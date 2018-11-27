@@ -77,6 +77,29 @@ type rate_counter_array is array (NR_ALGOS-1 downto 0) of std_logic_vector(RATE_
 constant MASKS_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"00000001"); --Finor and veto masks registers (bit 0 = finor, bit 1 = veto)
 -- ==== FDL definitions - end ============================================================
 
+-- *******************************************************************************
+-- Definitions for GTL v2.x.y
+
+    type muon_charge_bits_array is array (0 to NR_MUON_OBJECTS-1) of std_logic_vector(MUON_CHARGE_HIGH-MUON_CHARGE_LOW downto 0);
+    type muon_charcorr_double_array is array (0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) of std_logic_vector(MUON_CHARGE_HIGH-MUON_CHARGE_LOW downto 0);
+    type muon_charcorr_triple_array is array (0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) of std_logic_vector(MUON_CHARGE_HIGH-MUON_CHARGE_LOW downto 0);
+    type muon_charcorr_quad_array is array (0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) of std_logic_vector(MUON_CHARGE_HIGH-MUON_CHARGE_LOW downto 0);
+
+    constant MAX_PT_WIDTH : positive := 12; -- esums
+    type pt_array is array (natural range <>, natural range <>) of std_logic_vector(MAX_PT_WIDTH-1 downto 0);
+    constant MAX_COSH_COS_WIDTH : positive := 27; -- CALO_MUON_COSH_COS_VECTOR_WIDTH 
+    type cosh_cos_vector_array is array (natural range <>, natural range <>) of std_logic_vector(MAX_COSH_COS_WIDTH-1 downto 0);
+    type mass_vector_array is array (natural range <>, natural range <>) of std_logic_vector((2*MAX_PT_WIDTH+MAX_COSH_COS_WIDTH)-1 downto 0);
+    constant MAX_N_REQ : positive := 4;
+    constant MAX_N_OBJ : positive := 12;
+    type obj_cuts_array is array (MAX_N_REQ-1 downto 0) of std_logic_vector(MAX_N_OBJ-1 downto 0);
+    
+    type std_logic_2dim_array is array (natural range <>, natural range <>) of std_logic;
+    type std_logic_2dim_array is array (natural range <>, natural range <>, natural range <>) of std_logic;
+    type integer_array is array (natural range <>) of integer;
+    
+ -- *******************************************************************************
+   
 -- ==== MUONs - begin ============================================================
 -- MUONs
 constant NR_MUON_TEMPLATES : positive range 1 to 4 := 4; -- number of max. templates for muon conditions

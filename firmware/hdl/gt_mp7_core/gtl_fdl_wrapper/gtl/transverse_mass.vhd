@@ -23,6 +23,7 @@ entity transverse_mass is
         OUT_REG : boolean
     );
     port(
+        clk : in std_logic;
         pt1 : in pt_array;
         pt2 : in pt_array;
         cos_dphi : in cosh_cos_vector_array;
@@ -49,7 +50,7 @@ begin
         end generate loop_2;
     end generate loop_1;
 
-    out_reg_p: process(clk, cond)
+    out_reg_p: process(clk, transverse_mass_sq_div2)
     begin
         if OUT_REG = false then
             transverse_mass_o <= transverse_mass_sq_div2;

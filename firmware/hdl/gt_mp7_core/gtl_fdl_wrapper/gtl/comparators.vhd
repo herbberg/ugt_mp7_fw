@@ -16,6 +16,7 @@ entity comparators is
         OUT_REG : boolean
     );
     port(
+        clk : in std_logic;
         data : in std_logic_3dim(N_OBJ_1_H downto 0)(N_OBJ_2_H downto 0)(C_WIDTH-1 downto 0);
         comp_o : out std_logic_2dim(N_OBJ_1_H downto 0)(N_OBJ_2_H downto 0) := (others => (others => '0'))
     );
@@ -47,7 +48,7 @@ begin
         end generate l2;
     end generate l1;
 
-    out_reg_p: process(clk, cond)
+    out_reg_p: process(clk, comp)
     begin
         if OUT_REG = false then
             comp_o <= comp;

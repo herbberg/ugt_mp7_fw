@@ -22,6 +22,7 @@ entity invariant_mass is
         OUT_REG : boolean
     );
     port(
+        clk : in std_logic;
         pt1 : in pt_array;
         pt2 : in pt_array;
         cosh_deta : in cosh_cos_vector_array;
@@ -48,7 +49,7 @@ begin
         end generate loop_2;
     end generate loop_1;
     
-    out_reg_p: process(clk, cond)
+    out_reg_p: process(clk, invariant_mass_sq_div2)
     begin
         if OUT_REG = false then
             inv_mass_o <= invariant_mass_sq_div2;
