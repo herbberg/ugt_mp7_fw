@@ -14,25 +14,20 @@ use work.gtl_pkg.all;
 
 entity transverse_mass is
     generic (
-        NR_OBJ_1 : positive := 12;
-        NR_OBJ_2 : positive := 8;
-        pt1_width: positive := 12;
-        pt2_width: positive := 12;
-        cosh_cos_width: positive := 28;
-        mass_cosh_cos_precision : positive := 3;
-        OUT_REG : boolean
+        CONF : mass_conf
     );
     port(
         clk : in std_logic;
-        pt1 : in pt_array;
-        pt2 : in pt_array;
-        cos_dphi : in cosh_cos_vector_array;
-        transverse_mass_o : out mass_vector_array;
+        pt1 : in pt_array(CONF.NR_OBJ_1-1 downto 0);
+        pt2 : in pt_array(CONF.NR_OBJ_1-1 downto 0);
+        cos_dphi : in cosh_cos_vector_array(CONF.NR_OBJ_1-1 downto 0)(CONF.NR_OBJ_1-1 downto 0);
+        transverse_mass_o : out mass_vector_array(CONF.NR_OBJ_1-1 downto 0)(CONF.NR_OBJ_1-1 downto 0);
     );
 end transverse_mass;
 
 architecture rtl of transverse_mass is
 
+    constant OUT_REG_WIDTH : positive := CONF.NR_OBJ_1 * CONF.NR_OBJ_2 * (2*MAX_PT_WIDTH+MAX_COSH_COS_WIDTH);
     signal transverse_mass_sq_div2 : mass_vector_array := (others => (others => (others => '0')));
     
 -- HB 2017-09-21: used attribute "use_dsp" instead of "use_dsp48" for "mass" - see warning below
@@ -42,23 +37,16 @@ architecture rtl of transverse_mass is
 
 begin
 
-    loop_1: for i in 0 to NR_OBJ_1-1 generate
-        loop_2: for j in 0 to NR_OBJ_2-1 generate
+    loop_1: for i in 0 to CONF.NR_OBJ_1-1 generate
+        loop_2: for j in 0 to CONF.NR_OBJ_2-1 generate
 -- HB 2016-12-12: calculation of transverse mass with formular M**2/2=pt1*pt2*(1-cos(phi1-phi2))
---                "conv_std_logic_vector((10**mass_cosh_cos_precision), cosh_cos_width)" means 1 multiplied with 10**mass_cosh_cos_precision, converted to std_logic_vector with cosh_cos_width
-            transverse_mass_sq_div2(i,j) <= pt1(i)(pt1_width-1 downto 0) * pt2(j)(pt2_width-1 downto 0) * ((conv_std_logic_vector((10**mass_cosh_cos_precision), cosh_cos_width)) - (cos_dphi(i,j)(cosh_cos_width-1 downto 0)));
+--                "conv_std_logic_vector((10**COSH_COS_PREC), COSH_COS_WIDTH)" means 1 multiplied with 10**COSH_COS_PREC, converted to std_logic_vector with COSH_COS_WIDTH
+            transverse_mass_sq_div2(i,j) <= pt1(i)(CONF.PT1_WIDTH-1 downto 0) * pt2(j)(CONF.PT2_WIDTH-1 downto 0) * ((conv_std_logic_vector((10**CONF.COSH_COS_PREC), CONF.COSH_COS_WIDTH)) - (cos_dphi(i,j)(CONF.COSH_COS_WIDTH-1 downto 0)));
         end generate loop_2;
     end generate loop_1;
 
-    out_reg_p: process(clk, transverse_mass_sq_div2)
-    begin
-        if OUT_REG = false then
-            transverse_mass_o <= transverse_mass_sq_div2;
-        else
-            if (clk'event and clk = '1') then
-                transverse_mass_o <= transverse_mass_sq_div2;
-            end if;
-        end if;
-    end process;
-
+    out_reg_i : entity work.out_reg_mux
+        generic map(OUT_REG_WIDTH, CONF.OUT_REG);  
+        port map(clk, transverse_mass_sq_div2, transverse_mass_o); 
+    
 end architecture rtl;

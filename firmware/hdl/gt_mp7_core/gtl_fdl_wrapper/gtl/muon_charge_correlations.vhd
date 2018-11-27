@@ -11,6 +11,9 @@ use ieee.std_logic_arith.all;
 use work.gtl_pkg.all;
 
 entity muon_charge_correlations is
+    generic (
+        OUT_REG : boolean
+    );
     port(
         charge_bits_obj_1: in muon_charge_bits_array;
         charge_bits_obj_2: in muon_charge_bits_array;
@@ -22,9 +25,12 @@ end muon_charge_correlations;
 
 architecture rtl of muon_charge_correlations is
     
-    constant not_valid : std_logic_vector(1 downto 0) := "00"; 
-    constant ls : std_logic_vector(1 downto 0) := "01"; 
-    constant os : std_logic_vector(1 downto 0) := "10"; 
+    constant OUT_REG_WIDTH_DOUBLE : positive := NR_MUON_OBJECTS * NR_MUON_OBJECTS * N_MU_CHARGE_BITS;
+    constant OUT_REG_WIDTH_TRIPLE : positive := NR_MUON_OBJECTS * NR_MUON_OBJECTS * NR_MUON_OBJECTS * N_MU_CHARGE_BITS;
+    constant OUT_REG_WIDTH_QUAD : positive := NR_MUON_OBJECTS * NR_MUON_OBJECTS * NR_MUON_OBJECTS * NR_MUON_OBJECTS * N_MU_CHARGE_BITS;
+    constant not_valid : std_logic_vector(N_MU_CHARGE_BITS-1 downto 0) := "00"; 
+    constant ls : std_logic_vector(N_MU_CHARGE_BITS-1  downto 0) := "01"; 
+    constant os : std_logic_vector(N_MU_CHARGE_BITS-1  downto 0) := "10"; 
 
 begin
 
@@ -84,19 +90,17 @@ begin
         end loop;
     end process charge_corr_p;
 
-    out_reg_p: process(clk, cc_double_i, cc_triple_i, cc_quad_i)
-    begin
-        if OUT_REG = false then
-            cc_double <= cc_double_i;
-            cc_triple <= cc_triple_i;
-            cc_quad <= cc_quad_i;
-        else
-            if (clk'event and clk = '1') then
-                cc_double <= cc_double_i;
-                cc_triple <= cc_triple_i;
-                cc_quad <= cc_quad_i;
-            end if;
-        end if;
-    end process;
+    out_reg_double_i : entity work.out_reg_mux
+        generic map(OUT_REG_WIDTH_DOUBLE, OUT_REG);  
+        port map(clk, cc_double_i, cc_double); 
+    
+    out_reg_triple_i : entity work.out_reg_mux
+        generic map(OUT_REG_WIDTH_TRIPLE, OUT_REG);  
+        port map(clk, cc_triple_i, cc_triple); 
+    
+    out_reg_quad_i : entity work.out_reg_mux
+        generic map(OUT_REG_WIDTH_QUAD, OUT_REG);  
+        port map(clk, cc_quad_i, cc_quad); 
+    
 
 end architecture rtl;

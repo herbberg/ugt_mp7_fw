@@ -77,29 +77,6 @@ type rate_counter_array is array (NR_ALGOS-1 downto 0) of std_logic_vector(RATE_
 constant MASKS_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"00000001"); --Finor and veto masks registers (bit 0 = finor, bit 1 = veto)
 -- ==== FDL definitions - end ============================================================
 
--- *******************************************************************************
--- Definitions for GTL v2.x.y
-
-    type muon_charge_bits_array is array (0 to NR_MUON_OBJECTS-1) of std_logic_vector(MUON_CHARGE_HIGH-MUON_CHARGE_LOW downto 0);
-    type muon_charcorr_double_array is array (0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) of std_logic_vector(MUON_CHARGE_HIGH-MUON_CHARGE_LOW downto 0);
-    type muon_charcorr_triple_array is array (0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) of std_logic_vector(MUON_CHARGE_HIGH-MUON_CHARGE_LOW downto 0);
-    type muon_charcorr_quad_array is array (0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) of std_logic_vector(MUON_CHARGE_HIGH-MUON_CHARGE_LOW downto 0);
-
-    constant MAX_PT_WIDTH : positive := 12; -- esums
-    type pt_array is array (natural range <>, natural range <>) of std_logic_vector(MAX_PT_WIDTH-1 downto 0);
-    constant MAX_COSH_COS_WIDTH : positive := 27; -- CALO_MUON_COSH_COS_VECTOR_WIDTH 
-    type cosh_cos_vector_array is array (natural range <>, natural range <>) of std_logic_vector(MAX_COSH_COS_WIDTH-1 downto 0);
-    type mass_vector_array is array (natural range <>, natural range <>) of std_logic_vector((2*MAX_PT_WIDTH+MAX_COSH_COS_WIDTH)-1 downto 0);
-    constant MAX_N_REQ : positive := 4;
-    constant MAX_N_OBJ : positive := 12;
-    type obj_cuts_array is array (MAX_N_REQ-1 downto 0) of std_logic_vector(MAX_N_OBJ-1 downto 0);
-    
-    type std_logic_2dim_array is array (natural range <>, natural range <>) of std_logic;
-    type std_logic_2dim_array is array (natural range <>, natural range <>, natural range <>) of std_logic;
-    type integer_array is array (natural range <>) of integer;
-    
- -- *******************************************************************************
-   
 -- ==== MUONs - begin ============================================================
 -- MUONs
 constant NR_MUON_TEMPLATES : positive range 1 to 4 := 4; -- number of max. templates for muon conditions
@@ -497,6 +474,49 @@ constant D_S_I_MBT1HFM_V2 : d_s_i_mbt1hfm_record := (MBT1HFM_COUNT_HIGH,MBT1HFM_
 -- "External conditions" (former "Technical Triggers" and "External Algorithms") definitions
 constant NR_EXTERNAL_CONDITIONS : positive := EXTERNAL_CONDITIONS_DATA_WIDTH; -- number of "External conditions" inputs (proposed max. NR_EXTERNAL_CONDITIONS = 256), from lhc_data_pkg.vhd
 
+-- *******************************************************************************
+-- Definitions for GTL v2.x.y
+
+    constant N_MU_CHARGE_BITS : positive := MUON_CHARGE_HIGH-MUON_CHARGE_LOW + 1;
+    type muon_charge_bits_array is array (0 to NR_MUON_OBJECTS-1) of std_logic_vector(N_MU_CHARGE_BITS downto 0);
+    type muon_charcorr_double_array is array (0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) of std_logic_vector(N_MU_CHARGE_BITS downto 0);
+    type muon_charcorr_triple_array is array (0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) of std_logic_vector(N_MU_CHARGE_BITS downto 0);
+    type muon_charcorr_quad_array is array (0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) of std_logic_vector(N_MU_CHARGE_BITS downto 0);
+
+    constant MAX_PT_WIDTH : positive := 12; -- esums
+    type pt_array is array (natural range <>) of std_logic_vector(MAX_PT_WIDTH-1 downto 0);
+    constant MAX_COSH_COS_WIDTH : positive := 27; -- CALO_MUON_COSH_COS_VECTOR_WIDTH 
+    type cosh_cos_vector_array is array (natural range <>, natural range <>) of std_logic_vector(MAX_COSH_COS_WIDTH-1 downto 0);
+    type mass_vector_array is array (natural range <>, natural range <>) of std_logic_vector((2*MAX_PT_WIDTH+MAX_COSH_COS_WIDTH)-1 downto 0);
+    constant MAX_N_REQ : positive := 4;
+    constant MAX_N_OBJ : positive := 12;
+    
+    type std_logic_2dim_array is array (natural range <>, natural range <>) of std_logic;
+    type std_logic_3dim_array is array (natural range <>, natural range <>, natural range <>) of std_logic;
+    type integer_array is array (natural range <>) of integer;
+    
+    type differences_conf is record
+        NR_OBJ_1, NR_OBJ_2, PHI_HALF_RANGE : positive;
+        OUT_REG : boolean;
+    end record d_s_i_muon_record;
+
+    type mass_conf is record
+        NR_OBJ_1, NR_OBJ_2, PT1_WIDTH, PT2_WIDTH, COSH_COS_WIDTH, COSH_COS_PREC : positive;
+        OUT_REG : boolean;
+    end record d_s_i_muon_record;
+
+    type comparators_conf is record
+        N_OBJ_1_H, N_OBJ_2_H, C_WIDTH : natural;
+        GE_MODE, WINDOW, OUT_REG : boolean;
+    end record d_s_i_muon_record;
+
+    type comb_cond_conf is record
+        OUT_REG, TBPT_SEL, CHARGE_CORR_SEL, CHARGE_SEL, QUAL_SEL, ISO_SEL, PHI_SEL, ETA_SEL : boolean;
+        SLICE_4_L, SLICE_3_H, SLICE_3_L, SLICE_2_H, SLICE_2_L, SLICE_1_H, SLICE_1_L, N_OBJ, N_REQ : natural;
+    end record d_s_i_muon_record;
+
+-- *******************************************************************************
+   
 -- ==== Correlations - begin ============================================================
 -- Subtractors
 constant MAX_DIFF_BITS : positive := 16;
