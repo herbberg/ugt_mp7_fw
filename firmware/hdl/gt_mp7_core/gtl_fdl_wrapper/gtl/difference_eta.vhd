@@ -21,14 +21,14 @@ entity difference_eta is
         MUON_MUON_LUT : muon_muon_diff_phi_lut_array;
         CALO_CALO_COSH_COS_LUT : calo_CALO_cosh_deta_lut_array;
         CALO_MUON_COSH_COS_LUT : calo_muon_cosh_deta_lut_array;
-        MUON_MUON_COSH_COS_LUT : muon_muon_cosh_deta_lut_array;
+        MUON_MUON_COSH_COS_LUT : muon_muon_cosh_deta_lut_array
     );
     port(
         clk : in std_logic;
         in_1 : in diff_integer_inputs_array(0 to CONF.NR_OBJ_1-1);
         in_2 : in diff_integer_inputs_array(0 to CONF.NR_OBJ_2-1);
         diff_vector_o : out deta_dphi_vector_array(0 to CONF.NR_OBJ_1-1, 0 to CONF.NR_OBJ_2-1) := (others => (others => (others => '0')));
-        cosh_deta_vector_o : out cosh_cos_vector_array(0 to CONF.NR_OBJ_1-1, 0 to CONF.NR_OBJ_2-1) := (others => (others => (others => '0')));
+        cosh_deta_vector_o : out cosh_cos_vector_array(0 to CONF.NR_OBJ_1-1, 0 to CONF.NR_OBJ_2-1) := (others => (others => (others => '0')))
     );
 end difference_eta;
 
