@@ -4,6 +4,9 @@
 -- Version-history:
 -- HB 2018-11-26: First design.
 
+library ieee;
+use ieee.std_logic_1164.all;
+
 entity out_reg_mux is
     generic(
         R_WIDTH : natural := 12;

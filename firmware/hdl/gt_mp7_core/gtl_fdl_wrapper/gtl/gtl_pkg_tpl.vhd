@@ -127,16 +127,16 @@ type muon_templates_boolean_array is array (1 to NR_MUON_TEMPLATES) of boolean;
 type muon_templates_string_array is array (1 to NR_MUON_TEMPLATES) of string(1 to 3);
 
 -- HB 2014-04-15: types for muon_charge_correlations.vhd
-type muon_charcorr_double_array is array (0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) of std_logic;
-type muon_charcorr_triple_array is array (0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) of std_logic;
-type muon_charcorr_quad_array is array (0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) of std_logic;
+-- type muon_charcorr_double_array is array (0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) of std_logic;
+-- type muon_charcorr_triple_array is array (0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) of std_logic;
+-- type muon_charcorr_quad_array is array (0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) of std_logic;
 -- ==== MUONs - end ============================================================
 
 -- HB 2017-03-15: type definition for "std_logic" arrays.
 type std_logic_array is array (natural range <>) of std_logic;
-type std_logic_2dim_array is array (natural range <>, natural range <>) of std_logic;
--- HB 2017-05-18:
-type std_logic_3dim_array is array (natural range <>, natural range <>, natural range <>) of std_logic;
+-- type std_logic_2dim_array is array (natural range <>, natural range <>) of std_logic;
+-- -- HB 2017-05-18:
+-- type std_logic_3dim_array is array (natural range <>, natural range <>, natural range <>) of std_logic;
 
 -- ==== CALOs - begin ============================================================
 -- CALOs
@@ -495,25 +495,30 @@ constant NR_EXTERNAL_CONDITIONS : positive := EXTERNAL_CONDITIONS_DATA_WIDTH; --
     type std_logic_3dim_array is array (natural range <>, natural range <>, natural range <>) of std_logic;
     type integer_array is array (natural range <>) of integer;
     
+    type obj_corr_type is (calo_calo, calo_muon, muon_muon);
+
     type differences_conf is record
         NR_OBJ_1, NR_OBJ_2, PHI_HALF_RANGE : positive;
         OUT_REG : boolean;
-    end record d_s_i_muon_record;
+        OBJ_CORR : obj_corr_type;
+    end record differences_conf;
 
     type mass_conf is record
         NR_OBJ_1, NR_OBJ_2, PT1_WIDTH, PT2_WIDTH, COSH_COS_WIDTH, COSH_COS_PREC : positive;
         OUT_REG : boolean;
-    end record d_s_i_muon_record;
+    end record mass_conf;
 
     type comparators_conf is record
         N_OBJ_1_H, N_OBJ_2_H, C_WIDTH : natural;
         GE_MODE, WINDOW, OUT_REG : boolean;
-    end record d_s_i_muon_record;
+    end record comparators_conf;
 
     type comb_cond_conf is record
         OUT_REG, TBPT_SEL, CHARGE_CORR_SEL, CHARGE_SEL, QUAL_SEL, ISO_SEL, PHI_SEL, ETA_SEL : boolean;
         SLICE_4_L, SLICE_3_H, SLICE_3_L, SLICE_2_H, SLICE_2_L, SLICE_1_H, SLICE_1_L, N_OBJ, N_REQ : natural;
-    end record d_s_i_muon_record;
+    end record comb_cond_conf;
+
+    constant CALO_CALO_COSH_COS_VECTOR_WIDTH: positive := log2c(10597282-(-1000));
 
 -- *******************************************************************************
    

@@ -15,32 +15,51 @@ use work.gtl_pkg.all;
 
 entity difference_eta is
     generic (
-        CONF : differences_conf
+        CONF : differences_conf;
+        CALO_CALO_LUT : calo_calo_diff_eta_lut_array;
+        CALO_MUON_LUT : calo_muon_diff_eta_lut_array;
+        MUON_MUON_LUT : muon_muon_diff_phi_lut_array;
+        CALO_CALO_COSH_COS_LUT : calo_CALO_cosh_deta_lut_array;
+        CALO_MUON_COSH_COS_LUT : calo_muon_cosh_deta_lut_array;
+        MUON_MUON_COSH_COS_LUT : muon_muon_cosh_deta_lut_array;
     );
     port(
         clk : in std_logic;
         in_1 : in diff_integer_inputs_array(0 to CONF.NR_OBJ_1-1);
         in_2 : in diff_integer_inputs_array(0 to CONF.NR_OBJ_2-1);
-        diff_o : out dim2_max_eta_range_array(0 to CONF.NR_OBJ_1-1, 0 to CONF.NR_OBJ_2-1)
+        diff_vector_o : out deta_dphi_vector_array(0 to CONF.NR_OBJ_1-1, 0 to CONF.NR_OBJ_2-1) := (others => (others => (others => '0')));
+        cosh_deta_vector : out cosh_cos_vector_array(0 to CONF.NR_OBJ_1-1, 0 to CONF.NR_OBJ_2-1) := (others => (others => (others => '0')));
     );
 end difference_eta;
 
 architecture rtl of difference_eta is
 
-    constant OUT_REG_WIDTH : positive := CONF.NR_OBJ_1 * CONF.NR_OBJ_2 * integer(ETA_RANGE_REAL/MUON_ETA_STEP);
     signal diff_i : dim2_max_eta_range_array(0 to CONF.NR_OBJ_1-1, 0 to CONF.NR_OBJ_2-1);
     
 begin
--- instantiation of subtractors for eta
+
     loop_1: for i in 0 to CONF.NR_OBJ_1-1 generate
         loop_2: for j in 0 to CONF.NR_OBJ_2-1 generate
 -- only positive difference in eta
             diff_i(i,j) <= abs(in_1(i) - in_2(j));
+            calo_calo_i: if (CONF.OBJ_CORR = calo_calo) generate
+                diff_vector(i,j) <= CONV_STD_LOGIC_VECTOR(CALO_CALO_LUT(diff_i(i,j)),DETA_DPHI_VECTOR_WIDTH_ALL);
+                cosh_deta_vector(i,j) <= CONV_STD_LOGIC_VECTOR(CALO_CALO_COSH_COS_LUT(diff_i(i,j)), CALO_CALO_COSH_COS_VECTOR_WIDTH);
+            end generate calo_calo_i;
+            calo_muon_i: if (CONF.OBJ_CORR = calo_muon) generate
+                diff_vector(i,j) <= CONV_STD_LOGIC_VECTOR(CALO_MUON_LUT(diff_i(i,j)),DETA_DPHI_VECTOR_WIDTH_ALL);
+                cosh_deta_vector(i,j) <= CONV_STD_LOGIC_VECTOR(CALO_MUON_COSH_COS_LUT(diff_i(i,j)), CALO_MUON_COSH_COS_VECTOR_WIDTH);
+            end generate calo_calo_i;
+            muon_muon_i: if (CONF.OBJ_CORR = muon_muon) generate
+                diff_vector(i,j) <= CONV_STD_LOGIC_VECTOR(MUON_MUON_LUT(diff_i(i,j)),DETA_DPHI_VECTOR_WIDTH_ALL);
+                cosh_deta_vector(i,j) <= CONV_STD_LOGIC_VECTOR(MUON_MUON_COSH_COS_LUT(diff_i(i,j)), MUON_MUON_COSH_COS_VECTOR_WIDTH);
+            end generate calo_calo_i;
         end generate loop_2;
     end generate loop_1;
-
-    out_reg_i : entity work.out_reg_mux
-        generic map(OUT_REG_WIDTH, CONF.OUT_REG);  
-        port map(clk, diff_i, diff_o); 
     
+-- -- noch anpassen!!!
+--     out_reg_i : entity work.out_reg_mux
+--         generic map(OUT_REG_WIDTH, CONF.OUT_REG);  
+--         port map(clk, diff_vector, diff_vector_o); 
+
 end architecture rtl;
