@@ -495,7 +495,7 @@ constant NR_EXTERNAL_CONDITIONS : positive := EXTERNAL_CONDITIONS_DATA_WIDTH; --
     type std_logic_3dim_array is array (natural range <>, natural range <>, natural range <>) of std_logic;
     type integer_array is array (natural range <>) of integer;
     
-    type obj_corr_type is (calo_calo, calo_muon, muon_muon);
+    type obj_corr_type is (calo_calo, calo_esums, calo_muon, muon_muon, muon_esums);
 
     type differences_conf is record
         NR_OBJ_1, NR_OBJ_2, PHI_HALF_RANGE : positive;

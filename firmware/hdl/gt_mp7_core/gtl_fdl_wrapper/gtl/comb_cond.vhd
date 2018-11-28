@@ -44,7 +44,8 @@ begin
     and_l : for i in 1 to CONF.N_REQ generate 
         and_i : entity work.comb_cond_and
             generic map(CONF.N_OBJ, CONF.ETA_SEL, CONF.PHI_SEL, CONF.ISO_SEL, CONF.QUAL_SEL, CONF.CHARGE_SEL);  
-            port map(pt(i), eta_w1(i), eta_w2(i), eta_w3(i), eta_w4(i), eta_w5(i), phi_w1(i), phi_w2(i), iso(i), qual(i), charge(i), cond_and(i)); 
+            port map(pt(i), eta_w1(i), eta_w2(i), eta_w3(i), eta_w4(i), eta_w5(i),
+                phi_w1(i), phi_w2(i), iso(i), qual(i), charge(i), cond_and(i)); 
     end generate and_l;
     
     cc_double_i <= charge_corr_double when CONF.CHARGE_CORR_SEL else (others => (others => '1'));

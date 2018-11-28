@@ -18,16 +18,26 @@ end difference_eta_tb;
 architecture rtl of difference_eta_tb is
 
     constant LHC_CLK_PERIOD : time :=  25 ns;
-    signal lhc_clk : std_logic;
+    signal lhc_clk, test_out : std_logic;
 
-    constant CONF : differences_conf := (NR_OBJ_1 => 2, NR_OBJ_2 => 2, PHI_HALF_RANGE => 72, OUT_REG => true);
+    constant CONF : differences_conf := (NR_OBJ_1 => 2, NR_OBJ_2 => 2, PHI_HALF_RANGE => 72, OUT_REG => true, OBJ_CORR => calo_calo);
     signal eg_data : calo_objects_array(CONF.NR_OBJ_1-1 downto 0) := (X"00000000", X"00000000");
     signal eg_eta_integer: diff_integer_inputs_array(0 to CONF.NR_OBJ_1-1) := (others => 0);
-    signal diff_eg_eta: dim2_max_eta_range_array(0 to CONF.NR_OBJ_1-1, 0 to CONF.NR_OBJ_1-1) := (others => (others => 0));
+    signal diff_eta_vector : deta_dphi_vector_array(0 to CONF.NR_OBJ_1-1, 0 to CONF.NR_OBJ_2-1) := (others => (others => (others => '0')));
+    signal cosh_deta_vector : cosh_cos_vector_array(0 to CONF.NR_OBJ_1-1, 0 to CONF.NR_OBJ_2-1) := (others => (others => (others => '0')));
 
 --*********************************Main Body of Code**********************************
 begin
     
+    -- Clock
+    process
+    begin
+        lhc_clk  <=  '1';
+        wait for LHC_CLK_PERIOD/2;
+        lhc_clk  <=  '0';
+        wait for LHC_CLK_PERIOD/2;
+    end process;
+
     process
     begin
         wait for LHC_CLK_PERIOD; 
@@ -59,7 +69,7 @@ end generate;
 
 dut: entity work.difference_eta
     generic map(CONF)
-    port map(eg_eta_integer, eg_eta_integer, diff_eg_eta);
+    port map(lhc_clk, eg_eta_integer, eg_eta_integer, diff_eta_vector, cosh_deta_vector);
 
 end rtl;
 
