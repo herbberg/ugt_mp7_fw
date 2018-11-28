@@ -485,6 +485,17 @@ constant NR_EXTERNAL_CONDITIONS : positive := EXTERNAL_CONDITIONS_DATA_WIDTH; --
 
     constant MAX_PT_WIDTH : positive := 12; -- esums
     type pt_array is array (natural range <>) of std_logic_vector(MAX_PT_WIDTH-1 downto 0);
+    constant MAX_ETA_WIDTH : positive := MUON_ETA_HIGH - MUON_ETA_LOW + 1;
+    type eta_array is array (natural range <>) of std_logic_vector(MAX_ETA_WIDTH-1 downto 0);
+    constant MAX_PHI_WIDTH : positive := MUON_PHI_HIGH - MUON_PHI_LOW + 1;
+    type phi_array is array (natural range <>) of std_logic_vector(MAX_PHI_WIDTH-1 downto 0);
+    constant MAX_ISO_WIDTH : positive := MUON_ISO_HIGH - MUON_ISO_LOW + 1;
+    type iso_array is array (natural range <>) of std_logic_vector(MAX_ISO_WIDTH-1 downto 0);
+    constant MAX_QUAL_WIDTH : positive := MUON_QUAL_HIGH - MUON_QUAL_LOW + 1;
+    type qual_array is array (natural range <>) of std_logic_vector(MAX_QUAL_WIDTH-1 downto 0);
+    constant MAX_CHARGE_WIDTH : positive := MUON_CHARGE_HIGH - MUON_CHARGE_LOW + 1;
+    type charge_array is array (natural range <>) of std_logic_vector(MAX_CHARGE_WIDTH-1 downto 0);
+
     constant MAX_COSH_COS_WIDTH : positive := 27; -- CALO_MUON_COSH_COS_VECTOR_WIDTH 
     type cosh_cos_vector_array is array (natural range <>, natural range <>) of std_logic_vector(MAX_COSH_COS_WIDTH-1 downto 0);
     type mass_vector_array is array (natural range <>, natural range <>) of std_logic_vector((2*MAX_PT_WIDTH+MAX_COSH_COS_WIDTH)-1 downto 0);
@@ -495,16 +506,53 @@ constant NR_EXTERNAL_CONDITIONS : positive := EXTERNAL_CONDITIONS_DATA_WIDTH; --
     type std_logic_3dim_array is array (natural range <>, natural range <>, natural range <>) of std_logic;
     type integer_array is array (natural range <>) of integer;
     
+    type obj_type is (eg, jet, tau, muon, ett, etm, htt, htm, ettem, etmhf);
     type obj_corr_type is (calo_calo, calo_esums, calo_muon, muon_muon, muon_esums);
 
+    constant MAX_OBJ_BITS : positive := 64; -- muon
+    type objects_array is array (natural range <>) of std_logic_vector(MAX_OBJ_BITS-1 downto 0);
+
+    type sin_cos_integer_array is array (natural range <>) of integer;
+
+    constant EG_PT_LOW : natural := EG_ET_LOW;
+    constant EG_PT_HIGH : natural := EG_ET_HIGH;
+    constant JET_PT_LOW : natural := JET_ET_LOW;
+    constant JET_PT_HIGH : natural := JET_ET_HIGH;
+    constant TAU_PT_LOW : natural := TAU_ET_LOW;
+    constant TAU_PT_HIGH : natural := TAU_ET_HIGH;
+
+    type obj_struct is record
+        pt_l,pt_h,eta_l,eta_h,phi_l,phi_h,iso_l,
+        iso_h,qual_l,qual_h,charge_l,charge_h : natural;
+    end record obj_struct;
+
+    constant eg_struct : obj_struct := (EG_PT_LOW,EG_PT_HIGH,EG_ETA_LOW,EG_ETA_HIGH,EG_PHI_LOW,EG_PHI_HIGH,EG_ISO_LOW,EG_ISO_HIGH,0,0,0,0);
+    constant jet_struct : obj_struct := (JET_PT_LOW,JET_PT_HIGH,JET_ETA_LOW,JET_ETA_HIGH,JET_PHI_LOW,JET_PHI_HIGH,0,0,0,0,0,0);
+    constant tau_struct : obj_struct := (TAU_PT_LOW,TAU_PT_HIGH,TAU_ETA_LOW,TAU_ETA_HIGH,TAU_PHI_LOW,TAU_PHI_HIGH,TAU_ISO_LOW,TAU_ISO_HIGH,0,0,0,0);
+    constant muon_struct : obj_struct := (MUON_PT_LOW,MUON_PT_HIGH,MUON_ETA_LOW,MUON_ETA_HIGH,MUON_PHI_LOW,MUON_PHI_HIGH,MUON_ISO_LOW,MUON_ISO_HIGH,
+        MUON_QUAL_LOW,MUON_QUAL_HIGH,MUON_CHARGE_LOW,MUON_CHARGE_HIGH);
+
+    constant EG_PT_VECTOR_WIDTH_NEW: positive := 12; -- max. value 255.5 GeV => 2555 (255.5 * 10**CALO_INV_MASS_PT_PRECISION) => 0x9FB
+    constant JET_PT_VECTOR_WIDTH_NEW: positive := 14; -- max. value 1023.5 GeV => 10235 (1023.5 * 10**CALO_INV_MASS_PT_PRECISION) => 0x27FB
+    constant TAU_PT_VECTOR_WIDTH_NEW: positive := 12; -- max. value 255.5 GeV => 2555 (255.5 * 10**CALO_INV_MASS_PT_PRECISION) => 0x9FB
+    constant MUON_PT_VECTOR_WIDTH_NEW: positive := 12; -- max. value 255.5 GeV => 2555 (255.5 * 10**MUON_INV_MASS_PT_PRECISION) => 0x9FB
+    constant MAX_PT_VECTOR_WIDTH : positive := 14; -- jet (esums)
+    type pt_vector_array is array (natural range <>) of std_logic_vector(MAX_PT_VECTOR_WIDTH-1 downto 0);
+
+    type conversions_conf is record
+        N_OBJ : natural;
+        OBJ_T : obj_type;
+        OBJ_S : obj_struct;
+    end record conversions_conf;
+
     type differences_conf is record
-        NR_OBJ_1, NR_OBJ_2, PHI_HALF_RANGE : positive;
+        N_OBJ_1, N_OBJ_2, PHI_HALF_RANGE : positive;
         OUT_REG : boolean;
         OBJ_CORR : obj_corr_type;
     end record differences_conf;
 
     type mass_conf is record
-        NR_OBJ_1, NR_OBJ_2, PT1_WIDTH, PT2_WIDTH, COSH_COS_WIDTH, COSH_COS_PREC : positive;
+        N_OBJ_1, N_OBJ_2, PT1_WIDTH, PT2_WIDTH, COSH_COS_WIDTH, COSH_COS_PREC : positive;
         OUT_REG : boolean;
     end record mass_conf;
 
@@ -800,8 +848,8 @@ constant MU_ETMHF_COSH_COS_PRECISION : positive := MUON_ETMHF_COSH_COS_PRECISION
 constant MU_HTM_COSH_COS_PRECISION : positive := MUON_HTM_COSH_COS_PRECISION;
 
 constant MUON_PT_VECTOR_WIDTH: positive := log2c((2**(D_S_I_MUON_V2.pt_high-D_S_I_MUON_V2.pt_low+1)-1)*(10**MUON_PT_PRECISION)); -- max. value 255.5 GeV => 2555 => 0x9FB
-constant MU_PT_VECTOR_WIDTH: positive := MUON_PT_VECTOR_WIDTH; -- dummy for VHDL-Producer output (correlation conditions)
 -- constant MUON_PT_VECTOR_WIDTH: positive := 12; -- max. value 255.5 GeV => 2555 (255.5 * 10**MUON_INV_MASS_PT_PRECISION) => 0x9FB
+constant MU_PT_VECTOR_WIDTH: positive := MUON_PT_VECTOR_WIDTH; -- dummy for VHDL-Producer output (correlation conditions)
 
 constant MUON_MUON_COSH_COS_VECTOR_WIDTH: positive := log2c(677303); -- max. value cosh_deta-cos_dphi => [667303-(-10000)]=677303 => 0xA55B7 - highest value in LUT
 constant MU_MU_COSH_COS_VECTOR_WIDTH: positive := MUON_MUON_COSH_COS_VECTOR_WIDTH; -- max. value cosh_deta-cos_dphi => [667303-(-10000)]=677303 => 0xA55B7 - highest value in LUT

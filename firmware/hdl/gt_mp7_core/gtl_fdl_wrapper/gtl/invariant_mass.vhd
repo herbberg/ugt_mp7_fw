@@ -18,11 +18,11 @@ entity invariant_mass is
     );
     port(
         clk : in std_logic;
-        pt1 : in pt_array(CONF.NR_OBJ_1-1 downto 0);
-        pt2 : in pt_array(CONF.NR_OBJ_1-1 downto 0);
-        cosh_deta : in cosh_cos_vector_array(CONF.NR_OBJ_1-1 downto 0)(CONF.NR_OBJ_1-1 downto 0);
-        cos_dphi : in cosh_cos_vector_array(CONF.NR_OBJ_1-1 downto 0)(CONF.NR_OBJ_1-1 downto 0);
-        inv_mass_o : out mass_vector_array(CONF.NR_OBJ_1-1 downto 0)CONF.(NR_OBJ_1-1 downto 0) := (others => (others => (others => '0')))
+        pt1 : in pt_array(CONF.N_OBJ_1-1 downto 0);
+        pt2 : in pt_array(CONF.N_OBJ_2-1 downto 0);
+        cosh_deta : in cosh_cos_vector_array(CONF.N_OBJ_1-1 downto 0)(CONF.N_OBJ_2-1 downto 0);
+        cos_dphi : in cosh_cos_vector_array(CONF.N_OBJ_1-1 downto 0)(CONF.N_OBJ_2-1 downto 0);
+        inv_mass_o : out mass_vector_array(CONF.N_OBJ_1-1 downto 0)CONF.(N_OBJ_2-1 downto 0) := (others => (others => (others => '0')))
     );
 end invariant_mass;
 
@@ -38,8 +38,8 @@ architecture rtl of invariant_mass is
 
 begin
 
-    loop_1: for i in 0 toCONF. NR_OBJ_1-1 generate
-        loop_2: for j in 0 to CONF.NR_OBJ_2-1 generate
+    loop_1: for i in 0 toCONF. N_OBJ_1-1 generate
+        loop_2: for j in 0 to CONF.N_OBJ_2-1 generate
 -- HB 2015-10-01: calculation of invariant mass with formular M**2/2=pt1*pt2*(cosh(eta1-eta2)-cos(phi1-phi2))
             invariant_mass_sq_div2(i,j) <= pt1(i)(CONF.PT1_WIDTH-1 downto 0) * pt2(j)(CONF.PT2_WIDTH-1 downto 0) * 
                 ((cosh_deta(i,j)(CONF.COSH_COS_WIDTH-1 downto 0)) - (cos_dphi(i,j)(CONF.COSH_COS_WIDTH-1 downto 0)));

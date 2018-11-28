@@ -18,7 +18,7 @@ end difference_eta_tb;
 architecture rtl of difference_eta_tb is
 
     constant LHC_CLK_PERIOD : time :=  25 ns;
-    signal lhc_clk, test_out : std_logic;
+    signal lhc_clk: std_logic;
 
     constant CONF : differences_conf := (NR_OBJ_1 => 2, NR_OBJ_2 => 2, PHI_HALF_RANGE => 72, OUT_REG => true, OBJ_CORR => calo_calo);
     signal eg_data : calo_objects_array(CONF.NR_OBJ_1-1 downto 0) := (X"00000000", X"00000000");
@@ -64,7 +64,8 @@ begin
  ------------------- Instantiate  modules  -----------------
 
 eg_data_l: for i in 0 to CONF.NR_OBJ_1-1 generate
-    eg_eta_integer(i) <= CONV_INTEGER(signed(eg_data(i)(D_S_I_EG_V2.eta_high downto D_S_I_EG_V2.eta_low)));
+--     eg_eta_integer(i) <= CONV_INTEGER(signed(eg_data(i)(D_S_I_EG_V2.eta_high downto D_S_I_EG_V2.eta_low)));
+    eg_eta_integer(i) <= CONV_INTEGER(signed(eg_data(i)(eg_struct.eta_h downto eg_struct.eta_l)));
 end generate;
 
 dut: entity work.difference_eta
