@@ -49,17 +49,17 @@ vcom -93 -work work $GT_SRC/math_pkg.vhd
 vcom -93 -work work $GT_SRC/gt_mp7_core/gtl_fdl_wrapper/gtl/gtl_pkg_sim.vhd
 vcom -93 -work work $GT_SRC/gt_mp7_core/gtl_fdl_wrapper/gtl/out_reg_mux.vhd
 vcom -93 -work work $GT_SRC/gt_mp7_core/gtl_fdl_wrapper/gtl/combinatorial_and.vhd
-vcom -93 -work work $GT_SRC/gt_mp7_core/gtl_fdl_wrapper/gtl/correlation_conditions.vhd
+vcom -93 -work work $GT_SRC/gt_mp7_core/gtl_fdl_wrapper/gtl/combinatorial_conditions.vhd
 
 #Testbench
-vcom -93 -work work $TESTBENCH/correlation_conditions_tb.vhd
+vcom -93 -work work $TESTBENCH/combinatorial_conditions_tb.vhd
 
 #Load Design
-vsim -t 1ps work.correlation_conditions_tb 
+vsim -t 1ps work.combinatorial_conditions_tb 
 
 ##Load signals in wave window
 view wave
-do $TESTBENCH/../scripts/correlation_conditions_wave.do
+do $TESTBENCH/../scripts/combinatorial_conditions_wave.do
 
 ##Run simulation
 run 280 ns

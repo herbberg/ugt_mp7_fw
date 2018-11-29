@@ -502,8 +502,10 @@ constant NR_EXTERNAL_CONDITIONS : positive := EXTERNAL_CONDITIONS_DATA_WIDTH; --
     constant MAX_N_REQ : positive := 4;
     constant MAX_N_OBJ : positive := 12;
     
+    type std_logic_1dim_array is array (natural range <>) of std_logic;
     type std_logic_2dim_array is array (natural range <>, natural range <>) of std_logic;
     type std_logic_3dim_array is array (natural range <>, natural range <>, natural range <>) of std_logic;
+    type std_logic_4dim_array is array (natural range <>, natural range <>, natural range <>, natural range <>) of std_logic;
     type integer_array is array (natural range <>) of integer;
     
     type obj_type is (eg, jet, tau, muon, ett, etm, htt, htm, ettem, etmhf);
@@ -563,15 +565,15 @@ constant NR_EXTERNAL_CONDITIONS : positive := EXTERNAL_CONDITIONS_DATA_WIDTH; --
 
     type combinatorial_conditions_conf is record
         OUT_REG, TBPT_SEL, CHARGE_CORR_SEL, CHARGE_SEL, QUAL_SEL, ISO_SEL, PHI_SEL, ETA_SEL : boolean;
-        SLICE_4_L, SLICE_3_H, SLICE_3_L, SLICE_2_H, SLICE_2_L, SLICE_1_H, SLICE_1_L, N_OBJ, N_REQ : natural;
-    end record comb_cond_conf;
+        SLICE_4_L, SLICE_4_H, SLICE_3_L, SLICE_3_H, SLICE_2_L, SLICE_2_H, SLICE_1_L, SLICE_1_H, N_OBJ, N_REQ : natural;
+    end record combinatorial_conditions_conf;
 
     type correlation_conditions_conf is record
         OUT_REG, DETA_SEL, DPHI_SEL, INV_MASS_SEL, TRANS_MASS_SEL, TBPT_SEL, CHARGE_CORR_SEL, 
         CHARGE_1_SEL, QUAL_1_SEL, ISO_1_SEL, PHI_1_SEL, ETA_1_SEL,
         CHARGE_2_SEL, QUAL_2_SEL, ISO_2_SEL, PHI_2_SEL, ETA_2_SEL : boolean;
-        SLICE_2_H, SLICE_2_L, SLICE_1_H, SLICE_1_L, N_OBJ_1, N_OBJ_2 : natural;
-    end record comb_cond_conf;
+        SLICE_1_L, SLICE_1_H, SLICE_2_L, SLICE_2_H, N_OBJ_1, N_OBJ_2 : natural;
+    end record correlation_conditions_conf;
 
     constant CALO_CALO_COSH_COS_VECTOR_WIDTH: positive := log2c(10597282-(-1000));
 
