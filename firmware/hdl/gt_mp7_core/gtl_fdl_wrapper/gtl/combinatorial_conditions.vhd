@@ -9,9 +9,9 @@ use ieee.std_logic_1164.all;
 
 use work.gtl_pkg.all;
 
-entity comb_cond is
+entity combinatorial_conditions is
     generic(
-        CONF : comb_cond_conf
+        CONF : combinatorial_conditions_conf
     );
     port(
         clk : in std_logic;
@@ -32,9 +32,9 @@ entity comb_cond is
         tbpt : in std_logic_2dim_array(CONF.N_OBJ-1 downto 0)(CONF.N_OBJ-1 downto 0);
         cond_o : out std_logic
     );
-end comb_cond;
+end combinatorial_conditions;
 
-architecture rtl of comb_cond is
+architecture rtl of combinatorial_conditions is
 
     constant OUT_REG_WIDTH : positive := 1;
     constant N_SLICE_1 : positive := CONF.SLICE_1_H - CONF.SLICE_1_L + 1;

@@ -1,5 +1,5 @@
 -- Description:
--- Output register mux.
+-- Conversion logic.
 
 -- Version-history:
 -- HB 2018-11-26: First design.

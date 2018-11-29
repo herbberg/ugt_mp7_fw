@@ -7,7 +7,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-entity comb_cond_and is
+entity combinatorial_and is
     generic(
         N_OBJ : natural := 12;
         ETA_SEL : boolean := true;
@@ -30,9 +30,9 @@ entity comb_cond_and is
         charge : in std_logic_vector(N_OBJ-1 downto 0);
         cond_and : out std_logic_vector(N_OBJ-1 downto 0)
     );
-end comb_cond_and;
+end combinatorial_and;
 
-architecture rtl of comb_cond_single is
+architecture rtl of combinatorial_and is
 
     signal eta_i, phi_i, iso_i, qual_i, charge_i : std_logic_vector(N_OBJ-1 downto 0) := (others => '1');
     
