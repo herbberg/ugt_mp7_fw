@@ -83,6 +83,10 @@ begin
 --     cc_triple_i <= charge_corr_triple when CONF.CHARGE_CORR_SEL else DEF_VAL_3DIM;
 --     cc_quad_i <= charge_corr_quad when CONF.CHARGE_CORR_SEL else DEF_VAL_4DIM;
 --     tbpt_i <= tbpt when CONF.TBPT_SEL else DEF_VAL_2DIM;
+    cc_double_i <= charge_corr_double;
+    cc_triple_i <= charge_corr_triple;
+    cc_quad_i <= charge_corr_quad;
+    tbpt_i <= tbpt;
 
     and_or_p: process(cond_and, cc_double_i, cc_triple_i, cc_quad_i, tbpt_i)
         variable index : integer := 0;
@@ -100,17 +104,17 @@ begin
             for j in CONF.SLICE_2_L to CONF.SLICE_2_H loop
                 if CONF.N_REQ = 2 and (j/=i) then
                     index := index + 1;
-                    and_vec(index) := cond_and(1,i) and cond_and(2,j) and cc_double(i,j) and tbpt(i,j);
+                    and_vec(index) := cond_and(1,i) and cond_and(2,j) and cc_double_i(i,j) and tbpt_i(i,j);
                 end if;
                 for k in CONF.SLICE_3_L to CONF.SLICE_3_H loop
                     if CONF.N_REQ = 3 and (j/=i and k/=i and k/=j) then
                         index := index + 1;
-                        and_vec(index) := cond_and(1,i) and cond_and(2,j) and cond_and(3,k) and cc_triple(i,j,k);
+                        and_vec(index) := cond_and(1,i) and cond_and(2,j) and cond_and(3,k) and cc_triple_i(i,j,k);
                     end if;
                     for l in CONF.SLICE_4_L to CONF.SLICE_4_H loop
                         if CONF.N_REQ = 4 and (j/=i and k/=i and k/=j and l/=i and l/=j and l/=k) then
                             index := index + 1;
-                            and_vec(index) := cond_and(1,i) and cond_and(2,j) and cond_and(3,k) and cond_and(4,l) and cc_quad(i,j,k,l);
+                            and_vec(index) := cond_and(1,i) and cond_and(2,j) and cond_and(3,k) and cond_and(4,l) and cc_quad_i(i,j,k,l);
                         end if;
                     end loop;
                 end loop;

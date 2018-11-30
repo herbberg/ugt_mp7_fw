@@ -31,20 +31,20 @@ architecture rtl of combinatorial_conditions_tb is
     );
     
     signal pt : std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '1'));
-    signal eta_w1 : std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '1'));
-    signal eta_w2 : std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '1'));
-    signal eta_w3 : std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '1'));
-    signal eta_w4 : std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '1'));
-    signal eta_w5 : std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '1'));
-    signal phi_w1 : std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '1'));
-    signal phi_w2 : std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '1'));
-    signal iso : std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '1'));
-    signal qual : std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '1'));
-    signal charge : std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '1'));
-    signal tbpt : std_logic_2dim_array(CONF.N_OBJ-1 downto 0, CONF.N_OBJ-1 downto 0) := (others => (others => '1'));
-    signal charge_corr_double : std_logic_2dim_array(CONF.N_OBJ-1 downto 0, CONF.N_OBJ-1 downto 0) := (others => (others => '1'));
-    signal charge_corr_triple : std_logic_3dim_array(CONF.N_OBJ-1 downto 0, CONF.N_OBJ-1 downto 0, CONF.N_OBJ-1 downto 0) := (others => (others => (others => '1')));
-    signal charge_corr_quad : std_logic_4dim_array(CONF.N_OBJ-1 downto 0, CONF.N_OBJ-1 downto 0, CONF.N_OBJ-1 downto 0, CONF.N_OBJ-1 downto 0) := (others => (others => (others => (others => '1'))));
+--     signal eta_w1 : std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '1'));
+--     signal eta_w2 : std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '1'));
+--     signal eta_w3 : std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '1'));
+--     signal eta_w4 : std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '1'));
+--     signal eta_w5 : std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '1'));
+--     signal phi_w1 : std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '1'));
+--     signal phi_w2 : std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '1'));
+--     signal iso : std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '1'));
+--     signal qual : std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '1'));
+--     signal charge : std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '1'));
+--     signal tbpt : std_logic_2dim_array(CONF.N_OBJ-1 downto 0, CONF.N_OBJ-1 downto 0) := (others => (others => '1'));
+--     signal charge_corr_double : std_logic_2dim_array(CONF.N_OBJ-1 downto 0, CONF.N_OBJ-1 downto 0) := (others => (others => '1'));
+--     signal charge_corr_triple : std_logic_3dim_array(CONF.N_OBJ-1 downto 0, CONF.N_OBJ-1 downto 0, CONF.N_OBJ-1 downto 0) := (others => (others => (others => '1')));
+--     signal charge_corr_quad : std_logic_4dim_array(CONF.N_OBJ-1 downto 0, CONF.N_OBJ-1 downto 0, CONF.N_OBJ-1 downto 0, CONF.N_OBJ-1 downto 0) := (others => (others => (others => (others => '1'))));
 
 --*********************************Main Body of Code**********************************
 begin
@@ -82,22 +82,22 @@ begin
 dut: entity work.combinatorial_conditions
     generic map(CONF)
     port map(lhc_clk, 
-        pt, 
-        eta_w1, 
-        eta_w2, 
-        eta_w3, 
-        eta_w4, 
-        eta_w5, 
-        phi_w1, 
-        phi_w2, 
-        iso, 
-        qual, 
-        charge, 
-        tbpt,
-        charge_corr_double,
-        charge_corr_triple,
-        charge_corr_quad,
-        open 
+        pt => pt, 
+--         eta_w1, 
+--         eta_w2, 
+--         eta_w3, 
+--         eta_w4, 
+--         eta_w5, 
+--         phi_w1, 
+--         phi_w2, 
+--         iso, 
+--         qual, 
+--         charge, 
+--         tbpt,
+--         charge_corr_double,
+--         charge_corr_triple,
+--         charge_corr_quad,
+        cond_o => open 
     );
 
 end rtl;
