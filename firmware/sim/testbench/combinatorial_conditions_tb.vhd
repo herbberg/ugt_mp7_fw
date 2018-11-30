@@ -30,7 +30,7 @@ architecture rtl of combinatorial_conditions_tb is
         0, 7, 0, 7, 0, 7, 0, 7, 8, 4
     );
     
-    signal pt : std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '1'));
+    signal pt : std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0);
 --     signal eta_w1 : std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '1'));
 --     signal eta_w2 : std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '1'));
 --     signal eta_w3 : std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '1'));
