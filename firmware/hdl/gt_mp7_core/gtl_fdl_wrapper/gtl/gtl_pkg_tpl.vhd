@@ -479,22 +479,15 @@ constant NR_EXTERNAL_CONDITIONS : positive := EXTERNAL_CONDITIONS_DATA_WIDTH; --
 
     constant N_MU_CHARGE_BITS : positive := MUON_CHARGE_HIGH-MUON_CHARGE_LOW + 1;
     type muon_charge_bits_array is array (0 to NR_MUON_OBJECTS-1) of std_logic_vector(N_MU_CHARGE_BITS downto 0);
-    type muon_charcorr_double_array is array (0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) of std_logic_vector(N_MU_CHARGE_BITS downto 0);
-    type muon_charcorr_triple_array is array (0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) of std_logic_vector(N_MU_CHARGE_BITS downto 0);
-    type muon_charcorr_quad_array is array (0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) of std_logic_vector(N_MU_CHARGE_BITS downto 0);
+    type muon_cc_double_array is array (0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) of std_logic_vector(N_MU_CHARGE_BITS downto 0);
+    type muon_cc_triple_array is array (0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) of std_logic_vector(N_MU_CHARGE_BITS downto 0);
+    type muon_cc_quad_array is array (0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) of std_logic_vector(N_MU_CHARGE_BITS downto 0);
+    constant CC_NOT_VALID : std_logic_vector(N_MU_CHARGE_BITS-1 downto 0) := "00"; 
+    constant CC_LS : std_logic_vector(N_MU_CHARGE_BITS-1  downto 0) := "01"; 
+    constant CC_OS : std_logic_vector(N_MU_CHARGE_BITS-1  downto 0) := "10"; 
 
-    constant MAX_PT_WIDTH : positive := 12; -- esums
-    type pt_array is array (natural range <>) of std_logic_vector(MAX_PT_WIDTH-1 downto 0);
-    constant MAX_ETA_WIDTH : positive := MUON_ETA_HIGH - MUON_ETA_LOW + 1;
-    type eta_array is array (natural range <>) of std_logic_vector(MAX_ETA_WIDTH-1 downto 0);
-    constant MAX_PHI_WIDTH : positive := MUON_PHI_HIGH - MUON_PHI_LOW + 1;
-    type phi_array is array (natural range <>) of std_logic_vector(MAX_PHI_WIDTH-1 downto 0);
-    constant MAX_ISO_WIDTH : positive := MUON_ISO_HIGH - MUON_ISO_LOW + 1;
-    type iso_array is array (natural range <>) of std_logic_vector(MAX_ISO_WIDTH-1 downto 0);
-    constant MAX_QUAL_WIDTH : positive := MUON_QUAL_HIGH - MUON_QUAL_LOW + 1;
-    type qual_array is array (natural range <>) of std_logic_vector(MAX_QUAL_WIDTH-1 downto 0);
-    constant MAX_CHARGE_WIDTH : positive := MUON_CHARGE_HIGH - MUON_CHARGE_LOW + 1;
-    type charge_array is array (natural range <>) of std_logic_vector(MAX_CHARGE_WIDTH-1 downto 0);
+    constant MAX_COMP_IN_DATA_WIDTH : positive := 12; -- esums
+    type comp_in_data_array is array (natural range <>) of std_logic_vector(MAX_COMP_IN_DATA_WIDTH-1 downto 0);
 
     constant MAX_COSH_COS_WIDTH : positive := 27; -- CALO_MUON_COSH_COS_VECTOR_WIDTH 
     type cosh_cos_vector_array is array (natural range <>, natural range <>) of std_logic_vector(MAX_COSH_COS_WIDTH-1 downto 0);
@@ -546,10 +539,12 @@ constant NR_EXTERNAL_CONDITIONS : positive := EXTERNAL_CONDITIONS_DATA_WIDTH; --
         N_OBJ : natural;
         OBJ_T : obj_type;
         OBJ_S : obj_struct;
+        PT_VECTOR_WIDTH : positive;
+        OUT_REG : boolean;
     end record conversions_conf;
 
     type differences_conf is record
-        N_OBJ_1, N_OBJ_2, PHI_HALF_RANGE : positive;
+        N_OBJ_1, N_OBJ_2, PHI_HALF_RANGE, DIFF_WIDTH, COSH_COS_WIDTH : positive;
         OUT_REG : boolean;
         OBJ_CORR : obj_corr_type;
     end record differences_conf;
@@ -560,8 +555,8 @@ constant NR_EXTERNAL_CONDITIONS : positive := EXTERNAL_CONDITIONS_DATA_WIDTH; --
     end record mass_conf;
 
     type comparators_conf is record
-        N_OBJ_1_H, N_OBJ_2_H, C_WIDTH : natural;
-        GE_MODE, WINDOW, OUT_REG : boolean;
+        N_OBJ_1_H, N_OBJ_2_H, DATA_WIDTH, LUT_WIDTH : natural;
+        GE_MODE, WINDOW, LUT, OUT_REG : boolean;
     end record comparators_conf;
 
     type combinatorial_conditions_conf is record

@@ -1,5 +1,5 @@
 -- Description:
--- Comparators for all objects and cuts comparisons.
+-- Comparators for object cuts comparisons (except with LUTs).
 
 -- Version-history:
 -- HB 2018-11-26: First design.
@@ -12,44 +12,42 @@ use work.gtl_pkg.all;
 entity comparators is
     generic     (
         CONF : comparators_conf;
-        REQ_L : std_logic_Vector(CONF.C_WIDTH-1 downto 0);
-        REQ_H : std_logic_Vector(CONF.C_WIDTH-1 downto 0)
+        REQ_L : std_logic_vector;
+        REQ_H : std_logic_vector;
+        LUT_REQ : std_logic_vector
     );
     port(
         clk : in std_logic;
-        data : in std_logic_3dim(CONF.N_OBJ_1_H downto 0)(CONF.N_OBJ_2_H downto 0)(CONF.C_WIDTH-1 downto 0);
-        comp_o : out std_logic_2dim(CONF.N_OBJ_1_H downto 0)(CONF.N_OBJ_2_H downto 0) := (others => (others => '0'))
+        data : in comp_data_array(0 to CONF.N_OBJ_1_H);
+        comp_o : out std_logic_1dim(CONF.N_OBJ_1_H downto 0) := (others => '0')
     );
 end comparators;
 
 architecture rtl of comparators is
 begin
 
+    constant LUT_REQ_I : std_logic_vector(CONF.LUT_WIDTH-1 downto 0) := LUT_REQ;
     constant OUT_REG_WIDTH : positive := 1;
-    type std_logic_vector_2dim is array(CONF.N_OBJ_1_H downto 0)(CONF.N_OBJ_2_H downto 0) of std_logic_Vector(CONF.C_WIDTH-1 downto 0);
-    signal data_vec : std_logic_vector_2dim(CONF.N_OBJ_1_H downto 0)CONF.(N_OBJ_2_H downto 0);
-    signal comp : std_logic_2dim(CONF.N_OBJ_1_H downto 0)(CONF.N_OBJ_2_H downto 0);
+    signal comp : std_logic_1dim(CONF.N_OBJ_1_H downto 0);
 
     l1: for i in 0 to CONF.N_OBJ_1_H generate
-        l2: for j in 0 to CONF.N_OBJ_2_H generate
-            l3: for k in 0 to CONF.C_WIDTH-1 generate
-                data_vec(i,j)(k) <= data(i,j)(k);
-            end generate l3;
-            if_m: if CONF.GE_MODE generate
-                if_w: if CONF.WINDOW generate
-                comp(i,j) => (data_vec(i,j) >= REQ_L) and (data_vec(i,j) <= REQ_H);
-                end generate;
-                if_n_w: if not WINDOW generate
-                comp(i,j) => data_vec(i,j) >= REQ_L;
-                end generate;
-            end generate;
-            if_n_m: if not GE_MODE generate
-                comp(i,j) => data_vec(i,j) = REQ_L;
-            end generate;
-            out_reg_i : entity work.out_reg_mux
-                generic map(OUT_REG_WIDTH, CONF.OUT_REG);  
-                port map(clk, comp(i,j), comp_o(i,j)); 
-        end generate l2;
+        if_ge: if CONF.GE_MODE generate
+            if_w: if CONF.WINDOW generate
+            comp(i) => (data(i)(CONF.DATA_WIDTH-1 downto 0) >= REQ_L(CONF.DATA_WIDTH-1 downto 0)) and (data(i)(CONF.DATA_WIDTH-1 downto 0) <= REQ_H(CONF.DATA_WIDTH-1 downto 0));
+            end generate if_w;
+            if_n_w: if not WINDOW generate
+            comp(i) => data(i)(CONF.DATA_WIDTH-1 downto 0) >= REQ_L(CONF.DATA_WIDTH-1 downto 0);
+            end generate if_n_w;
+        end generate if_ge;
+        if_eq: if not GE_MODE generate
+            comp(i) => data(i)(CONF.DATA_WIDTH-1 downto 0) = REQ_L(CONF.DATA_WIDTH-1 downto 0);
+        end generate if_eq;
+        if_lut: if CONF.LUT generate
+            comp(i) <= LUT_REQ_I(CONV_INTEGER(data(i)(CONF.DATA_WIDTH-1 downto 0)));
+        end generate if_lut;        
+        out_reg_i : entity work.out_reg_mux
+            generic map(OUT_REG_WIDTH, CONF.OUT_REG);  
+            port map(clk, comp(i), comp_o(i)); 
     end generate l1;
 
 end architecture rtl;

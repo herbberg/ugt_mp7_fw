@@ -20,8 +20,8 @@ entity difference_phi is
         clk : in std_logic;
         phi_1 : in diff_integer_inputs_array(0 to CONF.N_OBJ_1-1);
         phi_2 : in diff_integer_inputs_array(0 to CONF.N_OBJ_2-1);
-        diff_phi_vector_o : out deta_dphi_vector_array(0 to CONF.N_OBJ_1-1, 0 to CONF.N_OBJ_2-1);
-        cos_dphi_vector_o : out cosh_cos_vector_array(0 to CONF.N_OBJ_1-1, 0 to CONF.N_OBJ_2-1)
+        diff_phi_o : out std_logic_3dim_array(0 to CONF.N_OBJ_1-1, 0 to CONF.N_OBJ_2-1, 0 to CONF.DIFF_WIDTH-1);
+        cos_dphi_o : out std_logic_3dim_array(0 to CONF.N_OBJ_1-1, 0 to CONF.N_OBJ_2-1, 0 to CONF.COSH_COS_WIDTH-1)
     );
 end difference_phi;
 
@@ -50,12 +50,16 @@ begin
                 diff_phi_vector_i(i,j) <= CONV_STD_LOGIC_VECTOR(MU_MU_DIFF_PHI_LUT(diff_i(i,j)), DETA_DPHI_VECTOR_WIDTH_ALL);
                 cos_dphi_vector_i(i,j)(MUON_MUON_COSH_COS_VECTOR_WIDTH-1 downto 0) <= CONV_STD_LOGIC_VECTOR(MUON_MUON_COS_DPHI_LUT(diff_i(i,j)), MUON_MUON_COSH_COS_VECTOR_WIDTH);
             end generate muon_muon_i;
-            out_reg_diff_i : entity work.out_reg_mux
-                generic map(DETA_DPHI_VECTOR_WIDTH_ALL, CONF.OUT_REG)  
-                port map(clk, diff_phi_vector_i(i,j), diff_phi_vector_o(i,j)); 
-            out_reg_cos_dphi_i : entity work.out_reg_mux               
-                generic map(MAX_COSH_COS_WIDTH, CONF.OUT_REG)  
-                port map(clk, cos_dphi_vector_i(i,j), cos_dphi_vector_o(i,j)); 
+            out_loop_diff: for k in 0 to CONF.DIFF_WIDTH-1 generate 
+                out_reg_diff_i : entity work.out_reg_mux
+                    generic map(1, CONF.OUT_REG)  
+                    port map(clk, diff_phi_vector_i(i,j)(k), diff_phi_o(i,j,k)); 
+            end generate out_loop_diff;
+            out_loop_cosh_cos: for k in 0 to CONF.COSH_COS_WIDTH-1 generate 
+                out_reg_cosh_deta_i : entity work.out_reg_mux               
+                    generic map(1, CONF.OUT_REG)  
+                    port map(clk, cos_dphi_vector_i(i,j)(k), cos_dphi_o(i,j,k)); 
+            end generate out_loop_cosh_cos;
         end generate loop_2;
     end generate loop_1;
 
