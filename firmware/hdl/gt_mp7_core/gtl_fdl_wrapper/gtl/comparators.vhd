@@ -26,7 +26,7 @@ end comparators;
 architecture rtl of comparators is
 begin
 
-    constant LUT_REQ_I : std_logic_vector(CONF.LUT_WIDTH-1 downto 0) := LUT_REQ;
+    constant LUT_REQ_I : std_logic_vector(CONF.LUT_HIGH_BIT downto 0) := LUT_REQ;
     constant OUT_REG_WIDTH : positive := 1;
     signal comp : std_logic_1dim(CONF.N_OBJ_1_H downto 0);
 

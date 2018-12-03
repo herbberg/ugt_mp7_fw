@@ -492,6 +492,8 @@ constant NR_EXTERNAL_CONDITIONS : positive := EXTERNAL_CONDITIONS_DATA_WIDTH; --
     constant MAX_COSH_COS_WIDTH : positive := 27; -- CALO_MUON_COSH_COS_VECTOR_WIDTH 
     type cosh_cos_vector_array is array (natural range <>, natural range <>) of std_logic_vector(MAX_COSH_COS_WIDTH-1 downto 0);
     type mass_vector_array is array (natural range <>, natural range <>) of std_logic_vector((2*MAX_PT_WIDTH+MAX_COSH_COS_WIDTH)-1 downto 0);
+    constant MAX_DIFF_WIDTH : positive := 27; -- CALO_MUON_COSH_COS_VECTOR_WIDTH 
+    type delta_r_vector_array is array (natural range <>, natural range <>) of std_logic_vector((2*)-1 downto 0);
     constant MAX_N_REQ : positive := 4;
     constant MAX_N_OBJ : positive := 12;
     
@@ -555,7 +557,7 @@ constant NR_EXTERNAL_CONDITIONS : positive := EXTERNAL_CONDITIONS_DATA_WIDTH; --
     end record mass_conf;
 
     type comparators_conf is record
-        N_OBJ_1_H, N_OBJ_2_H, DATA_WIDTH, LUT_WIDTH : natural;
+        N_OBJ_1_H, N_OBJ_2_H, DATA_WIDTH, LUT_HIGH_BIT : natural;
         GE_MODE, WINDOW, LUT, OUT_REG : boolean;
     end record comparators_conf;
 
