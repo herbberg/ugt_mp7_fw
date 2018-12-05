@@ -10,25 +10,30 @@ use ieee.std_logic_1164.all;
 use work.gtl_pkg.all;
 
 entity comparators_corr_cuts is
-    generic     (
+    generic(
         CONF : comparators_conf;
-        REQ_L : std_logic_vector(CONF.DATA_WIDTH-1 downto 0);
-        REQ_H : std_logic_vector(CONF.DATA_WIDTH-1 downto 0)
+        REQ_L : std_logic_vector(MAX_COMP_CORR_CUTS_DATA_WIDTH-1 downto 0) := (others => '0');
+        REQ_H : std_logic_vector(MAX_COMP_CORR_CUTS_DATA_WIDTH-1 downto 0) := (others => '0')
     );
     port(
         clk : in std_logic;
-        data : in std_logic_3dim(0 to CONF.N_OBJ_1_H)(0 to CONF.N_OBJ_2_H)(CONF.DATA_WIDTH-1 downto 0);
-        comp_o : out std_logic_2dim(CONF.N_OBJ_1_H downto 0)(CONF.N_OBJ_2_H downto 0) := (others => (others => '0'))
+        data : in std_logic_3dim_array(0 to CONF.N_OBJ_1_H, 0 to CONF.N_OBJ_2_H, CONF.DATA_WIDTH-1 downto 0) := (others => (others => (others => '0')));
+        comp_o : out std_logic_2dim_array(CONF.N_OBJ_1_H downto 0, CONF.N_OBJ_2_H downto 0) := (others => (others => '0'))
     );
 end comparators_corr_cuts;
 
 architecture rtl of comparators_corr_cuts is
-begin
 
-    constant OUT_REG_WIDTH : positive := 1;
-    type data_vec_array is array(CONF.N_OBJ_1_H downto 0)(CONF.N_OBJ_2_H downto 0) of std_logic_vector(CONF.DATA_WIDTH-1 downto 0);
+    constant REQ_L_I : std_logic_vector(CONF.DATA_WIDTH-1 downto 0) := REQ_L(CONF.DATA_WIDTH-1 downto 0);
+    constant REQ_H_I : std_logic_vector(CONF.DATA_WIDTH-1 downto 0) := REQ_H(CONF.DATA_WIDTH-1 downto 0);
+    type data_vec_array is array(CONF.N_OBJ_1_H downto 0,CONF.N_OBJ_2_H downto 0) of std_logic_vector(CONF.DATA_WIDTH-1 downto 0);
     signal data_vec : data_vec_array;
-    signal comp : std_logic_2dim(CONF.N_OBJ_1_H downto 0)(CONF.N_OBJ_2_H downto 0);
+    signal comp : std_logic_2dim_array(CONF.N_OBJ_1_H downto 0, CONF.N_OBJ_2_H downto 0);
+    type comp_i_array is array (CONF.N_OBJ_1_H downto 0, CONF.N_OBJ_2_H downto 0) of std_logic_vector(0 downto 0);
+    signal comp_i : comp_i_array;
+    signal comp_r : comp_i_array;
+
+begin
 
     l1: for i in 0 to CONF.N_OBJ_1_H generate
         l2: for j in 0 to CONF.N_OBJ_2_H generate
@@ -37,18 +42,20 @@ begin
             end generate l3;
             if_m: if CONF.GE_MODE generate
                 if_w: if CONF.WINDOW generate
-                comp(i,j) => (data_vec(i,j) >= REQ_L) and (data_vec(i,j) <= REQ_H);
+                comp(i,j) <= '1' when ((data_vec(i,j) >= REQ_L_I) and (data_vec(i,j) <= REQ_H_I)) else '0';
                 end generate;
-                if_n_w: if not WINDOW generate
-                comp(i,j) => data_vec(i,j) >= REQ_L;
+                if_n_w: if not CONF.WINDOW generate
+                comp(i,j) <= '1' when (data_vec(i,j) >= REQ_L_I) else '0';
                 end generate;
             end generate;
-            if_n_m: if not GE_MODE generate
-                comp(i,j) => data_vec(i,j) = REQ_L;
+            if_n_m: if not CONF.GE_MODE generate
+                comp(i,j) <= '1' when (data_vec(i,j) = REQ_L_I) else '0';
             end generate;
+            comp_i(i,j)(0) <= comp(i,j);
             out_reg_i : entity work.out_reg_mux
-                generic map(OUT_REG_WIDTH, CONF.OUT_REG);  
-                port map(clk, comp(i,j), comp_o(i,j)); 
+                generic map(1, CONF.OUT_REG) 
+                port map(clk, comp_i(i,j), comp_r(i,j)); 
+            comp_o(i,j) <= comp_r(i,j)(0);
         end generate l2;
     end generate l1;
 

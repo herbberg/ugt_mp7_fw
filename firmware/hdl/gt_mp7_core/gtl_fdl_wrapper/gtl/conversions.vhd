@@ -22,12 +22,12 @@ entity conversions is
         clk : in std_logic;
         obj : in objects_array(0 to CONF.N_OBJ-1);
 -- Output signals registered, for direct used in next stage => comparison
-        pt : out pt_array(0 to CONF.N_OBJ-1) := (others => (others => '0'));
-        eta : out eta_array(0 to CONF.N_OBJ-1) := (others => (others => '0'));
-        phi : out phi_array(0 to CONF.N_OBJ-1) := (others => (others => '0'));
-        iso : out iso_array(0 to CONF.N_OBJ-1) := (others => (others => '0'));
-        qual : out qual_array(0 to CONF.N_OBJ-1) := (others => (others => '0'));
-        charge : out charge_array(0 to CONF.N_OBJ-1) := (others => (others => '0'));
+        pt : out comp_in_data_array(0 to CONF.N_OBJ-1) := (others => (others => '0'));
+        eta : out comp_in_data_array(0 to CONF.N_OBJ-1) := (others => (others => '0'));
+        phi : out comp_in_data_array(0 to CONF.N_OBJ-1) := (others => (others => '0'));
+        iso : out comp_in_data_array(0 to CONF.N_OBJ-1) := (others => (others => '0'));
+        qual : out comp_in_data_array(0 to CONF.N_OBJ-1) := (others => (others => '0'));
+        charge : out comp_in_data_array(0 to CONF.N_OBJ-1) := (others => (others => '0'));
         pt_vector : out pt_vector_array(0 to CONF.N_OBJ-1) := (others => (others => '0'));
         cos_phi : out sin_cos_integer_array(0 to CONF.N_OBJ-1) := (others => 0);
         sin_phi : out sin_cos_integer_array(0 to CONF.N_OBJ-1) := (others => 0);
@@ -43,49 +43,51 @@ end conversions;
 
 architecture rtl of conversions is
 
-    constant pt_i_width : positive := CONF.OBJ_S.pt_h - CONF.OBJ_S.pt_l + 1;
-    constant eta_i_width : positive := CONF.OBJ_S.eta_h - CONF.OBJ_S.eta_l + 1;
-    constant phi_i_width : positive := CONF.OBJ_S.phi_h - CONF.OBJ_S.phi_l + 1;
-    constant iso_i_width : positive := CONF.OBJ_S.iso_h - CONF.OBJ_S.iso_l + 1;
-    constant qual_i_width : positive := CONF.OBJ_S.qual_h - CONF.OBJ_S.qual_l + 1;
-    constant charge_i_width : positive := CONF.OBJ_S.charge_h - CONF.OBJ_S.charge_l + 1;
+    constant pt_width : positive := CONF.OBJ_S.pt_h - CONF.OBJ_S.pt_l + 1;
+    constant eta_width : positive := CONF.OBJ_S.eta_h - CONF.OBJ_S.eta_l + 1;
+    constant phi_width : positive := CONF.OBJ_S.phi_h - CONF.OBJ_S.phi_l + 1;
+    constant iso_width : positive := CONF.OBJ_S.iso_h - CONF.OBJ_S.iso_l + 1;
+    constant qual_width : positive := CONF.OBJ_S.qual_h - CONF.OBJ_S.qual_l + 1;
+    constant charge_width : positive := CONF.OBJ_S.charge_h - CONF.OBJ_S.charge_l + 1;
     
-    type pt_i_array is array (0 to CONF.N_OBJ-1) of std_logic_vector(pt_i_width-1 downto 0);
+    type pt_i_array is array (0 to CONF.N_OBJ-1) of std_logic_vector(pt_width-1 downto 0);
     signal pt_i : pt_i_array := (others => (others => '0'));
-    type eta_i_array is array (0 to CONF.N_OBJ-1) of std_logic_vector(eta_i_width-1 downto 0);
+    type eta_i_array is array (0 to CONF.N_OBJ-1) of std_logic_vector(eta_width-1 downto 0);
     signal eta_i : eta_i_array := (others => (others => '0'));
-    type phi_i_array is array (0 to CONF.N_OBJ-1) of std_logic_vector(phi_i_width-1 downto 0);
+    type phi_i_array is array (0 to CONF.N_OBJ-1) of std_logic_vector(phi_width-1 downto 0);
     signal phi_i : phi_i_array := (others => (others => '0'));
-    type iso_i_array is array (0 to CONF.N_OBJ-1) of std_logic_vector(iso_i_width-1 downto 0);
+    type iso_i_array is array (0 to CONF.N_OBJ-1) of std_logic_vector(iso_width-1 downto 0);
     signal iso_i : iso_i_array := (others => (others => '0'));
-    type qual_i_array is array (0 to CONF.N_OBJ-1) of std_logic_vector(qual_i_width-1 downto 0);
+    type qual_i_array is array (0 to CONF.N_OBJ-1) of std_logic_vector(qual_width-1 downto 0);
     signal qual_i : qual_i_array := (others => (others => '0'));
-    type charge_i_array is array (0 to CONF.N_OBJ-1) of std_logic_vector(charge_i_width-1 downto 0);
+    type charge_i_array is array (0 to CONF.N_OBJ-1) of std_logic_vector(charge_width-1 downto 0);
     signal charge_i : charge_i_array := (others => (others => '0'));
     type pt_vector_i_array is array (0 to CONF.N_OBJ-1) of std_logic_vector(CONF.PT_VECTOR_WIDTH-1 downto 0);
     signal pt_vector_i : pt_vector_i_array := (others => (others => '0'));
 
-    signal sin_phi_i : sin_cos_integer_array := (others => (others => 0));
-    signal cos_phi_i : sin_cos_integer_array := (others => (others => 0));
-    signal conv_mu_sin_phi_i : sin_cos_integer_array := (others => (others => 0));
-    signal conv_mu_cos_phi_i : sin_cos_integer_array := (others => (others => 0));
+    signal sin_phi_i : sin_cos_integer_array(0 to CONF.N_OBJ-1) := (others => 0);
+    signal cos_phi_i : sin_cos_integer_array(0 to CONF.N_OBJ-1) := (others => 0);
+    signal conv_mu_sin_phi_i : sin_cos_integer_array(0 to CONF.N_OBJ-1) := (others => 0);
+    signal conv_mu_cos_phi_i : sin_cos_integer_array(0 to CONF.N_OBJ-1) := (others => 0);
     
-    signal calo_cos_phi_vec : std_logic_vector(CALO_SIN_COS_VECTOR_WIDTH-1 downto 0);
-    signal calo_sin_phi_vec : std_logic_vector(CALO_SIN_COS_VECTOR_WIDTH-1 downto 0);
-    signal calo_cos_phi_vec_i : std_logic_vector(CALO_SIN_COS_VECTOR_WIDTH-1 downto 0);
-    signal calo_sin_phi_vec_i : std_logic_vector(CALO_SIN_COS_VECTOR_WIDTH-1 downto 0);
-    signal conv_mu_cos_phi_vec : std_logic_vector(MUON_SIN_COS_VECTOR_WIDTH-1 downto 0);
-    signal conv_mu_sin_phi_vec : std_logic_vector(MUON_SIN_COS_VECTOR_WIDTH-1 downto 0);
-    signal conv_mu_cos_phi_vec_i : std_logic_vector(MUON_SIN_COS_VECTOR_WIDTH-1 downto 0);
-    signal conv_mu_sin_phi_vec_i : std_logic_vector(MUON_SIN_COS_VECTOR_WIDTH-1 downto 0);
-    signal muon_cos_phi_vec : std_logic_vector(MUON_SIN_COS_VECTOR_WIDTH-1 downto 0);
-    signal muon_sin_phi_vec : std_logic_vector(MUON_SIN_COS_VECTOR_WIDTH-1 downto 0);
-    signal muon_cos_phi_vec_i : std_logic_vector(MUON_SIN_COS_VECTOR_WIDTH-1 downto 0);
-    signal muon_sin_phi_vec_i : std_logic_vector(MUON_SIN_COS_VECTOR_WIDTH-1 downto 0);
+    type calo_sin_cos_array is array (0 to CONF.N_OBJ-1) of std_logic_vector(CALO_SIN_COS_VECTOR_WIDTH-1 downto 0);
+    signal calo_cos_phi_vec : calo_sin_cos_array;
+    signal calo_sin_phi_vec : calo_sin_cos_array;
+    signal calo_cos_phi_vec_i : calo_sin_cos_array;
+    signal calo_sin_phi_vec_i : calo_sin_cos_array;
+    type muon_sin_cos_array is array (0 to CONF.N_OBJ-1) of std_logic_vector(MUON_SIN_COS_VECTOR_WIDTH-1 downto 0);
+    signal conv_mu_cos_phi_vec : muon_sin_cos_array;
+    signal conv_mu_sin_phi_vec : muon_sin_cos_array;
+    signal conv_mu_cos_phi_vec_i : muon_sin_cos_array;
+    signal conv_mu_sin_phi_vec_i : muon_sin_cos_array;
+    signal muon_cos_phi_vec : muon_sin_cos_array;
+    signal muon_sin_phi_vec : muon_sin_cos_array;
+    signal muon_cos_phi_vec_i : muon_sin_cos_array;
+    signal muon_sin_phi_vec_i : muon_sin_cos_array;
         
-    signal iso_def : iso_array(0 to CONF.N_OBJ-1) := (others => (others => '0'));
-    signal qual_def : qual_array(0 to CONF.N_OBJ-1) := (others => (others => '0'));
-    signal charge_def : charge_array(0 to CONF.N_OBJ-1) := (others => (others => '0'));
+    signal iso_def : iso_i_array := (others => (others => '0'));
+    signal qual_def : qual_i_array := (others => (others => '0'));
+    signal charge_def : charge_i_array := (others => (others => '0'));
     signal conv_2_muon_phi_integer_i : diff_integer_inputs_array(0 to CONF.N_OBJ-1) := (others => 0);
     
 begin
@@ -129,17 +131,18 @@ begin
             conv_mu_cos_phi_vec_i(i) <= CONV_STD_LOGIC_VECTOR(conv_mu_cos_phi_i(i), MUON_SIN_COS_VECTOR_WIDTH);
             conv_mu_sin_phi_vec_i(i) <= CONV_STD_LOGIC_VECTOR(conv_mu_cos_phi_i(i), MUON_SIN_COS_VECTOR_WIDTH);
             cos_phi_vec_reg_i : entity work.out_reg_mux
-                    generic map(CALO_SIN_COS_VECTOR_WIDTH, CONF.OUT_REG);  
+                    generic map(CALO_SIN_COS_VECTOR_WIDTH, CONF.OUT_REG) 
                     port map(clk, calo_cos_phi_vec_i(i), calo_cos_phi_vec(i)); 
             sin_phi_vec_reg_i : entity work.out_reg_mux
-                    generic map(CALO_SIN_COS_VECTOR_WIDTH, CONF.OUT_REG);  
+                    generic map(CALO_SIN_COS_VECTOR_WIDTH, CONF.OUT_REG)  
                     port map(clk, calo_sin_phi_vec_i(i), calo_sin_phi_vec(i)); 
             conv_mu_cos_phi_vec_reg_i : entity work.out_reg_mux
-                    generic map(MUON_SIN_COS_VECTOR_WIDTH, CONF.OUT_REG);  
+                    generic map(MUON_SIN_COS_VECTOR_WIDTH, CONF.OUT_REG)  
                     port map(clk, conv_mu_cos_phi_vec_i(i), conv_mu_cos_phi_vec(i)); 
             conv_mu_sin_phi_vec_reg_i : entity work.out_reg_mux
-                    generic map(MUON_SIN_COS_VECTOR_WIDTH, CONF.OUT_REG);  
-                    port map(clk, conv_mu_sin_phi_vec_i(i), conv_mu_sin_phi_vec(i));                     
+                    generic map(MUON_SIN_COS_VECTOR_WIDTH, CONF.OUT_REG)  
+                    port map(clk, conv_mu_sin_phi_vec_i(i), conv_mu_sin_phi_vec(i));
+                    
             cos_phi(i) <= CONV_INTEGER(calo_cos_phi_vec(i));
             sin_phi(i) <= CONV_INTEGER(calo_sin_phi_vec(i));
             conv_mu_cos_phi(i) <= CONV_INTEGER(conv_mu_cos_phi_vec(i));
@@ -154,14 +157,14 @@ begin
             sin_phi_i(i) <= MUON_SIN_PHI_LUT(CONV_INTEGER(phi_i(i)));
             
 -- Internal register for integer signals directly used directly in next stage => comparison
-            muon_cos_phi_i_vec(i) <= CONV_STD_LOGIC_VECTOR(cos_phi_i(i), MUON_SIN_COS_VECTOR_WIDTH);
-            muon_sin_phi_i_vec(i) <= CONV_STD_LOGIC_VECTOR(sin_phi_i(i), MUON_SIN_COS_VECTOR_WIDTH);            
+            muon_cos_phi_vec_i(i) <= CONV_STD_LOGIC_VECTOR(cos_phi_i(i), MUON_SIN_COS_VECTOR_WIDTH);
+            muon_sin_phi_vec_i(i) <= CONV_STD_LOGIC_VECTOR(sin_phi_i(i), MUON_SIN_COS_VECTOR_WIDTH);            
             cos_phi_vec_reg_i : entity work.out_reg_mux
-                    generic map(MUON_SIN_COS_VECTOR_WIDTH, CONF.OUT_REG);  
-                    port map(clk, muon_cos_phi_i_vec(i), muon_cos_phi_vec(i)); 
+                    generic map(MUON_SIN_COS_VECTOR_WIDTH, CONF.OUT_REG)  
+                    port map(clk, muon_sin_phi_vec_i(i), muon_cos_phi_vec(i)); 
             sin_phi_vec_reg_i : entity work.out_reg_mux
-                    generic map(MUON_SIN_COS_VECTOR_WIDTH, CONF.OUT_REG);  
-                    port map(clk, muon_sin_phi_i_vec(i), muon_sin_phi_vec(i));                    
+                    generic map(MUON_SIN_COS_VECTOR_WIDTH, CONF.OUT_REG)  
+                    port map(clk, muon_sin_phi_vec_i(i), muon_sin_phi_vec(i));                    
             cos_phi(i) <= CONV_INTEGER(muon_cos_phi_vec(i));
             sin_phi(i) <= CONV_INTEGER(muon_sin_phi_vec(i));
 
@@ -172,25 +175,25 @@ begin
             
 -- Output register for signals directly used directly in next stage => comparison
         pt_out_reg_i : entity work.out_reg_mux
-            generic map(pt_width, CONF.OUT_REG);  
+            generic map(pt_width, CONF.OUT_REG)  
             port map(clk, pt_i(i), pt(i)); 
         eta_out_reg_i : entity work.out_reg_mux
-            generic map(eta_width, CONF.OUT_REG);  
+            generic map(eta_width, CONF.OUT_REG)  
             port map(clk, eta_i(i), eta(i)); 
         phi_out_reg_i : entity work.out_reg_mux
-            generic map(phi_width, CONF.OUT_REG);  
+            generic map(phi_width, CONF.OUT_REG)  
             port map(clk, phi_i(i), phi(i)); 
         iso_out_reg_i : entity work.out_reg_mux
-            generic map(iso_width, CONF.OUT_REG);  
+            generic map(iso_width, CONF.OUT_REG)  
             port map(clk, iso_i(i), iso(i)); 
         qual_out_reg_i : entity work.out_reg_mux
-            generic map(qual_width, CONF.OUT_REG);  
+            generic map(qual_width, CONF.OUT_REG)  
             port map(clk, qual_i(i), qual(i)); 
         charge_out_reg_i : entity work.out_reg_mux
-            generic map(charge_width, CONF.OUT_REG);  
+            generic map(charge_width, CONF.OUT_REG)  
             port map(clk, charge_i(i), charge(i)); 
         pt_vector_out_reg_i : entity work.out_reg_mux
-            generic map(CONF.PT_VECTOR_WIDTH, CONF.OUT_REG);  
+            generic map(CONF.PT_VECTOR_WIDTH, CONF.OUT_REG)  
             port map(clk, pt_vector_i(i), pt_vector(i)); 
 
     end generate obj_loop;

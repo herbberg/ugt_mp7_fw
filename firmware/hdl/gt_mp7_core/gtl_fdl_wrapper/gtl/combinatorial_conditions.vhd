@@ -36,16 +36,12 @@ end combinatorial_conditions;
 
 architecture rtl of combinatorial_conditions is
 
-    constant DEF_VAL_2DIM : std_logic_2dim_array(CONF.N_OBJ-1 downto 0, CONF.N_OBJ-1 downto 0) := (others => (others => '1'));
-    constant DEF_VAL_3DIM : std_logic_3dim_array(CONF.N_OBJ-1 downto 0, CONF.N_OBJ-1 downto 0, CONF.N_OBJ-1 downto 0) := (others => (others => (others => '1')));
-    constant DEF_VAL_4DIM : std_logic_4dim_array(CONF.N_OBJ-1 downto 0, CONF.N_OBJ-1 downto 0, CONF.N_OBJ-1 downto 0, CONF.N_OBJ-1 downto 0) := (others => (others => (others => (others => '1'))));
-    constant OUT_REG_WIDTH : positive := 1;
     constant N_SLICE_1 : positive := CONF.SLICE_1_H - CONF.SLICE_1_L + 1;
     constant N_SLICE_2 : positive := CONF.SLICE_2_H - CONF.SLICE_2_L + 1;
     constant N_SLICE_3 : positive := CONF.SLICE_3_H - CONF.SLICE_3_L + 1;
     constant N_SLICE_4 : positive := CONF.SLICE_4_H - CONF.SLICE_4_L + 1;
     
-    type req_obj_array is array (1 to CONF.N_REQ) of std_logic_vector(CONF.N_OBJ-1 downto 0);    
+    type req_obj_array is array (1 to CONF.N_REQ) of std_logic_1dim_array(CONF.N_OBJ-1 downto 0);    
     signal pt_i, eta_w1_i, eta_w2_i, eta_w3_i, eta_w4_i, eta_w5_i, phi_w1_i,phi_w2_i, iso_i, qual_i, charge_i, cond_and_i : req_obj_array;
     
     signal cc_double_i : std_logic_2dim_array(CONF.N_OBJ-1 downto 0, CONF.N_OBJ-1 downto 0);
@@ -78,11 +74,6 @@ begin
                 phi_w1_i(i), phi_w2_i(i), iso_i(i), qual_i(i), charge_i(i), cond_and_i(i)); 
     end generate req_l;
 
--- -- default values on input ports !
---     cc_double_i <= charge_corr_double when CONF.CHARGE_CORR_SEL else DEF_VAL_2DIM;
---     cc_triple_i <= charge_corr_triple when CONF.CHARGE_CORR_SEL else DEF_VAL_3DIM;
---     cc_quad_i <= charge_corr_quad when CONF.CHARGE_CORR_SEL else DEF_VAL_4DIM;
---     tbpt_i <= tbpt when CONF.TBPT_SEL else DEF_VAL_2DIM;
     cc_double_i <= charge_corr_double;
     cc_triple_i <= charge_corr_triple;
     cc_quad_i <= charge_corr_quad;
@@ -127,7 +118,7 @@ begin
     end process and_or_p;
 
     out_reg_i : entity work.out_reg_mux
-        generic map(OUT_REG_WIDTH, CONF.OUT_REG)  
+        generic map(1, CONF.OUT_REG)  
         port map(clk, cond_and_or, cond_o_v);
     
     cond_o <= cond_o_v(0);

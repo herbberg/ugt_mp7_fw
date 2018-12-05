@@ -13,7 +13,7 @@ use ieee.std_logic_arith.all;
 use work.gtl_pkg.all;
 
 entity difference_eta is
-    generic (
+    generic(
         CONF : differences_conf
     );
     port(
@@ -21,6 +21,7 @@ entity difference_eta is
         eta_1 : in diff_integer_inputs_array(0 to CONF.N_OBJ_1-1);
         eta_2 : in diff_integer_inputs_array(0 to CONF.N_OBJ_2-1);
         diff_eta_o : out std_logic_3dim_array(0 to CONF.N_OBJ_1-1, 0 to CONF.N_OBJ_2-1, CONF.DIFF_WIDTH-1 downto 0);
+        diff_eta_reg_o : out std_logic_3dim_array(0 to CONF.N_OBJ_1-1, 0 to CONF.N_OBJ_2-1, CONF.DIFF_WIDTH-1 downto 0);
         cosh_deta_o : out std_logic_3dim_array(0 to CONF.N_OBJ_1-1, 0 to CONF.N_OBJ_2-1, CONF.COSH_COS_WIDTH-1 downto 0)
     );
 end difference_eta;
@@ -29,6 +30,8 @@ architecture rtl of difference_eta is
 
     signal diff_i : dim2_max_eta_range_array(0 to CONF.N_OBJ_1-1, 0 to CONF.N_OBJ_2-1);
     signal diff_eta_vector_i : deta_dphi_vector_array(0 to CONF.N_OBJ_1-1, 0 to CONF.N_OBJ_2-1) := (others => (others => (others => '0')));
+    type diff_eta_i_array is array (0 to CONF.N_OBJ_1-1, 0 to CONF.N_OBJ_2-1, CONF.DIFF_WIDTH-1 downto 0) of std_logic_vector(0 downto 0);
+    signal diff_eta_i, diff_eta_reg : diff_eta_i_array := (others => (others => (others => "0")));
     signal cosh_deta_vector_i : cosh_cos_vector_array(0 to CONF.N_OBJ_1-1, 0 to CONF.N_OBJ_2-1) := (others => (others => (others => '0')));
     
 begin
@@ -50,15 +53,19 @@ begin
                 cosh_deta_vector_i(i,j)(MUON_MUON_COSH_COS_VECTOR_WIDTH-1 downto 0) <= CONV_STD_LOGIC_VECTOR(MU_MU_COSH_DETA_LUT(diff_i(i,j)), MUON_MUON_COSH_COS_VECTOR_WIDTH);
             end generate muon_muon_i;
             out_loop_diff: for k in 0 to CONF.DIFF_WIDTH-1 generate 
+-- no output register for diff_eta_o (used only in first stage, e.g. delta-R calculation)
+                diff_eta_o(i,j,k) <= diff_eta_vector_i(i,j)(k); 
+-- output register for diff_eta_reg_o for use in second stage, e.g. deta comparison)
+                diff_eta_i(i,j,k)(0) <= diff_eta_vector_i(i,j)(k); 
                 out_reg_diff_i : entity work.out_reg_mux
                     generic map(1, CONF.OUT_REG)  
-                    port map(clk, diff_eta_vector_i(i,j)(k), diff_eta_o(i,j,k)); 
+                    port map(clk, diff_eta_i(i,j,k), diff_eta_reg(i,j,k));
+                diff_eta_reg_o(i,j,k) <= diff_eta_reg(i,j,k)(0);
             end generate out_loop_diff;
-            out_loop_cosh_cos: for k in 0 to CONF.COSH_COS_WIDTH-1 generate 
-                out_reg_cosh_deta_i : entity work.out_reg_mux               
-                    generic map(1, CONF.OUT_REG)  
-                    port map(clk, cosh_deta_vector_i(i,j)(k), cosh_deta_o(i,j,k)); 
-            end generate out_loop_cosh_cos;
+-- no output register for cosh_deta_o (used only in first stage, e.g. mass calculation)
+            out_loop_cosh: for l in 0 to CONF.COSH_COS_WIDTH-1 generate 
+                 cosh_deta_o(i,j,l) <= cosh_deta_vector_i(i,j)(l); 
+            end generate out_loop_cosh;
         end generate loop_2;
     end generate loop_1;
     

@@ -483,19 +483,22 @@ constant NR_EXTERNAL_CONDITIONS : positive := EXTERNAL_CONDITIONS_DATA_WIDTH; --
     type muon_cc_triple_array is array (0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) of std_logic_vector(N_MU_CHARGE_BITS downto 0);
     type muon_cc_quad_array is array (0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) of std_logic_vector(N_MU_CHARGE_BITS downto 0);
     constant CC_NOT_VALID : std_logic_vector(N_MU_CHARGE_BITS-1 downto 0) := "00"; 
-    constant CC_LS : std_logic_vector(N_MU_CHARGE_BITS-1  downto 0) := "01"; 
-    constant CC_OS : std_logic_vector(N_MU_CHARGE_BITS-1  downto 0) := "10"; 
-
-    constant MAX_COMP_IN_DATA_WIDTH : positive := 12; -- esums
+    constant CC_LS : std_logic_vector(N_MU_CHARGE_BITS-1 downto 0) := "01"; 
+    constant CC_OS : std_logic_vector(N_MU_CHARGE_BITS-1 downto 0) := "10"; 
+    
+    constant MAX_COMP_IN_DATA_WIDTH : positive := 12; -- esums pt
     type comp_in_data_array is array (natural range <>) of std_logic_vector(MAX_COMP_IN_DATA_WIDTH-1 downto 0);
+    constant MAX_COMP_CORR_CUTS_DATA_WIDTH : positive := 52; -- max inv mass width (2*MAX_PT_WIDTH+MAX_COSH_COS_WIDTH = 51) - used 52 for hex notation !
 
     constant MAX_COSH_COS_WIDTH : positive := 27; -- CALO_MUON_COSH_COS_VECTOR_WIDTH 
     type cosh_cos_vector_array is array (natural range <>, natural range <>) of std_logic_vector(MAX_COSH_COS_WIDTH-1 downto 0);
+    constant MAX_PT_WIDTH : positive := 12; 
     type mass_vector_array is array (natural range <>, natural range <>) of std_logic_vector((2*MAX_PT_WIDTH+MAX_COSH_COS_WIDTH)-1 downto 0);
-    constant MAX_DIFF_WIDTH : positive := 27; -- CALO_MUON_COSH_COS_VECTOR_WIDTH 
-    type delta_r_vector_array is array (natural range <>, natural range <>) of std_logic_vector((2*)-1 downto 0);
+--     constant MAX_DIFF_WIDTH : positive := 14; -- DETA_DPHI_VECTOR_WIDTH_ALL 
+--     type delta_r_vector_array is array (natural range <>, natural range <>) of std_logic_vector((2*DETA_DPHI_VECTOR_WIDTH_ALL)-1 downto 0);
     constant MAX_N_REQ : positive := 4;
     constant MAX_N_OBJ : positive := 12;
+    constant MAX_LUT_WIDTH : positive := 16; -- muon qual lut
     
     type std_logic_1dim_array is array (natural range <>) of std_logic;
     type std_logic_2dim_array is array (natural range <>, natural range <>) of std_logic;
@@ -516,8 +519,13 @@ constant NR_EXTERNAL_CONDITIONS : positive := EXTERNAL_CONDITIONS_DATA_WIDTH; --
     constant EG_PT_WIDTH : natural := EG_ET_HIGH - EG_ET_LOW + 1;
     constant JET_PT_LOW : natural := JET_ET_LOW;
     constant JET_PT_HIGH : natural := JET_ET_HIGH;
+    constant JET_PT_WIDTH : natural := JET_ET_HIGH - JET_ET_LOW + 1;
+    constant JET_ETA_WIDTH : natural := JET_ETA_HIGH - JET_ETA_LOW + 1;
     constant TAU_PT_LOW : natural := TAU_ET_LOW;
     constant TAU_PT_HIGH : natural := TAU_ET_HIGH;
+    constant TAU_PT_WIDTH : natural := TAU_ET_HIGH - TAU_ET_LOW + 1;
+    constant MUON_PT_WIDTH : natural := MUON_PT_HIGH - MUON_PT_LOW + 1;
+    constant MUON_QUAL_WIDTH : natural := MUON_QUAL_HIGH - MUON_QUAL_LOW + 1;
 
     type obj_struct is record
         pt_l,pt_h,eta_l,eta_h,phi_l,phi_h,iso_l,
@@ -551,6 +559,11 @@ constant NR_EXTERNAL_CONDITIONS : positive := EXTERNAL_CONDITIONS_DATA_WIDTH; --
         OBJ_CORR : obj_corr_type;
     end record differences_conf;
 
+    type dr_conf is record
+        N_OBJ_1, N_OBJ_2, DIFF_WIDTH : positive;
+        OUT_REG : boolean;
+    end record dr_conf;
+
     type mass_conf is record
         N_OBJ_1, N_OBJ_2, PT1_WIDTH, PT2_WIDTH, COSH_COS_WIDTH, COSH_COS_PREC : positive;
         OUT_REG : boolean;
@@ -567,7 +580,7 @@ constant NR_EXTERNAL_CONDITIONS : positive := EXTERNAL_CONDITIONS_DATA_WIDTH; --
     end record combinatorial_conditions_conf;
 
     type correlation_conditions_conf is record
-        OUT_REG, DETA_SEL, DPHI_SEL, INV_MASS_SEL, TRANS_MASS_SEL, TBPT_SEL, CHARGE_CORR_SEL, 
+        OUT_REG, DETA_SEL, DPHI_SEL, DR_SEL, INV_MASS_SEL, TRANS_MASS_SEL, TBPT_SEL, CHARGE_CORR_SEL, 
         CHARGE_1_SEL, QUAL_1_SEL, ISO_1_SEL, PHI_1_SEL, ETA_1_SEL,
         CHARGE_2_SEL, QUAL_2_SEL, ISO_2_SEL, PHI_2_SEL, ETA_2_SEL : boolean;
         SLICE_1_L, SLICE_1_H, SLICE_2_L, SLICE_2_H, N_OBJ_1, N_OBJ_2 : natural;
@@ -688,7 +701,6 @@ subtype diff_eta_range_real is real range 0.0 to ETA_RANGE_REAL;
 subtype diff_phi_range_real is real range 0.0 to PHI_MAX/2.0;
 subtype dr_squared_range_real is real range 0.0 to ((ETA_RANGE_REAL*(real(10**DETA_DPHI_PRECISION_ALL)))**2+(PI*(real(10**DETA_DPHI_PRECISION_ALL))**2));
 
--- ********************************************************
 -- mass parameters
 -- HB 2017-04-26: definition of mass_type:
 -- 0 => invariant mass
@@ -2046,6 +2058,8 @@ constant MU_MU_COS_DPHI_LUT : muon_muon_cos_dphi_lut_array := (
 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 );
+
+constant MUON_MUON_COS_DPHI_LUT : muon_muon_cos_dphi_lut_array := MU_MU_COS_DPHI_LUT;
 
 -- muon-muon cosh deta LUTs
 type calo_muon_cosh_deta_lut_array is array (0 to 2**(MUON_ETA_HIGH-MUON_ETA_LOW+1+1)-1) of natural range 0 to 109487199;
