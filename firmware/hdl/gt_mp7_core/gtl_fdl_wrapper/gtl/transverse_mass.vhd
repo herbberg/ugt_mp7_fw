@@ -20,8 +20,9 @@ entity transverse_mass is
         clk : in std_logic;
         pt1 : in pt_array(CONF.N_OBJ_1-1 downto 0);
         pt2 : in pt_array(CONF.N_OBJ_2-1 downto 0);
-        cos_dphi : in cosh_cos_vector_array(CONF.N_OBJ_1-1 downto 0)(CONF.N_OBJ_2-1 downto 0);
+        cos_dphi : in cosh_cos_vector_array(CONF.N_OBJ_1-1 downto 0, CONF.N_OBJ_2-1 downto 0);
         transverse_mass_o : out std_logic_3dim_array(0 to CONF.N_OBJ_1-1, 0 to CONF.N_OBJ_2-1, (CONF.PT1_WIDTH*CONF.PT2_WIDTH+CONF.COSH_COS_WIDTH)-1 downto 0) := (others => (others => (others => '0')))
+    );
 end transverse_mass;
 
 architecture rtl of transverse_mass is
@@ -49,7 +50,7 @@ begin
             l_3: for k in 0 to MASS_WIDTH-1 generate
                 transverse_mass_sq_div2(i,j,k)(0) <= transverse_mass_sq_div2_i(i,j)(k);                 
                 out_reg_i : entity work.out_reg_mux
-                    generic map(1, CONF.OUT_REG);  
+                    generic map(1, CONF.OUT_REG)  
                     port map(clk, transverse_mass_sq_div2(i,j,k), transverse_mass_sq_div2_r(i,j,k)); 
                 transverse_mass_o(i,j,k) <= transverse_mass_sq_div2_r(i,j,k)(0);
             end generate l_3;

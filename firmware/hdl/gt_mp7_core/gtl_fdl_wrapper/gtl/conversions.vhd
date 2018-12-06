@@ -29,15 +29,15 @@ entity conversions is
         qual : out comp_in_data_array(0 to CONF.N_OBJ-1) := (others => (others => '0'));
         charge : out comp_in_data_array(0 to CONF.N_OBJ-1) := (others => (others => '0'));
         pt_vector : out pt_vector_array(0 to CONF.N_OBJ-1) := (others => (others => '0'));
-        cos_phi : out sin_cos_integer_array(0 to CONF.N_OBJ-1) := (others => 0);
-        sin_phi : out sin_cos_integer_array(0 to CONF.N_OBJ-1) := (others => 0);
-        conv_mu_cos_phi : out sin_cos_integer_array(0 to CONF.N_OBJ-1) := (others => 0);
-        conv_mu_sin_phi : out sin_cos_integer_array(0 to CONF.N_OBJ-1) := (others => 0);
+        cos_phi : out integer_array(0 to CONF.N_OBJ-1) := (others => 0);
+        sin_phi : out integer_array(0 to CONF.N_OBJ-1) := (others => 0);
+        conv_mu_cos_phi : out integer_array(0 to CONF.N_OBJ-1) := (others => 0);
+        conv_mu_sin_phi : out integer_array(0 to CONF.N_OBJ-1) := (others => 0);
 -- Output signals without register for use in 
-        eta_integer : out diff_integer_inputs_array(0 to CONF.N_OBJ-1) := (others => 0);
-        phi_integer : out diff_integer_inputs_array(0 to CONF.N_OBJ-1) := (others => 0);
-        conv_2_muon_eta_integer : out diff_integer_inputs_array(0 to CONF.N_OBJ-1) := (others => 0);
-        conv_2_muon_phi_integer : out diff_integer_inputs_array(0 to CONF.N_OBJ-1) := (others => 0)
+        eta_integer : out integer_array(0 to CONF.N_OBJ-1) := (others => 0);
+        phi_integer : out integer_array(0 to CONF.N_OBJ-1) := (others => 0);
+        conv_2_muon_eta_integer : out integer_array(0 to CONF.N_OBJ-1) := (others => 0);
+        conv_2_muon_phi_integer : out integer_array(0 to CONF.N_OBJ-1) := (others => 0)
     );
 end conversions;
 
@@ -65,10 +65,10 @@ architecture rtl of conversions is
     type pt_vector_i_array is array (0 to CONF.N_OBJ-1) of std_logic_vector(CONF.PT_VECTOR_WIDTH-1 downto 0);
     signal pt_vector_i : pt_vector_i_array := (others => (others => '0'));
 
-    signal sin_phi_i : sin_cos_integer_array(0 to CONF.N_OBJ-1) := (others => 0);
-    signal cos_phi_i : sin_cos_integer_array(0 to CONF.N_OBJ-1) := (others => 0);
-    signal conv_mu_sin_phi_i : sin_cos_integer_array(0 to CONF.N_OBJ-1) := (others => 0);
-    signal conv_mu_cos_phi_i : sin_cos_integer_array(0 to CONF.N_OBJ-1) := (others => 0);
+    signal sin_phi_i : integer_array(0 to CONF.N_OBJ-1) := (others => 0);
+    signal cos_phi_i : integer_array(0 to CONF.N_OBJ-1) := (others => 0);
+    signal conv_mu_sin_phi_i : integer_array(0 to CONF.N_OBJ-1) := (others => 0);
+    signal conv_mu_cos_phi_i : integer_array(0 to CONF.N_OBJ-1) := (others => 0);
     
     type calo_sin_cos_array is array (0 to CONF.N_OBJ-1) of std_logic_vector(CALO_SIN_COS_VECTOR_WIDTH-1 downto 0);
     signal calo_cos_phi_vec : calo_sin_cos_array;
@@ -88,7 +88,7 @@ architecture rtl of conversions is
     signal iso_def : iso_i_array := (others => (others => '0'));
     signal qual_def : qual_i_array := (others => (others => '0'));
     signal charge_def : charge_i_array := (others => (others => '0'));
-    signal conv_2_muon_phi_integer_i : diff_integer_inputs_array(0 to CONF.N_OBJ-1) := (others => 0);
+    signal conv_2_muon_phi_integer_i : integer_array(0 to CONF.N_OBJ-1) := (others => 0);
     
 begin
 
@@ -102,15 +102,15 @@ begin
         charge_i(i)(charge_width-1 downto 0) <= obj(i)(CONF.OBJ_S.charge_h downto CONF.OBJ_S.charge_l) when CONF.OBJ_T = muon else charge_def(i);
 
         eg_i: if (CONF.OBJ_T = eg) generate
-            pt_vector_i(i)(EG_PT_VECTOR_WIDTH_NEW-1 downto 0) <= CONV_STD_LOGIC_VECTOR(EG_PT_LUT(CONV_INTEGER(pt_i(i))), EG_PT_VECTOR_WIDTH_NEW);
+            pt_vector_i(i)(EG_PT_VECTOR_WIDTH-1 downto 0) <= CONV_STD_LOGIC_VECTOR(EG_PT_LUT(CONV_INTEGER(pt_i(i))), EG_PT_VECTOR_WIDTH);
         end generate eg_i;
 
         jet_i: if (CONF.OBJ_T = jet) generate
-            pt_vector_i(i)(JET_PT_VECTOR_WIDTH_NEW-1 downto 0) <= CONV_STD_LOGIC_VECTOR(JET_PT_LUT(CONV_INTEGER(pt_i(i))), JET_PT_VECTOR_WIDTH_NEW);
+            pt_vector_i(i)(JET_PT_VECTOR_WIDTH-1 downto 0) <= CONV_STD_LOGIC_VECTOR(JET_PT_LUT(CONV_INTEGER(pt_i(i))), JET_PT_VECTOR_WIDTH);
         end generate jet_i;
 
         tau_i: if (CONF.OBJ_T = tau) generate
-            pt_vector_i(i)(TAU_PT_VECTOR_WIDTH_NEW-1 downto 0) <= CONV_STD_LOGIC_VECTOR(TAU_PT_LUT(CONV_INTEGER(pt_i(i))), TAU_PT_VECTOR_WIDTH_NEW);
+            pt_vector_i(i)(TAU_PT_VECTOR_WIDTH-1 downto 0) <= CONV_STD_LOGIC_VECTOR(TAU_PT_LUT(CONV_INTEGER(pt_i(i))), TAU_PT_VECTOR_WIDTH);
         end generate tau_i;
 
         calo_i: if ((CONF.OBJ_T = eg) or (CONF.OBJ_T = jet) or (CONF.OBJ_T = tau)) generate
@@ -152,7 +152,7 @@ begin
 
         muon_i: if (CONF.OBJ_T = muon) generate
         
-            pt_vector_i(i)(MUON_PT_VECTOR_WIDTH_NEW-1 downto 0) <= CONV_STD_LOGIC_VECTOR(MU_PT_LUT(CONV_INTEGER(pt_i(i))), MUON_PT_VECTOR_WIDTH_NEW);
+            pt_vector_i(i)(MUON_PT_VECTOR_WIDTH-1 downto 0) <= CONV_STD_LOGIC_VECTOR(MU_PT_LUT(CONV_INTEGER(pt_i(i))), MUON_PT_VECTOR_WIDTH);
             cos_phi_i(i) <= MUON_COS_PHI_LUT(CONV_INTEGER(phi_i(i)));
             sin_phi_i(i) <= MUON_SIN_PHI_LUT(CONV_INTEGER(phi_i(i)));
             
@@ -176,25 +176,25 @@ begin
 -- Output register for signals directly used directly in next stage => comparison
         pt_out_reg_i : entity work.out_reg_mux
             generic map(pt_width, CONF.OUT_REG)  
-            port map(clk, pt_i(i), pt(i)); 
+            port map(clk, pt_i(i), pt(i)(pt_width-1 downto 0)); 
         eta_out_reg_i : entity work.out_reg_mux
             generic map(eta_width, CONF.OUT_REG)  
-            port map(clk, eta_i(i), eta(i)); 
+            port map(clk, eta_i(i), eta(i)(eta_width-1 downto 0)); 
         phi_out_reg_i : entity work.out_reg_mux
             generic map(phi_width, CONF.OUT_REG)  
-            port map(clk, phi_i(i), phi(i)); 
+            port map(clk, phi_i(i), phi(i)(phi_width-1 downto 0)); 
         iso_out_reg_i : entity work.out_reg_mux
             generic map(iso_width, CONF.OUT_REG)  
-            port map(clk, iso_i(i), iso(i)); 
+            port map(clk, iso_i(i), iso(i)(iso_width-1 downto 0)); 
         qual_out_reg_i : entity work.out_reg_mux
             generic map(qual_width, CONF.OUT_REG)  
-            port map(clk, qual_i(i), qual(i)); 
+            port map(clk, qual_i(i), qual(i)(qual_width-1 downto 0)); 
         charge_out_reg_i : entity work.out_reg_mux
             generic map(charge_width, CONF.OUT_REG)  
-            port map(clk, charge_i(i), charge(i)); 
+            port map(clk, charge_i(i), charge(i)(charge_width-1 downto 0)); 
         pt_vector_out_reg_i : entity work.out_reg_mux
             generic map(CONF.PT_VECTOR_WIDTH, CONF.OUT_REG)  
-            port map(clk, pt_vector_i(i), pt_vector(i)); 
+            port map(clk, pt_vector_i(i), pt_vector(i)(CONF.PT_VECTOR_WIDTH-1 downto 0)); 
 
     end generate obj_loop;
 

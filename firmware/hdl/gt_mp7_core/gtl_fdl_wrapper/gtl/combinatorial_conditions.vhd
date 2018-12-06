@@ -15,21 +15,21 @@ entity combinatorial_conditions is
     );
     port(
         clk : in std_logic;
-        pt : in std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '1'));
-        eta_w1 : in std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '1'));
-        eta_w2 : in std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '1'));
-        eta_w3 : in std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '1'));
-        eta_w4 : in std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '1'));
-        eta_w5 : in std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '1'));
-        phi_w1 : in std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '1'));
-        phi_w2 : in std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '1'));
-        iso : in std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '1'));
-        qual : in std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '1'));
-        charge : in std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '1'));
-        tbpt : in std_logic_2dim_array(CONF.N_OBJ-1 downto 0, CONF.N_OBJ-1 downto 0) := (others => (others => '1'));
-        charge_corr_double : in std_logic_2dim_array(CONF.N_OBJ-1 downto 0, CONF.N_OBJ-1 downto 0) := (others => (others => '1'));
-        charge_corr_triple : in std_logic_3dim_array(CONF.N_OBJ-1 downto 0, CONF.N_OBJ-1 downto 0, CONF.N_OBJ-1 downto 0) := (others => (others => (others => '1')));
-        charge_corr_quad : in std_logic_4dim_array(CONF.N_OBJ-1 downto 0, CONF.N_OBJ-1 downto 0, CONF.N_OBJ-1 downto 0, CONF.N_OBJ-1 downto 0) := (others => (others => (others => (others => '1'))));
+        pt : in std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '0'));
+        eta_w1 : in std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '0'));
+        eta_w2 : in std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '0'));
+        eta_w3 : in std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '0'));
+        eta_w4 : in std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '0'));
+        eta_w5 : in std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '0'));
+        phi_w1 : in std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '0'));
+        phi_w2 : in std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '0'));
+        iso : in std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '0'));
+        qual : in std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '0'));
+        charge : in std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '0'));
+        tbpt : in std_logic_2dim_array(CONF.N_OBJ-1 downto 0, CONF.N_OBJ-1 downto 0) := (others => (others => '0'));
+        charge_corr_double : in std_logic_2dim_array(CONF.N_OBJ-1 downto 0, CONF.N_OBJ-1 downto 0) := (others => (others => '0'));
+        charge_corr_triple : in std_logic_3dim_array(CONF.N_OBJ-1 downto 0, CONF.N_OBJ-1 downto 0, CONF.N_OBJ-1 downto 0) := (others => (others => (others => '0')));
+        charge_corr_quad : in std_logic_4dim_array(CONF.N_OBJ-1 downto 0, CONF.N_OBJ-1 downto 0, CONF.N_OBJ-1 downto 0, CONF.N_OBJ-1 downto 0) := (others => (others => (others => (others => '0'))));
         cond_o : out std_logic
     );
 end combinatorial_conditions;
@@ -74,10 +74,10 @@ begin
                 phi_w1_i(i), phi_w2_i(i), iso_i(i), qual_i(i), charge_i(i), cond_and_i(i)); 
     end generate req_l;
 
-    cc_double_i <= charge_corr_double;
-    cc_triple_i <= charge_corr_triple;
-    cc_quad_i <= charge_corr_quad;
-    tbpt_i <= tbpt;
+    cc_double_i <= charge_corr_double when (CONF.CHARGE_CORR_SEL and CONF.N_REQ = 2) else (others => (others => '1'));
+    cc_triple_i <= charge_corr_triple when (CONF.CHARGE_CORR_SEL and CONF.N_REQ = 3) else (others => (others => (others => '1')));
+    cc_quad_i <= charge_corr_quad when (CONF.CHARGE_CORR_SEL and CONF.N_REQ = 4) else (others => (others => (others => (others => '1'))));
+    tbpt_i <= tbpt when CONF.TBPT_SEL else (others => (others => '1'));
 
     and_or_p: process(cond_and, cc_double_i, cc_triple_i, cc_quad_i, tbpt_i)
         variable index : integer := 0;

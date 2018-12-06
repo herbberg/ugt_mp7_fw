@@ -121,20 +121,20 @@ begin
 -- HF+ thresh 1 => MBT1HFP
 -- HF- thresh 1 => MBT1HFM
 
-    ett_internal(D_S_I_ETT_V2.et_high downto D_S_I_ETT_V2.et_low) <= lhc_data.ett(D_S_I_ETT_V2.et_high downto D_S_I_ETT_V2.et_low);
-    ht_internal(D_S_I_HTT_V2.et_high downto D_S_I_HTT_V2.et_low) <= lhc_data.ht(D_S_I_HTT_V2.et_high downto D_S_I_HTT_V2.et_low);
-    etm_internal(D_S_I_ETM_V2.phi_high downto D_S_I_ETM_V2.et_low) <= lhc_data.etm(D_S_I_ETM_V2.phi_high downto D_S_I_ETM_V2.et_low);
-    htm_internal(D_S_I_HTM_V2.phi_high downto D_S_I_HTM_V2.et_low) <= lhc_data.htm(D_S_I_HTM_V2.phi_high downto D_S_I_HTM_V2.et_low);
+    ett_internal(ETT_STRUCT.pt_h downto ETT_STRUCT.pt_l) <= lhc_data.ett(ETT_STRUCT.pt_h downto ETT_STRUCT.pt_l);
+    ht_internal(HTT_STRUCT.pt_h downto HTT_STRUCT.pt_l) <= lhc_data.ht(HTT_STRUCT.pt_h downto HTT_STRUCT.pt_l);
+    etm_internal(ETM_STRUCT.phi_h downto ETM_STRUCT.pt_l) <= lhc_data.etm(ETM_STRUCT.phi_h downto ETM_STRUCT.pt_l);
+    htm_internal(HTM_STRUCT.phi_h downto HTM_STRUCT.pt_l) <= lhc_data.htm(HTM_STRUCT.phi_h downto HTM_STRUCT.pt_l);
 -- HB 2016-09-16: inserted new esums
-    ettem_internal(D_S_I_ETTEM_V2.et_high downto D_S_I_ETTEM_V2.et_low) <= lhc_data.ett(ETTEM_IN_ETT_HIGH downto ETTEM_IN_ETT_LOW);
-    etmhf_internal(D_S_I_ETMHF_V2.phi_high downto D_S_I_ETMHF_V2.et_low) <= lhc_data.etmhf(D_S_I_ETMHF_V2.phi_high downto D_S_I_ETMHF_V2.et_low);
-    htmhf_internal(D_S_I_HTMHF_V2.phi_high downto D_S_I_HTMHF_V2.et_low) <= lhc_data.htmhf(D_S_I_HTMHF_V2.phi_high downto D_S_I_HTMHF_V2.et_low);
-    towercount_internal(D_S_I_TOWERCOUNT_V2.count_high-D_S_I_TOWERCOUNT_V2.count_low downto 0) <= lhc_data.ht(TOWERCOUNT_IN_HTT_HIGH downto TOWERCOUNT_IN_HTT_LOW);
+    ettem_internal(ETTEM_STRUCT.pt_h downto ETTEM_STRUCT.pt_l) <= lhc_data.ett(ETTEM_IN_ETT_HIGH downto ETTEM_IN_ETT_LOW);
+    etmhf_internal(ETMHF_STRUCT.phi_h downto ETMHF_STRUCT.pt_l) <= lhc_data.etmhf(ETMHF_STRUCT.phi_h downto ETMHF_STRUCT.pt_l);
+    htmhf_internal(HTMHF_STRUCT.phi_h downto HTMHF_STRUCT.pt_l) <= lhc_data.htmhf(HTMHF_STRUCT.phi_h downto HTMHF_STRUCT.pt_l);
+    towercount_internal(TOWERCOUNT_STRUCT.high-TOWERCOUNT_STRUCT.low downto 0) <= lhc_data.ht(TOWERCOUNT_IN_HTT_HIGH downto TOWERCOUNT_IN_HTT_LOW);
 
-    mbt0hfp_internal(D_S_I_MBT0HFP_V2.count_high downto D_S_I_MBT0HFP_V2.count_low) <= lhc_data.ett(MBT0HFP_IN_ETT_HIGH downto MBT0HFP_IN_ETT_LOW);
-    mbt0hfm_internal(D_S_I_MBT0HFM_V2.count_high downto D_S_I_MBT0HFM_V2.count_low) <= lhc_data.ht(MBT0HFM_IN_HTT_HIGH downto MBT0HFM_IN_HTT_LOW);
-    mbt1hfp_internal(D_S_I_MBT1HFP_V2.count_high downto D_S_I_MBT1HFP_V2.count_low) <= lhc_data.etm(MBT1HFP_IN_ETM_HIGH downto MBT1HFP_IN_ETM_LOW);
-    mbt1hfm_internal(D_S_I_MBT1HFM_V2.count_high downto D_S_I_MBT1HFM_V2.count_low) <= lhc_data.htm(MBT1HFM_IN_HTM_HIGH downto MBT1HFM_IN_HTM_LOW);
+    mbt0hfp_internal(MBT0HFP_STRUCT.high downto MBT0HFP_STRUCT.low) <= lhc_data.ett(MBT0HFP_IN_ETT_HIGH downto MBT0HFP_IN_ETT_LOW);
+    mbt0hfm_internal(MBT0HFM_STRUCT.high downto MBT0HFM_STRUCT.low) <= lhc_data.ht(MBT0HFM_IN_HTT_HIGH downto MBT0HFM_IN_HTT_LOW);
+    mbt1hfp_internal(MBT1HFP_STRUCT.high downto MBT1HFP_STRUCT.low) <= lhc_data.etm(MBT1HFP_IN_ETM_HIGH downto MBT1HFP_IN_ETM_LOW);
+    mbt1hfm_internal(MBT1HFM_STRUCT.high downto MBT1HFM_STRUCT.low) <= lhc_data.htm(MBT1HFM_IN_HTM_HIGH downto MBT1HFM_IN_HTM_LOW);
 
 -- HB 2018-08-06: inserted signals for "Asymmetry" and "Centrality" (included in esums data structure).
 -- see: https://indico.cern.ch/event/746381/contributions/3085360/subcontributions/260912/attachments/1693846/2725976/DemuxOutput.pdf
@@ -147,10 +147,10 @@ begin
 -- Frame 4, ETMHF: bits 31..28 => CENT3..CENT0
 -- Frame 5, HTMHF: bits 31..28 => CENT7..CENT4
 
-    asymet_internal(D_S_I_ASYMET.high downto D_S_I_ASYMET.low) <= lhc_data.etm(ASYMET_IN_ETM_HIGH downto ASYMET_IN_ETM_LOW);
-    asymht_internal(D_S_I_ASYMHT.high downto D_S_I_ASYMHT.low) <= lhc_data.htm(ASYMHT_IN_HTM_HIGH downto ASYMHT_IN_HTM_LOW);
-    asymethf_internal(D_S_I_ASYMETHF.high downto D_S_I_ASYMETHF.low) <= lhc_data.etmhf(ASYMETHF_IN_ETMHF_HIGH downto ASYMETHF_IN_ETMHF_LOW);
-    asymhthf_internal(D_S_I_ASYMHTHF.high downto D_S_I_ASYMHTHF.low) <= lhc_data.htmhf(ASYMHTHF_IN_HTMHF_HIGH downto ASYMHTHF_IN_HTMHF_LOW);
+    asymet_internal(ASYMET_STRUCT.high downto ASYMET_STRUCT.low) <= lhc_data.etm(ASYMET_IN_ETM_HIGH downto ASYMET_IN_ETM_LOW);
+    asymht_internal(ASYMHT_STRUCT.high downto ASYMHT_STRUCT.low) <= lhc_data.htm(ASYMHT_IN_HTM_HIGH downto ASYMHT_IN_HTM_LOW);
+    asymethf_internal(ASYMETHF_STRUCT.high downto ASYMETHF_STRUCT.low) <= lhc_data.etmhf(ASYMETHF_IN_ETMHF_HIGH downto ASYMETHF_IN_ETMHF_LOW);
+    asymhthf_internal(ASYMHTHF_STRUCT.high downto ASYMHTHF_STRUCT.low) <= lhc_data.htmhf(ASYMHTHF_IN_HTMHF_HIGH downto ASYMHTHF_IN_HTMHF_LOW);
     
     centrality_internal(CENT_LBITS_HIGH downto CENT_LBITS_LOW) <= lhc_data.etmhf(CENT_IN_ETMHF_HIGH downto CENT_IN_ETMHF_LOW);
     centrality_internal(CENT_UBITS_HIGH downto CENT_UBITS_LOW) <= lhc_data.htmhf(CENT_IN_HTMHF_HIGH downto CENT_IN_HTMHF_LOW);

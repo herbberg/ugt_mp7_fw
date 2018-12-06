@@ -29,8 +29,9 @@ src gt_mp7_core/gtl_fdl_wrapper/fdl/algo_slice.vhd
 #
 src gt_mp7_core/gtl_fdl_wrapper/gtl/p_m_2_bx_pipeline.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/conversions.vhd
-src gt_mp7_core/gtl_fdl_wrapper/gtl/comparators.vhd
+src gt_mp7_core/gtl_fdl_wrapper/gtl/comparators_obj_cuts.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/comparators_corr_cuts.vhd
+src gt_mp7_core/gtl_fdl_wrapper/gtl/comparator_muon_charge_corr.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/combinatorial_and.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/combinatorial_conditions.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/correlation_conditions.vhd

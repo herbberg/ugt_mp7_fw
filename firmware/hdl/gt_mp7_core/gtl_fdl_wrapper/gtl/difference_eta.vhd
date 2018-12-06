@@ -18,8 +18,8 @@ entity difference_eta is
     );
     port(
         clk : in std_logic;
-        eta_1 : in diff_integer_inputs_array(0 to CONF.N_OBJ_1-1);
-        eta_2 : in diff_integer_inputs_array(0 to CONF.N_OBJ_2-1);
+        eta_1 : in integer_array(0 to CONF.N_OBJ_1-1);
+        eta_2 : in integer_array(0 to CONF.N_OBJ_2-1);
         diff_eta_o : out std_logic_3dim_array(0 to CONF.N_OBJ_1-1, 0 to CONF.N_OBJ_2-1, CONF.DIFF_WIDTH-1 downto 0);
         diff_eta_reg_o : out std_logic_3dim_array(0 to CONF.N_OBJ_1-1, 0 to CONF.N_OBJ_2-1, CONF.DIFF_WIDTH-1 downto 0);
         cosh_deta_o : out std_logic_3dim_array(0 to CONF.N_OBJ_1-1, 0 to CONF.N_OBJ_2-1, CONF.COSH_COS_WIDTH-1 downto 0)

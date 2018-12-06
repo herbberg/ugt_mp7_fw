@@ -18,8 +18,8 @@ entity difference_phi is
     );
     port(
         clk : in std_logic;
-        phi_1 : in diff_integer_inputs_array(0 to CONF.N_OBJ_1-1);
-        phi_2 : in diff_integer_inputs_array(0 to CONF.N_OBJ_2-1);
+        phi_1 : in integer_array(0 to CONF.N_OBJ_1-1);
+        phi_2 : in integer_array(0 to CONF.N_OBJ_2-1);
         diff_phi_o : out std_logic_3dim_array(0 to CONF.N_OBJ_1-1, 0 to CONF.N_OBJ_2-1, 0 to CONF.DIFF_WIDTH-1);
         diff_phi_reg_o : out std_logic_3dim_array(0 to CONF.N_OBJ_1-1, 0 to CONF.N_OBJ_2-1, CONF.DIFF_WIDTH-1 downto 0);
         cos_dphi_o : out std_logic_3dim_array(0 to CONF.N_OBJ_1-1, 0 to CONF.N_OBJ_2-1, 0 to CONF.COSH_COS_WIDTH-1)
@@ -40,7 +40,7 @@ begin
     loop_1: for i in 0 to CONF.N_OBJ_1-1 generate
         loop_2: for j in 0 to CONF.N_OBJ_2-1 generate
             diff_temp(i,j) <= abs(phi_1(i) - phi_2(j));
-            diff_i(i,j) <= diff_temp(i,j) when diff_temp(i,j) < CONF.PHI_HALF_RANGE else CONF.PHI_HALF_RANGE*2-diff_temp(i,j);
+            diff_i(i,j) <= diff_temp(i,j) when (diff_temp(i,j) < CONF.PHI_HALF_RANGE) else (CONF.PHI_HALF_RANGE*2-diff_temp(i,j));
             calo_calo_i: if ((CONF.OBJ_CORR = calo_calo) or (CONF.OBJ_CORR = calo_esums)) generate
                 diff_phi_vector_i(i,j) <= CONV_STD_LOGIC_VECTOR(CALO_CALO_DIFF_PHI_LUT(diff_i(i,j)), DETA_DPHI_VECTOR_WIDTH_ALL);
                 cos_dphi_vector_i(i,j)(CALO_CALO_COSH_COS_VECTOR_WIDTH-1 downto 0) <= CONV_STD_LOGIC_VECTOR(CALO_CALO_COS_DPHI_LUT(diff_i(i,j)), CALO_CALO_COSH_COS_VECTOR_WIDTH);

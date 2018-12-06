@@ -29,8 +29,6 @@ architecture rtl of muon_charge_correlations is
     signal cc_double_i : muon_cc_double_array;
     signal cc_triple_i : muon_cc_triple_array;
     signal cc_quad_i : muon_cc_quad_array;
-    signal charge_bits_obj_1 : muon_charge_bits_array;
-    signal charge_bits_obj_2 : muon_charge_bits_array;
     
 begin
 
@@ -46,11 +44,12 @@ begin
 -- *********************************************************
 
     charge_corr_p: process(in_1, in_2)
+        variable charge_bits_obj_1, charge_bits_obj_2 : muon_charge_bits_array;
     begin
         for i in 0 to NR_MUON_OBJECTS-1 loop
             for j in 0 to NR_MUON_OBJECTS-1 loop
-                charge_bits_obj_1(i) <= in_1(i)(N_MU_CHARGE_BITS-1 downto 0);
-                charge_bits_obj_2(i) <= in_2(i)(N_MU_CHARGE_BITS-1 downto 0);
+                charge_bits_obj_1(i) := in_1(i)(NR_MUON_CHARGE_BITS-1 downto 0);
+                charge_bits_obj_2(i) := in_2(i)(NR_MUON_CHARGE_BITS-1 downto 0);
                 if (charge_bits_obj_1(i)(1)='1' and charge_bits_obj_2(j)(1)='1') then
                     if charge_bits_obj_1(i)(0)='1' and charge_bits_obj_2(j)(0)='1' then
                         cc_double_i(i,j) <= CC_LS;
@@ -95,15 +94,15 @@ begin
     l_1 : for i in 0 to NR_MUON_OBJECTS-1 generate
         l_2 : for j in 0 to NR_MUON_OBJECTS-1 generate
             out_reg_double_i : entity work.out_reg_mux
-                generic map(N_MU_CHARGE_BITS, OUT_REG)  
+                generic map(NR_MUON_CHARGE_BITS, OUT_REG)  
                 port map(clk, cc_double_i(i,j), cc_double(i,j)); 
             l_3 : for k in 0 to NR_MUON_OBJECTS-1 generate
                 out_reg_triple_i : entity work.out_reg_mux
-                    generic map(N_MU_CHARGE_BITS, OUT_REG)  
+                    generic map(NR_MUON_CHARGE_BITS, OUT_REG)  
                     port map(clk, cc_triple_i(i,j,k), cc_triple(i,j,k)); 
                 l_4 : for l in 0 to NR_MUON_OBJECTS-1 generate
                     out_reg_quad_i : entity work.out_reg_mux
-                        generic map(N_MU_CHARGE_BITS, OUT_REG)  
+                        generic map(NR_MUON_CHARGE_BITS, OUT_REG)  
                         port map(clk, cc_quad_i(i,j,k,l), cc_quad(i,j,k,l)); 
                 end generate l_4;
             end generate l_3;
