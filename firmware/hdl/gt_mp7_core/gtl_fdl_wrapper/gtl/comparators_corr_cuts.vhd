@@ -40,17 +40,15 @@ begin
             l3: for k in 0 to CONF.DATA_WIDTH-1 generate
                 data_vec(i,j)(k) <= data(i,j,k);
             end generate l3;
-            if_m: if CONF.GE_MODE generate
-                if_w: if CONF.WINDOW generate
-                comp(i,j) <= '1' when ((data_vec(i,j) >= REQ_L_I) and (data_vec(i,j) <= REQ_H_I)) else '0';
-                end generate;
-                if_n_w: if not CONF.WINDOW generate
+            if_ge: if CONF.MODE = greater_equal generate
                 comp(i,j) <= '1' when (data_vec(i,j) >= REQ_L_I) else '0';
-                end generate;
-            end generate;
-            if_n_m: if not CONF.GE_MODE generate
+            end generate if_ge;
+            if_win: if CONF.MODE = window generate
+                comp(i,j) <= '1' when ((data_vec(i,j) >= REQ_L_I) and (data_vec(i,j) <= REQ_H_I)) else '0';
+            end generate if_win;
+            if_eq: if CONF.MODE = equal generate
                 comp(i,j) <= '1' when (data_vec(i,j) = REQ_L_I) else '0';
-            end generate;
+            end generate if_eq;
             comp_i(i,j)(0) <= comp(i,j);
             out_reg_i : entity work.out_reg_mux
                 generic map(1, CONF.OUT_REG) 

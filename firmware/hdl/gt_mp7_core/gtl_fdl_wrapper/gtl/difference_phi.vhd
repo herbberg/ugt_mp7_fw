@@ -11,6 +11,7 @@ use ieee.std_logic_1164.all;
 use ieee.std_logic_arith.all;
 
 use work.gtl_pkg.all;
+use work.lut_pkg.all;
 
 entity difference_phi is
     generic(

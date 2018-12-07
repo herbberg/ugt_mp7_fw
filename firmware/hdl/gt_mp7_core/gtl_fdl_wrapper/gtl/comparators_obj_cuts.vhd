@@ -11,6 +11,7 @@ use ieee.std_logic_1164.all;
 use ieee.std_logic_unsigned.all;
 
 use work.gtl_pkg.all;
+use work.lut_pkg.all;
 
 entity comparators_obj_cuts is
     generic(
@@ -39,18 +40,16 @@ architecture rtl of comparators_obj_cuts is
 begin
 
     l1: for i in 0 to CONF.N_OBJ_1_H generate
-        if_ge: if CONF.GE_MODE generate
-            if_w: if CONF.WINDOW generate
-            comp(i) <= '1' when (data(i)(CONF.DATA_WIDTH-1 downto 0) >= REQ_L_I(CONF.DATA_WIDTH-1 downto 0)) and (data(i)(CONF.DATA_WIDTH-1 downto 0) <= REQ_H_I(CONF.DATA_WIDTH-1 downto 0)) else '0';
-            end generate if_w;
-            if_n_w: if not CONF.WINDOW generate
+        if_ge: if CONF.MODE = greater_equal generate
             comp(i) <= '1' when (data(i)(CONF.DATA_WIDTH-1 downto 0) >= REQ_L_I(CONF.DATA_WIDTH-1 downto 0)) else '0';
-            end generate if_n_w;
         end generate if_ge;
-        if_eq: if not CONF.GE_MODE generate
+        if_win: if CONF.MODE = window generate
+            comp(i) <= '1' when (data(i)(CONF.DATA_WIDTH-1 downto 0) >= REQ_L_I(CONF.DATA_WIDTH-1 downto 0)) and (data(i)(CONF.DATA_WIDTH-1 downto 0) <= REQ_H_I(CONF.DATA_WIDTH-1 downto 0)) else '0';
+        end generate if_win;
+        if_eq: if CONF.MODE = equal generate
             comp(i) <= '1' when (data(i)(CONF.DATA_WIDTH-1 downto 0) = REQ_L_I(CONF.DATA_WIDTH-1 downto 0)) else '0';
         end generate if_eq;
-        if_lut: if CONF.LUT generate
+        if_lut: if CONF.MODE = lut generate
             comp(i) <= LUT_REQ_I(CONV_INTEGER(data(i)(CONF.DATA_WIDTH-1 downto 0)));
         end generate if_lut;
         comp_i(i)(0) <= comp(i);
