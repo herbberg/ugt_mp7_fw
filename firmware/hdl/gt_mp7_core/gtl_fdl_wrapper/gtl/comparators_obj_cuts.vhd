@@ -23,7 +23,7 @@ entity comparators_obj_cuts is
     port(
         clk : in std_logic;
         data : in comp_in_data_array(0 to CONF.N_OBJ_1_H);
-        comp_o : out std_logic_1dim_array(CONF.N_OBJ_1_H downto 0) := (others => '0')
+        comp_o : out std_logic_vector(CONF.N_OBJ_1_H downto 0) := (others => '0')
     );
 end comparators_obj_cuts;
 
@@ -32,10 +32,7 @@ architecture rtl of comparators_obj_cuts is
     constant REQ_L_I : std_logic_vector(CONF.DATA_WIDTH-1 downto 0) := REQ_L(CONF.DATA_WIDTH-1 downto 0);
     constant REQ_H_I : std_logic_vector(CONF.DATA_WIDTH-1 downto 0) := REQ_H(CONF.DATA_WIDTH-1 downto 0);
     constant LUT_REQ_I : std_logic_vector(CONF.LUT_HIGH_BIT downto 0) := LUT_REQ(CONF.LUT_HIGH_BIT downto 0);
-    signal comp : std_logic_1dim_array(CONF.N_OBJ_1_H downto 0);
-    type comp_i_array is array (CONF.N_OBJ_1_H downto 0) of std_logic_vector(0 downto 0);
-    signal comp_i : comp_i_array;
-    signal comp_r : comp_i_array;
+    signal comp : std_logic_vector(CONF.N_OBJ_1_H downto 0);
 
 begin
 
@@ -52,11 +49,10 @@ begin
         if_lut: if CONF.MODE = lut generate
             comp(i) <= LUT_REQ_I(CONV_INTEGER(data(i)(CONF.DATA_WIDTH-1 downto 0)));
         end generate if_lut;
-        comp_i(i)(0) <= comp(i);
-        out_reg_i : entity work.out_reg_mux
-            generic map(1, CONF.OUT_REG)  
-            port map(clk, comp_i(i), comp_r(i));
-        comp_o(i) <= comp_r(i)(0);
     end generate l1;
 
+    out_reg_i : entity work.out_reg_mux
+        generic map(CONF.N_OBJ_1_H+1, CONF.OUT_REG)  
+        port map(clk, comp, comp_o);
+        
 end architecture rtl;

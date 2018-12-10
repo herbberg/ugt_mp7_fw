@@ -14,18 +14,11 @@ entity combinatorial_conditions is
         CONF : combinatorial_conditions_conf
     );
     port(
-        clk : in std_logic;
-        pt : in std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '0'));
-        eta_w1 : in std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '0'));
-        eta_w2 : in std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '0'));
-        eta_w3 : in std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '0'));
-        eta_w4 : in std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '0'));
-        eta_w5 : in std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '0'));
-        phi_w1 : in std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '0'));
-        phi_w2 : in std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '0'));
-        iso : in std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '0'));
-        qual : in std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '0'));
-        charge : in std_logic_2dim_array(1 to CONF.N_REQ, CONF.N_OBJ-1 downto 0) := (others => (others => '0'));
+        clk : in std_logic;        
+        in_1 : in std_logic_vector(CONF.N_OBJ-1 downto 0) := (others => '0');
+        in_2 : in std_logic_vector(CONF.N_OBJ-1 downto 0) := (others => '0');
+        in_3 : in std_logic_vector(CONF.N_OBJ-1 downto 0) := (others => '0');
+        in_4 : in std_logic_vector(CONF.N_OBJ-1 downto 0) := (others => '0');
         tbpt : in std_logic_2dim_array(CONF.N_OBJ-1 downto 0, CONF.N_OBJ-1 downto 0) := (others => (others => '0'));
         charge_corr_double : in std_logic_2dim_array(CONF.N_OBJ-1 downto 0, CONF.N_OBJ-1 downto 0) := (others => (others => '0'));
         charge_corr_triple : in std_logic_3dim_array(CONF.N_OBJ-1 downto 0, CONF.N_OBJ-1 downto 0, CONF.N_OBJ-1 downto 0) := (others => (others => (others => '0')));
@@ -53,33 +46,12 @@ architecture rtl of combinatorial_conditions is
 
 begin
 
-    req_l : for i in 1 to CONF.N_REQ generate 
-        obj_l : for j in 0 to CONF.N_OBJ-1 generate
-            pt_i(i)(j) <= pt(i,j);
-            eta_w1_i(i)(j) <= eta_w1(i,j);
-            eta_w2_i(i)(j) <= eta_w2(i,j);
-            eta_w3_i(i)(j) <= eta_w3(i,j);
-            eta_w4_i(i)(j) <= eta_w4(i,j);
-            eta_w5_i(i)(j) <= eta_w5(i,j);
-            phi_w1_i(i)(j) <= phi_w1(i,j);
-            phi_w2_i(i)(j) <= phi_w2(i,j);
-            iso_i(i)(j) <= iso(i,j);
-            qual_i(i)(j) <= qual(i,j);
-            charge_i(i)(j) <= charge(i,j);
-            cond_and(i,j) <= cond_and_i(i)(j);
-        end generate obj_l;        
-        and_i : entity work.combinatorial_and
-            generic map(CONF.N_OBJ, CONF.ETA_SEL, CONF.PHI_SEL, CONF.ISO_SEL, CONF.QUAL_SEL, CONF.CHARGE_SEL)  
-            port map(pt_i(i), eta_w1_i(i), eta_w2_i(i), eta_w3_i(i), eta_w4_i(i), eta_w5_i(i),
-                phi_w1_i(i), phi_w2_i(i), iso_i(i), qual_i(i), charge_i(i), cond_and_i(i)); 
-    end generate req_l;
-
     cc_double_i <= charge_corr_double when (CONF.CHARGE_CORR_SEL and CONF.N_REQ = 2) else (others => (others => '1'));
     cc_triple_i <= charge_corr_triple when (CONF.CHARGE_CORR_SEL and CONF.N_REQ = 3) else (others => (others => (others => '1')));
     cc_quad_i <= charge_corr_quad when (CONF.CHARGE_CORR_SEL and CONF.N_REQ = 4) else (others => (others => (others => (others => '1'))));
     tbpt_i <= tbpt when CONF.TBPT_SEL else (others => (others => '1'));
 
-    and_or_p: process(cond_and, cc_double_i, cc_triple_i, cc_quad_i, tbpt_i)
+    and_or_p: process(in_1, in_2, in_3, in_4, cc_double_i, cc_triple_i, cc_quad_i, tbpt_i)
         variable index : integer := 0;
         variable and_vec : std_logic_vector((N_SLICE_1*N_SLICE_2*N_SLICE_3*N_SLICE_4) downto 1) := (others => '0');
         variable tmp : std_logic := '0';
@@ -90,22 +62,22 @@ begin
         for i in CONF.SLICE_1_L to CONF.SLICE_1_H loop
             if CONF.N_REQ = 1 then
                 index := index + 1;
-                and_vec(index) := cond_and(1,i);
+                and_vec(index) := in_1(i);
             end if;
             for j in CONF.SLICE_2_L to CONF.SLICE_2_H loop
                 if CONF.N_REQ = 2 and (j/=i) then
                     index := index + 1;
-                    and_vec(index) := cond_and(1,i) and cond_and(2,j) and cc_double_i(i,j) and tbpt_i(i,j);
+                    and_vec(index) := in_1(i) and in_2(j) and cc_double_i(i,j) and tbpt_i(i,j);
                 end if;
                 for k in CONF.SLICE_3_L to CONF.SLICE_3_H loop
                     if CONF.N_REQ = 3 and (j/=i and k/=i and k/=j) then
                         index := index + 1;
-                        and_vec(index) := cond_and(1,i) and cond_and(2,j) and cond_and(3,k) and cc_triple_i(i,j,k);
+                        and_vec(index) := in_1(i) and in_2(j) and in_3(k) and cc_triple_i(i,j,k);
                     end if;
                     for l in CONF.SLICE_4_L to CONF.SLICE_4_H loop
                         if CONF.N_REQ = 4 and (j/=i and k/=i and k/=j and l/=i and l/=j and l/=k) then
                             index := index + 1;
-                            and_vec(index) := cond_and(1,i) and cond_and(2,j) and cond_and(3,k) and cond_and(4,l) and cc_quad_i(i,j,k,l);
+                            and_vec(index) := in_1(i) and in_2(j) and in_3(k) and in_4(l) and cc_quad_i(i,j,k,l);
                         end if;
                     end loop;
                 end loop;

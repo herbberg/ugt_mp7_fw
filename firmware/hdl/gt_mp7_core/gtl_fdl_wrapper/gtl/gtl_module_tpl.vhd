@@ -2,14 +2,16 @@
 -- Global Trigger Logic module.
 
 -- Version-history:
--- HB 2018-11-26: v2.0.0: New structure with 3 stages: calculations, comparisons and conditions (incl. algos).
+-- HB 2018-11-29: v2.0.0: Version for GTL_v2.x.y.
 
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.std_logic_arith.all;
 use ieee.std_logic_unsigned.all;
 
+use work.lhc_data_pkg.all;
 use work.gtl_pkg.all;
+use work.lut_pkg.all;
 
 entity gtl_module is
     port(
@@ -52,10 +54,15 @@ architecture rtl of gtl_module is
 -- HB 2016-03-08: "workaraound" for VHDL-Producer output
     constant NR_MU_OBJECTS: positive := NR_MUON_OBJECTS;
 
-    signal mu_bx_p2, mu_bx_p1, mu_bx_0, mu_bx_m1, mu_bx_m2 : muon_objects_array(0 to NR_MUON_OBJECTS-1);
-    signal eg_bx_p2, eg_bx_p1, eg_bx_0, eg_bx_m1, eg_bx_m2 : calo_objects_array(0 to NR_EG_OBJECTS-1);
-    signal jet_bx_p2, jet_bx_p1, jet_bx_0, jet_bx_m1, jet_bx_m2 : calo_objects_array(0 to NR_JET_OBJECTS-1);
-    signal tau_bx_p2, tau_bx_p1, tau_bx_0, tau_bx_m1, tau_bx_m2 : calo_objects_array(0 to NR_TAU_OBJECTS-1);
+    signal muon_data_i : objects_array(0 to NR_MUON_OBJECTS-1) := (others => (others => '0'));
+    signal eg_data_i : objects_array(0 to NR_EG_OBJECTS-1) := (others => (others => '0'));
+    signal jet_data_i : objects_array(0 to NR_JET_OBJECTS-1) := (others => (others => '0'));
+    signal tau_data_i : objects_array(0 to NR_TAU_OBJECTS-1) := (others => (others => '0'));
+    
+    signal muon_bx_p2, muon_bx_p1, muon_bx_0, muon_bx_m1, muon_bx_m2 : objects_array(0 to NR_MUON_OBJECTS-1);
+    signal eg_bx_p2, eg_bx_p1, eg_bx_0, eg_bx_m1, eg_bx_m2 : objects_array(0 to NR_EG_OBJECTS-1);
+    signal jet_bx_p2, jet_bx_p1, jet_bx_0, jet_bx_m1, jet_bx_m2 : objects_array(0 to NR_JET_OBJECTS-1);
+    signal tau_bx_p2, tau_bx_p1, tau_bx_0, tau_bx_m1, tau_bx_m2 : objects_array(0 to NR_TAU_OBJECTS-1);
     signal ett_bx_p2, ett_bx_p1, ett_bx_0, ett_bx_m1, ett_bx_m2 : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
 -- HB 2015-04-28: changed for "htt" - object type from TME [string(1 to 3)] in esums_conditions.vhd
     signal htt_bx_p2, htt_bx_p1, htt_bx_0, htt_bx_m1, htt_bx_m2 : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
@@ -99,13 +106,37 @@ architecture rtl of gtl_module is
 
 begin
 
+muon_data_l1: for i in 0 to NR_MUON_OBJECTS-1 generate
+    muon_data_l2: for j in 0 to MUON_DATA_WIDTH-1 generate
+        muon_data_i(i)(j) <= muon_data(i)(j);
+    end generate muon_data_l2;
+end generate muon_data_l1;
+
+eg_data_l1: for i in 0 to NR_EG_OBJECTS-1 generate
+    eg_data_l2: for j in 0 to EG_DATA_WIDTH-1 generate
+        eg_data_i(i)(j) <= eg_data(i)(j);
+    end generate eg_data_l2;
+end generate eg_data_l1;
+
+jet_data_l1: for i in 0 to NR_JET_OBJECTS-1 generate
+    jet_data_l2: for j in 0 to JET_DATA_WIDTH-1 generate
+        jet_data_i(i)(j) <= jet_data(i)(j);
+    end generate jet_data_l2;
+end generate jet_data_l1;
+
+tau_data_l1: for i in 0 to NR_TAU_OBJECTS-1 generate
+    tau_data_l2: for j in 0 to TAU_DATA_WIDTH-1 generate
+        tau_data_i(i)(j) <= tau_data(i)(j);
+    end generate tau_data_l2;
+end generate tau_data_l1;
+
 p_m_2_bx_pipeline_i: entity work.p_m_2_bx_pipeline
     port map(
         lhc_clk,
-        muon_data, mu_bx_p2, mu_bx_p1, mu_bx_0, mu_bx_m1, mu_bx_m2,
-        eg_data, eg_bx_p2, eg_bx_p1, eg_bx_0, eg_bx_m1, eg_bx_m2,
-        jet_data, jet_bx_p2, jet_bx_p1, jet_bx_0, jet_bx_m1, jet_bx_m2,
-        tau_data, tau_bx_p2, tau_bx_p1, tau_bx_0, tau_bx_m1, tau_bx_m2,
+        muon_data_i, muon_bx_p2, muon_bx_p1, muon_bx_0, muon_bx_m1, muon_bx_m2,
+        eg_data_i, eg_bx_p2, eg_bx_p1, eg_bx_0, eg_bx_m1, eg_bx_m2,
+        jet_data_i, jet_bx_p2, jet_bx_p1, jet_bx_0, jet_bx_m1, jet_bx_m2,
+        tau_data_i, tau_bx_p2, tau_bx_p1, tau_bx_0, tau_bx_m1, tau_bx_m2,
         ett_data, ett_bx_p2, ett_bx_p1, ett_bx_0, ett_bx_m1, ett_bx_m2,
         ht_data, htt_bx_p2, htt_bx_p1, htt_bx_0, htt_bx_m1, htt_bx_m2,
         etm_data, etm_bx_p2, etm_bx_p1, etm_bx_0, etm_bx_m1, etm_bx_m2,
@@ -194,47 +225,47 @@ centrality_pipe_p: process(lhc_clk, centrality_bx_p2_int, centrality_bx_p1_int, 
         centrality_bx_m2 <= centrality_bx_m2_pipe_temp(1);
 end process;
 
--- Centrality bit assignment
-cent0_bx_p2 <= centrality_bx_p2(0);
-cent1_bx_p2 <= centrality_bx_p2(1);
-cent2_bx_p2 <= centrality_bx_p2(2);
-cent3_bx_p2 <= centrality_bx_p2(3);
-cent4_bx_p2 <= centrality_bx_p2(4);
-cent5_bx_p2 <= centrality_bx_p2(5);
-cent6_bx_p2 <= centrality_bx_p2(6);
-cent7_bx_p2 <= centrality_bx_p2(7);
-cent0_bx_p1 <= centrality_bx_p1(0);
-cent1_bx_p1 <= centrality_bx_p1(1);
-cent2_bx_p1 <= centrality_bx_p1(2);
-cent3_bx_p1 <= centrality_bx_p1(3);
-cent4_bx_p1 <= centrality_bx_p1(4);
-cent5_bx_p1 <= centrality_bx_p1(5);
-cent6_bx_p1 <= centrality_bx_p1(6);
-cent7_bx_p1 <= centrality_bx_p1(7);
-cent0_bx_0 <= centrality_bx_0(0);
-cent1_bx_0 <= centrality_bx_0(1);
-cent2_bx_0 <= centrality_bx_0(2);
-cent3_bx_0 <= centrality_bx_0(3);
-cent4_bx_0 <= centrality_bx_0(4);
-cent5_bx_0 <= centrality_bx_0(5);
-cent6_bx_0 <= centrality_bx_0(6);
-cent7_bx_0 <= centrality_bx_0(7);
-cent0_bx_m1 <= centrality_bx_m1(0);
-cent1_bx_m1 <= centrality_bx_m1(1);
-cent2_bx_m1 <= centrality_bx_m1(2);
-cent3_bx_m1 <= centrality_bx_m1(3);
-cent4_bx_m1 <= centrality_bx_m1(4);
-cent5_bx_m1 <= centrality_bx_m1(5);
-cent6_bx_m1 <= centrality_bx_m1(6);
-cent7_bx_m1 <= centrality_bx_m1(7);
-cent0_bx_m2 <= centrality_bx_m2(0);
-cent1_bx_m2 <= centrality_bx_m2(1);
-cent2_bx_m2 <= centrality_bx_m2(2);
-cent3_bx_m2 <= centrality_bx_m2(3);
-cent4_bx_m2 <= centrality_bx_m2(4);
-cent5_bx_m2 <= centrality_bx_m2(5);
-cent6_bx_m2 <= centrality_bx_m2(6);
-cent7_bx_m2 <= centrality_bx_m2(7);
+-- -- Centrality bit assignment - ?????? not needed - use e.g. centrality_bx_0(0) directly ?????
+-- cent0_bx_p2 <= centrality_bx_p2(0);
+-- cent1_bx_p2 <= centrality_bx_p2(1);
+-- cent2_bx_p2 <= centrality_bx_p2(2);
+-- cent3_bx_p2 <= centrality_bx_p2(3);
+-- cent4_bx_p2 <= centrality_bx_p2(4);
+-- cent5_bx_p2 <= centrality_bx_p2(5);
+-- cent6_bx_p2 <= centrality_bx_p2(6);
+-- cent7_bx_p2 <= centrality_bx_p2(7);
+-- cent0_bx_p1 <= centrality_bx_p1(0);
+-- cent1_bx_p1 <= centrality_bx_p1(1);
+-- cent2_bx_p1 <= centrality_bx_p1(2);
+-- cent3_bx_p1 <= centrality_bx_p1(3);
+-- cent4_bx_p1 <= centrality_bx_p1(4);
+-- cent5_bx_p1 <= centrality_bx_p1(5);
+-- cent6_bx_p1 <= centrality_bx_p1(6);
+-- cent7_bx_p1 <= centrality_bx_p1(7);
+-- cent0_bx_0 <= centrality_bx_0(0);
+-- cent1_bx_0 <= centrality_bx_0(1);
+-- cent2_bx_0 <= centrality_bx_0(2);
+-- cent3_bx_0 <= centrality_bx_0(3);
+-- cent4_bx_0 <= centrality_bx_0(4);
+-- cent5_bx_0 <= centrality_bx_0(5);
+-- cent6_bx_0 <= centrality_bx_0(6);
+-- cent7_bx_0 <= centrality_bx_0(7);
+-- cent0_bx_m1 <= centrality_bx_m1(0);
+-- cent1_bx_m1 <= centrality_bx_m1(1);
+-- cent2_bx_m1 <= centrality_bx_m1(2);
+-- cent3_bx_m1 <= centrality_bx_m1(3);
+-- cent4_bx_m1 <= centrality_bx_m1(4);
+-- cent5_bx_m1 <= centrality_bx_m1(5);
+-- cent6_bx_m1 <= centrality_bx_m1(6);
+-- cent7_bx_m1 <= centrality_bx_m1(7);
+-- cent0_bx_m2 <= centrality_bx_m2(0);
+-- cent1_bx_m2 <= centrality_bx_m2(1);
+-- cent2_bx_m2 <= centrality_bx_m2(2);
+-- cent3_bx_m2 <= centrality_bx_m2(3);
+-- cent4_bx_m2 <= centrality_bx_m2(4);
+-- cent5_bx_m2 <= centrality_bx_m2(5);
+-- cent6_bx_m2 <= centrality_bx_m2(6);
+-- cent7_bx_m2 <= centrality_bx_m2(7);
 
 {{gtl_module_instances}}
 

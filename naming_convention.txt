@@ -6,7 +6,7 @@ Naming conventions:
 
 1.1.1 Configuration constants for conversions:
 
-  conversions_conf_<object type>_bx_<bx notation> 
+  conv_conf_<object type>_bx_<bx notation> 
 
   list of bx notation:
   p2, p1, 0, m1, m2
@@ -23,28 +23,33 @@ Naming conventions:
   cos_phi, sin_phi, conv_2_muon_eta_integer, conv_2_muon_phi_integer, conv_mu_cos_phi, conv_mu_sin_phi
 
   Example of declaration:
-  signal phi_eg_bx_0 : phi_array(0 to NR_EG_OBJECTS-1);
+  signal phi_eg_bx_0 : comp_in_data_array(0 to NR_EG_OBJECTS-1);
 
 1.2 Calculations of differences
 
 1.2.1 Configuration constants for differences:
  
-  differences_conf_<object type>_bx_<bx notation> 
+  diff_conf_<object type 1>_bx_<bx notation 1>_<object type 2>_bx_<bx notation 2> 
 
   Example of declaration:
   constant differences_conf_eg_bx_0_jet_bx_0 : differences_conf := (N_OBJ_1 => NR_EG_OBJECTS, N_OBJ_2 => NR_JET_OBJECTS, PHI_HALF_RANGE => CALO_PHI_HALF_RANGE_BINS, OUT_REG => true, OBJ_CORR => calo_calo);
  
 1.2.2 Output signals of differences in eta:
  
-  deta_<object type>_bx_<bx notation>
-  cosh_deta_<object type>_bx_<bx notation>
+  deta_<object type 1>_bx_<bx notation 1>_<object type 2>_bx_<bx notation 2>
+  cosh_deta_<object type 1>_bx_<bx notation 1>_<object type 2>_bx_<bx notation 2>
 
   Example of declaration:
-  deta_eg_bx_0_jet_bx_0 : ....
+  signal deta_eg_bx_0_jet_bx_0 : std_logic_3dim_array(0 to NR_EG_OBJECTS-1, 0 to NR_JET_OBJECTS-1, DETA_DPHI_VECTOR_WIDTH_ALL-1 downto 0);
     
 1.3 Calculations of delta-Rs
 
 1.3.1 Configuration constants for delta-R:
+
+  dr_conf_<object type 1>_bx_<bx notation 1>_<object type 2>_bx_<bx notation 2> 
+  
+  Example of declaration:
+  constant dr_conf_eg_bx_0_jet_bx_0 : dr_conf := (N_OBJ_1 => NR_EG_OBJECTS, N_OBJ_2 => NR_JET_OBJECTS, DIFF_WIDTH => DETA_DPHI_VECTOR_WIDTH_ALL, OUT_REG => OUT_REG_CONV_CALC);
  
 1.3.2 Output signals of delta-R:
 

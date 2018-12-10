@@ -19,18 +19,18 @@ entity combinatorial_and is
         CHARGE_SEL : boolean := false
     );
     port(
-        pt : in std_logic_1dim_array(N_OBJ-1 downto 0);
-        eta_w1 : in std_logic_1dim_array(N_OBJ-1 downto 0);
-        eta_w2 : in std_logic_1dim_array(N_OBJ-1 downto 0);
-        eta_w3 : in std_logic_1dim_array(N_OBJ-1 downto 0);
-        eta_w4 : in std_logic_1dim_array(N_OBJ-1 downto 0);
-        eta_w5 : in std_logic_1dim_array(N_OBJ-1 downto 0);
-        phi_w1 : in std_logic_1dim_array(N_OBJ-1 downto 0);
-        phi_w2 : in std_logic_1dim_array(N_OBJ-1 downto 0);
-        iso : in std_logic_1dim_array(N_OBJ-1 downto 0);
-        qual : in std_logic_1dim_array(N_OBJ-1 downto 0);
-        charge : in std_logic_1dim_array(N_OBJ-1 downto 0);
-        cond_and : out std_logic_1dim_array(N_OBJ-1 downto 0)
+        pt : in std_logic_1dim_array(N_OBJ-1 downto 0) := (others => '0');
+        eta_w1 : in std_logic_1dim_array(N_OBJ-1 downto 0) := (others => '0');
+        eta_w2 : in std_logic_1dim_array(N_OBJ-1 downto 0) := (others => '0');
+        eta_w3 : in std_logic_1dim_array(N_OBJ-1 downto 0) := (others => '0');
+        eta_w4 : in std_logic_1dim_array(N_OBJ-1 downto 0) := (others => '0');
+        eta_w5 : in std_logic_1dim_array(N_OBJ-1 downto 0) := (others => '0');
+        phi_w1 : in std_logic_1dim_array(N_OBJ-1 downto 0) := (others => '0');
+        phi_w2 : in std_logic_1dim_array(N_OBJ-1 downto 0) := (others => '0');
+        iso : in std_logic_1dim_array(N_OBJ-1 downto 0) := (others => '0');
+        qual : in std_logic_1dim_array(N_OBJ-1 downto 0) := (others => '0');
+        charge : in std_logic_1dim_array(N_OBJ-1 downto 0) := (others => '0');
+        comb_and : out std_logic_1dim_array(N_OBJ-1 downto 0)
     );
 end combinatorial_and;
 
@@ -50,7 +50,7 @@ begin
         iso_i(i) <= iso(i) when ISO_SEL else '1';
         qual_i(i) <= qual(i) when QUAL_SEL else '1';
         charge_i(i) <= charge(i) when CHARGE_SEL else '1';
-        cond_and(i) <= pt(i) and eta_i(i) and phi_i(i) and iso_i(i) and qual_i(i) and charge_i(i);
+        comb_and(i) <= pt(i) and eta_i(i) and phi_i(i) and iso_i(i) and qual_i(i) and charge_i(i);
     end generate and_i;
 
 end architecture rtl;
