@@ -36,6 +36,7 @@ architecture rtl of correlation_conditions is
     constant DEF_VAL_2DIM : std_logic_2dim_array(CONF.N_OBJ_1-1 downto 0, CONF.N_OBJ_2-1 downto 0) := (others => (others => '1'));
     signal deta_i : std_logic_2dim_array(CONF.N_OBJ_1-1 downto 0, CONF.N_OBJ_2-1 downto 0);
     signal dphi_i : std_logic_2dim_array(CONF.N_OBJ_1-1 downto 0, CONF.N_OBJ_2-1 downto 0);
+    signal dr_i : std_logic_2dim_array(CONF.N_OBJ_1-1 downto 0, CONF.N_OBJ_2-1 downto 0);
     signal inv_mass_i : std_logic_2dim_array(CONF.N_OBJ_1-1 downto 0, CONF.N_OBJ_2-1 downto 0);
     signal trans_mass_i : std_logic_2dim_array(CONF.N_OBJ_1-1 downto 0, CONF.N_OBJ_2-1 downto 0);
     signal tbpt_i : std_logic_2dim_array(CONF.N_OBJ_1-1 downto 0, CONF.N_OBJ_2-1 downto 0);
@@ -46,6 +47,7 @@ begin
 
     deta_i <= deta when CONF.DETA_SEL else DEF_VAL_2DIM;
     dphi_i <= dphi when CONF.DPHI_SEL else DEF_VAL_2DIM;
+    dr_i <= delta_r when CONF.DR_SEL else DEF_VAL_2DIM;
     inv_mass_i <= inv_mass when CONF.INV_MASS_SEL else DEF_VAL_2DIM;
     trans_mass_i <= trans_mass when CONF.TRANS_MASS_SEL else DEF_VAL_2DIM;
     tbpt_i <= tbpt when CONF.TBPT_SEL else DEF_VAL_2DIM;
@@ -62,7 +64,7 @@ begin
         for i in CONF.SLICE_1_L to CONF.SLICE_1_H loop
             for j in CONF.SLICE_2_L to CONF.SLICE_2_H loop
                 index := index + 1;
-                and_vec(index) := in_1(i) and in_2(j) and deta_i(i,j) and dphi_i(i,j) and 
+                and_vec(index) := in_1(i) and in_2(j) and deta_i(i,j) and dphi_i(i,j) and dr_i(i,j) and 
                     inv_mass_i(i,j) and trans_mass_i(i,j) and tbpt_i(i,j) and cc_double_i(i,j);
             end loop;
         end loop;
