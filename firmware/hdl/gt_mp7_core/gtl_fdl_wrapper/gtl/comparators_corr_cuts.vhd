@@ -43,9 +43,14 @@ begin
             if_ge: if CONF.MODE = greater_equal generate
                 comp(i,j) <= '1' when (data_vec(i,j) >= REQ_L_I) else '0';
             end generate if_ge;
-            if_win: if CONF.MODE = window generate
+            if_win_sign: if CONF.MODE = win_sign generate
+                comp_signed_i : entity work.comp_signed
+                    generic map(REQ_L_I, REQ_H_I)  
+                    port map(data_vec(i,j), comp(i,j));
+            end generate if_win_sign;
+            if_win_unsign: if CONF.MODE = win_unsign generate
                 comp(i,j) <= '1' when ((data_vec(i,j) >= REQ_L_I) and (data_vec(i,j) <= REQ_H_I)) else '0';
-            end generate if_win;
+            end generate if_win_unsign;
             if_eq: if CONF.MODE = equal generate
                 comp(i,j) <= '1' when (data_vec(i,j) = REQ_L_I) else '0';
             end generate if_eq;

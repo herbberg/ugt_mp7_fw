@@ -44,16 +44,14 @@ begin
         if_ge: if CONF.MODE = greater_equal generate
             comp(i) <= '1' when (data_i(i) >= REQ_L_I(CONF.DATA_WIDTH-1 downto 0)) else '0';
         end generate if_ge;
-        if_win: if CONF.MODE = window generate
---             comp_1_sim(i) <= '1' when (data_i(i) >= REQ_L_I(CONF.DATA_WIDTH-1 downto 0)) else '0';
---             comp_2_sim(i) <= '1' when (data_i(i) <= REQ_H_I(CONF.DATA_WIDTH-1 downto 0)) else '0';
---             comp(i) <= comp_1(i) and comp_2(i);
---             comp(i) <= '1' when (data_i(i) >= REQ_L_I(CONF.DATA_WIDTH-1 downto 0)) and (data_i(i) <= REQ_H_I(CONF.DATA_WIDTH-1 downto 0)) else '0';
+        if_win_sign: if CONF.MODE = win_sign generate
             comp_signed_i : entity work.comp_signed
                 generic map(REQ_L_I, REQ_H_I)  
                 port map(data_i(i), comp(i));
-                
-        end generate if_win;
+        end generate if_win_sign;
+        if_win_unsign: if CONF.MODE = win_unsign generate
+            comp(i) <= '1' when (data_i(i) >= REQ_L_I(CONF.DATA_WIDTH-1 downto 0)) and (data_i(i) <= REQ_H_I(CONF.DATA_WIDTH-1 downto 0)) else '0';
+        end generate if_win_unsign;
         if_eq: if CONF.MODE = equal generate
             comp(i) <= '1' when (data_i(i) = REQ_L_I(CONF.DATA_WIDTH-1 downto 0)) else '0';
         end generate if_eq;
@@ -66,23 +64,4 @@ begin
         generic map(CONF.N_OBJ_1_H+1, CONF.OUT_REG)  
         port map(clk, comp, comp_o);
 
---     l1: for i in 0 to CONF.N_OBJ_1_H generate
---         if_ge: if CONF.MODE = greater_equal generate
---             comp(i) <= '1' when (data(i)(CONF.DATA_WIDTH-1 downto 0) >= REQ_L_I(CONF.DATA_WIDTH-1 downto 0)) else '0';
---         end generate if_ge;
---         if_win: if CONF.MODE = window generate
---             comp(i) <= '1' when (data(i)(CONF.DATA_WIDTH-1 downto 0) >= REQ_L_I(CONF.DATA_WIDTH-1 downto 0)) and (data(i)(CONF.DATA_WIDTH-1 downto 0) <= REQ_H_I(CONF.DATA_WIDTH-1 downto 0)) else '0';
---         end generate if_win;
---         if_eq: if CONF.MODE = equal generate
---             comp(i) <= '1' when (data(i)(CONF.DATA_WIDTH-1 downto 0) = REQ_L_I(CONF.DATA_WIDTH-1 downto 0)) else '0';
---         end generate if_eq;
---         if_lut: if CONF.MODE = lut generate
---             comp(i) <= LUT_REQ_I(CONV_INTEGER(data(i)(CONF.DATA_WIDTH-1 downto 0)));
---         end generate if_lut;
---     end generate l1;
--- 
---     out_reg_i : entity work.out_reg_mux
---         generic map(CONF.N_OBJ_1_H+1, CONF.OUT_REG)  
---         port map(clk, comp, comp_o);
-        
 end architecture rtl;

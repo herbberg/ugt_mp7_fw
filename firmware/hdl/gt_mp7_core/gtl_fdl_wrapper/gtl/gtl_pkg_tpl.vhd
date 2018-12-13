@@ -70,6 +70,7 @@ constant MASKS_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"000000
     constant MAX_PT_VECTOR_WIDTH : positive := 15; -- esums - max. value 2047.5 GeV => 20475 (2047.5 * 10) => 0x4FFB
 
     constant OUT_REG_CONV_CALC: boolean := true;
+    constant IN_REG_COMP: boolean := false;
     constant OUT_REG_COMP: boolean := true;
     constant OUT_REG_COND: boolean := false;
     
@@ -265,7 +266,7 @@ constant MASKS_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"000000
 
     type pt_vector_array is array (natural range <>) of std_logic_vector(MAX_PT_VECTOR_WIDTH-1 downto 0);
 
-    type comp_mode is (greater_equal,window,equal,lut);
+    type comp_mode is (greater_equal,win_sign,win_unsign,equal,lut);
 
     type obj_struct is record
         pt_l,pt_h,eta_l,eta_h,phi_l,phi_h,iso_l,
@@ -308,7 +309,7 @@ constant MASKS_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"000000
     type comparators_conf is record
         N_OBJ_1_H, N_OBJ_2_H, DATA_WIDTH, LUT_HIGH_BIT : natural;
         MODE : comp_mode;
-        OUT_REG : boolean;
+        IN_REG, OUT_REG : boolean;
     end record comparators_conf;
     
     type comparator_muon_charge_corr_conf is record
