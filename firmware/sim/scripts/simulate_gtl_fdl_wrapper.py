@@ -16,10 +16,10 @@ DEFAULT_MODELSIM_INI_TPL = 'modelsim_tpl.ini'
 INI_FILE_TPL = 'modelsim_tpl.ini'
 INI_FILE = 'modelsim.ini'
 # Do file and template.
-DO_FILE_TPL = 'scripts/gtl_fdl_wrapper_tpl.do'
+DO_FILE_TPL = 'scripts/templates/gtl_fdl_wrapper_test_tpl.do'
 DO_FILE = 'scripts/gtl_fdl_wrapper.do'
 # Testbench file and template.
-TB_FILE_TPL = 'testbench/gtl_fdl_wrapper_tb_tpl.vhd'
+TB_FILE_TPL = 'testbench/templates/gtl_fdl_wrapper_tb_tpl.vhd'
 TB_FILE = 'testbench/gtl_fdl_wrapper_tb.vhd'
 TEMP_FILE = 'testbench/temp_file.vhd'
 ## HB 2016-12-05: not used anymore (using ../hdl/gt_mp7_core/gt_mp7_core_pkg_sim.vhd for simulation)
@@ -78,6 +78,7 @@ def parse():
     parser = argparse.ArgumentParser()
     parser.add_argument('mp7tag', type=os.path.abspath, help = "path to MP7 tag")
     parser.add_argument('menu', type=os.path.abspath, help = "path to trigger menu directory")
+    parser.add_argument('--module', default = 0, help = "module number")
     parser.add_argument('--testvector', type=os.path.abspath, help = "path to testvector to be used")
     parser.add_argument('-o', metavar = '<filename>', help = "write transcript, warnings and errors to file, default is `sim_results_gtl_fdl_wrapper_<testvector>'")
     parser.add_argument('--wlf', action = 'store_true', help = "no console transcript info, warning and error messages (transcript output to vsim.wlf)")
@@ -94,11 +95,12 @@ def main():
     sim_dir = os.getenv('SIM_ROOT')#looks for sim dir if not found display error
     if not sim_dir:
         raise RuntimeError("var SIM_ROOT is not defined (start setup.sh first!)")
-    debug = 'prints' if args.p else ''
+    #debug = 'prints' if args.verbose else ''
     # Setup console logging
     logging.basicConfig(format = '%(levelname)s: %(message)s', level = logging.DEBUG)
     # Menu path.
     menu_path = args.menu + '/vhdl/module_' + str(args.module)
+
     # Fetch menu name from path.
     menu_name = os.path.basename(args.menu)
     if not menu_name.startswith('L1Menu_'):
@@ -109,10 +111,13 @@ def main():
     msgmode = 'wlf' if args.wlf else 'tran'
     # Testvector name (basename without extension).
     if not args.testvector:
-
+        print "no test vector file"
     else: testvector_name = os.path.splitext(os.path.basename(args.testvector))[0]
-    if debug == 'prints':
+    if args.verbose:
         print "testvector_name: {testvector_name}".format(**locals())
+    result_file_path = os.path.join('sim_results_gtl_fdl_wrapper_', testvector_name)
+    print "testvector_name: {testvector_name}".format(**locals())
+    
     # As things are getting serious let's start logging to file.
     handler = logging.FileHandler('sum_{testvector_name}.log'.format(**locals()), mode = 'w')
     handler.setFormatter(logging.Formatter(fmt = '%(asctime)s %(levelname)s : %(message)s', datefmt='%Y-%m-%d %H:%M:%S'))
@@ -137,7 +142,7 @@ def main():
         '{{MODELSIM_VERSION}}' : args.modelsim,
     })
     render_template(DO_FILE_TPL, DO_FILE, {
-        '_MP7_TAG_' : args.mp7_tag,
+        '_MP7_TAG_' : args.mp7tag,
         '_MENU_PATH_' : menu_path,
     })
     render_template(TB_FILE_TPL, TEMP_FILE, {
@@ -146,6 +151,7 @@ def main():
     render_template(TEMP_FILE, TB_FILE, {
         '{{TESTVECTOR_FILENAME}}' : args.testvector,
         '{{TESTVECTOR_NAME}}' : testvector_name,
+        '{{RESULT_FILE}}' : result_file_path,
     })
 ## HB 2016-12-05: not used anymore (using ../hdl/gt_mp7_core/gt_mp7_core_pkg_sim.vhd for simulation)
     #render_template(GT_MP7_TOP_PKG_TPL, GT_MP7_TOP_PKG_SIM_TEMP, {
@@ -163,20 +169,21 @@ def main():
 
     uGTalgosPath = os.path.abspath(os.path.join(sim_dir, '..'))
     src_dir = os.path.join(menu_path, 'src')
-    replace_map = {
-        '{{algo_index}}': read_file(os.path.join(src_dir, 'algo_index.vhd')),
-        '{{ugt_constants}}': read_file(os.path.join(src_dir, 'ugt_constants.vhd')),
-        '{{gtl_module_signals}}': read_file(os.path.join(src_dir, 'gtl_module_signals.vhd')),
-        '{{gtl_module_instances}}': read_file(os.path.join(src_dir, 'gtl_module_instances.vhd')),
-    }
+    
+    #replace_map = {
+        #'{{algo_index}}': read_file(os.path.join(src_dir, 'algo_index.vhd')),
+        #'{{ugt_constants}}': read_file(os.path.join(src_dir, 'ugt_constants.vhd')),
+        #'{{gtl_module_signals}}': read_file(os.path.join(src_dir, 'gtl_module_signals.vhd')),
+        #'{{gtl_module_instances}}': read_file(os.path.join(src_dir, 'gtl_module_instances.vhd')),
+    #}
     gtl_fdl_wrapper_dir = os.path.join(uGTalgosPath, 'hdl', 'gt_mp7_core', 'gtl_fdl_wrapper')
     gtl_dir = os.path.join(gtl_fdl_wrapper_dir, 'gtl')
     fdl_dir = os.path.join(gtl_fdl_wrapper_dir, 'fdl')
-    # Patch VHDL files
-    template_replace(os.path.join(fdl_dir, 'algo_mapping_rop_tpl.vhd'), replace_map, os.path.join(sim_dir_vhdl_temp, 'algo_mapping_rop.vhd'))
-    template_replace(os.path.join(gtl_dir, 'gtl_pkg_tpl.vhd'), replace_map, os.path.join(sim_dir_vhdl_temp, 'gtl_pkg.vhd'))
-    template_replace(os.path.join(gtl_dir, 'gtl_module_tpl.vhd'), replace_map, os.path.join(sim_dir_vhdl_temp, 'gtl_module.vhd'))
-    # Run Modelsim with makefile, on fail (1) raise error.
+    ## Patch VHDL files
+    #template_replace(os.path.join(fdl_dir, 'algo_mapping_rop_tpl.vhd'), replace_map, os.path.join(sim_dir_vhdl_temp, 'algo_mapping_rop.vhd'))
+    #template_replace(os.path.join(gtl_dir, 'gtl_pkg_tpl.vhd'), replace_map, os.path.join(sim_dir_vhdl_temp, 'gtl_pkg.vhd'))
+    #template_replace(os.path.join(gtl_dir, 'gtl_module_tpl.vhd'), replace_map, os.path.join(sim_dir_vhdl_temp, 'gtl_module.vhd'))
+    ## Run Modelsim with makefile, on fail (1) raise error.
     if 0 != call_process('vsim', '-c', '-msgmode', msgmode, '-do', 'do {filename}; quit -f'.format(filename = DO_FILE)):
         print "something went wrong"
     print

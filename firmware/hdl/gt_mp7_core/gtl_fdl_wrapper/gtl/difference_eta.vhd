@@ -9,6 +9,8 @@ use ieee.std_logic_1164.all;
 
 -- used for CONV_STD_LOGIC_VECTOR
 use ieee.std_logic_arith.all;
+-- used for CONV_INTEGER
+use ieee.std_logic_unsigned.all;
 
 use work.gtl_pkg.all;
 use work.lut_pkg.all;
@@ -22,6 +24,7 @@ entity difference_eta is
         eta_1 : in integer_array(0 to CONF.N_OBJ_1-1);
         eta_2 : in integer_array(0 to CONF.N_OBJ_2-1);
         diff_eta_o : out std_logic_3dim_array(0 to CONF.N_OBJ_1-1, 0 to CONF.N_OBJ_2-1, CONF.DIFF_WIDTH-1 downto 0);
+        diff_eta_o_int : out integer_2dim_array(0 to CONF.N_OBJ_1-1, 0 to CONF.N_OBJ_2-1);
         diff_eta_reg_o : out std_logic_3dim_array(0 to CONF.N_OBJ_1-1, 0 to CONF.N_OBJ_2-1, CONF.DIFF_WIDTH-1 downto 0);
         cosh_deta_o : out std_logic_3dim_array(0 to CONF.N_OBJ_1-1, 0 to CONF.N_OBJ_2-1, CONF.COSH_COS_WIDTH-1 downto 0)
     );
@@ -34,7 +37,7 @@ architecture rtl of difference_eta is
     type diff_eta_i_array is array (0 to CONF.N_OBJ_1-1, 0 to CONF.N_OBJ_2-1, CONF.DIFF_WIDTH-1 downto 0) of std_logic_vector(0 downto 0);
     signal diff_eta_i, diff_eta_reg : diff_eta_i_array := (others => (others => (others => "0")));
     signal cosh_deta_vector_i : cosh_cos_vector_array(0 to CONF.N_OBJ_1-1, 0 to CONF.N_OBJ_2-1) := (others => (others => (others => '0')));
-    
+   
 begin
 
     loop_1: for i in 0 to CONF.N_OBJ_1-1 generate
@@ -64,10 +67,11 @@ begin
                 diff_eta_reg_o(i,j,k) <= diff_eta_reg(i,j,k)(0);
             end generate out_loop_diff;
 -- no output register for cosh_deta_o (used only in first stage, e.g. mass calculation)
+            diff_eta_o_int(i,j) <= CONV_INTEGER(diff_eta_vector_i(i,j));
             out_loop_cosh: for l in 0 to CONF.COSH_COS_WIDTH-1 generate 
                  cosh_deta_o(i,j,l) <= cosh_deta_vector_i(i,j)(l); 
             end generate out_loop_cosh;
         end generate loop_2;
     end generate loop_1;
-    
+                    
 end architecture rtl;

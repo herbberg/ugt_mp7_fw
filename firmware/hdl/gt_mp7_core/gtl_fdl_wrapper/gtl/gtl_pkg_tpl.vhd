@@ -256,6 +256,7 @@ constant MASKS_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"000000
     type std_logic_3dim_array is array (natural range <>, natural range <>, natural range <>) of std_logic;
     type std_logic_4dim_array is array (natural range <>, natural range <>, natural range <>, natural range <>) of std_logic;
     type integer_array is array (natural range <>) of integer;
+    type integer_2dim_array is array (natural range <>, natural range <>) of integer;
     
     type obj_type is (eg, jet, tau, muon, ett, etm, htt, htm, ettem, etmhf);
     type obj_corr_type is (calo_calo, calo_esums, calo_muon, muon_muon, muon_esums);

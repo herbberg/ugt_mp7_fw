@@ -217,27 +217,28 @@ dut : entity work.gtl_fdl_wrapper
     )
     port map
     (
-        ipb_clk            => '0',
-        ipb_rst            => '0',
-        ipb_in             => IPB_WBUS_NULL,
-        ipb_out            => open,
-        lhc_clk            => lhc_clk,
-        lhc_rst            => '0',
-        lhc_data           => lhc_data,
-        bcres              => '0',
-        l1a                => '0',
+        ipb_clk => '0',
+        ipb_rst => '0',
+        ipb_in => IPB_WBUS_NULL,
+        ipb_out => open,
+        lhc_clk => lhc_clk,
+        lhc_rst => '0',
+        lhc_data => lhc_data,
+        bcres => '0',
+        test_en => '0',
+        l1a => '0',
         begin_lumi_section => '0',
         prescale_factor_set_index_rop => open,
         algo_after_gtLogic_rop => open,
         algo_after_bxomask_rop => open,
         algo_after_prescaler_rop  => open,
-        algo_after_finor_mask_rop => algo_after_finor_mask_rop,
         local_finor_rop => open,
         local_veto_rop  => open,
         finor_2_mezz_lemo  => open,
         veto_2_mezz_lemo  => open,
-	finor_w_veto_2_mezz_lemo  => open,
-	local_finor_with_veto_o  => local_finor_with_veto
+        finor_w_veto_2_mezz_lemo  => open,
+        local_finor_with_veto_o  => local_finor_with_veto
     );
 
 end rtl;
+

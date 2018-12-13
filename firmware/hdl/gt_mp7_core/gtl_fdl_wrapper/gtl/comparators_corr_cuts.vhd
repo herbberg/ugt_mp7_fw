@@ -18,7 +18,7 @@ entity comparators_corr_cuts is
     port(
         clk : in std_logic;
         data : in std_logic_3dim_array(0 to CONF.N_OBJ_1_H, 0 to CONF.N_OBJ_2_H, CONF.DATA_WIDTH-1 downto 0) := (others => (others => (others => '0')));
-        comp_o : out std_logic_2dim_array(CONF.N_OBJ_1_H downto 0, CONF.N_OBJ_2_H downto 0) := (others => (others => '0'))
+        comp_o : out std_logic_2dim_array(0 to CONF.N_OBJ_1_H, 0 to CONF.N_OBJ_2_H) := (others => (others => '0'))
     );
 end comparators_corr_cuts;
 
@@ -26,10 +26,10 @@ architecture rtl of comparators_corr_cuts is
 
     constant REQ_L_I : std_logic_vector(CONF.DATA_WIDTH-1 downto 0) := REQ_L(CONF.DATA_WIDTH-1 downto 0);
     constant REQ_H_I : std_logic_vector(CONF.DATA_WIDTH-1 downto 0) := REQ_H(CONF.DATA_WIDTH-1 downto 0);
-    type data_vec_array is array(CONF.N_OBJ_1_H downto 0,CONF.N_OBJ_2_H downto 0) of std_logic_vector(CONF.DATA_WIDTH-1 downto 0);
+    type data_vec_array is array(0 to CONF.N_OBJ_1_H, 0 to CONF.N_OBJ_2_H) of std_logic_vector(CONF.DATA_WIDTH-1 downto 0);
     signal data_vec : data_vec_array;
-    signal comp : std_logic_2dim_array(CONF.N_OBJ_1_H downto 0, CONF.N_OBJ_2_H downto 0);
-    type comp_i_array is array (CONF.N_OBJ_1_H downto 0, CONF.N_OBJ_2_H downto 0) of std_logic_vector(0 downto 0);
+    signal comp : std_logic_2dim_array(0 to CONF.N_OBJ_1_H, 0 to CONF.N_OBJ_2_H);
+    type comp_i_array is array (0 to CONF.N_OBJ_1_H, 0 to CONF.N_OBJ_2_H) of std_logic_vector(0 downto 0);
     signal comp_i : comp_i_array;
     signal comp_r : comp_i_array;
 
