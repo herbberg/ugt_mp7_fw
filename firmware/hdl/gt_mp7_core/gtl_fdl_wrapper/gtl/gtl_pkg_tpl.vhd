@@ -312,9 +312,9 @@ constant MASKS_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"000000
         IN_REG, OUT_REG : boolean;
     end record comparators_conf;
     
-    type comparator_muon_charge_corr_conf is record
-        OUT_REG : boolean;
-    end record comparator_muon_charge_corr_conf;
+--     type comparator_muon_charge_corr_conf is record
+--         OUT_REG : boolean;
+--     end record comparator_muon_charge_corr_conf;
 
     type combinatorial_conditions_conf is record
         OUT_REG, TBPT_SEL, CHARGE_CORR_SEL, CHARGE_SEL, QUAL_SEL, ISO_SEL, PHI_SEL, ETA_SEL : boolean;
