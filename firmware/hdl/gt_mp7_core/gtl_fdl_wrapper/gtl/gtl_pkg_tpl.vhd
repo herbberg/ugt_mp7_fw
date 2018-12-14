@@ -69,8 +69,8 @@ constant MASKS_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"000000
     constant MAX_PT_WIDTH : positive := 12; -- max. pt width of comparators (esums pt = 12)
     constant MAX_PT_VECTOR_WIDTH : positive := 15; -- esums - max. value 2047.5 GeV => 20475 (2047.5 * 10) => 0x4FFB
 
-    constant OUT_REG_CONV_CALC: boolean := true;
-    constant IN_REG_COMP: boolean := false;
+    constant OUT_REG_CONV_CALC: boolean := false;
+    constant IN_REG_COMP: boolean := true;
     constant OUT_REG_COMP: boolean := true;
     constant OUT_REG_COND: boolean := false;
     
