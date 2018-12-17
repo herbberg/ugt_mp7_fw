@@ -93,15 +93,15 @@ begin
     
     l_1 : for i in 0 to NR_MUON_OBJECTS-1 generate
         l_2 : for j in 0 to NR_MUON_OBJECTS-1 generate
-            out_reg_double_i : entity work.out_reg_mux
+            out_reg_double_i : entity work.reg_mux
                 generic map(NR_MUON_CHARGE_BITS, OUT_REG)  
                 port map(clk, cc_double_i(i,j), cc_double(i,j)); 
             l_3 : for k in 0 to NR_MUON_OBJECTS-1 generate
-                out_reg_triple_i : entity work.out_reg_mux
+                out_reg_triple_i : entity work.reg_mux
                     generic map(NR_MUON_CHARGE_BITS, OUT_REG)  
                     port map(clk, cc_triple_i(i,j,k), cc_triple(i,j,k)); 
                 l_4 : for l in 0 to NR_MUON_OBJECTS-1 generate
-                    out_reg_quad_i : entity work.out_reg_mux
+                    out_reg_quad_i : entity work.reg_mux
                         generic map(NR_MUON_CHARGE_BITS, OUT_REG)  
                         port map(clk, cc_quad_i(i,j,k,l), cc_quad(i,j,k,l)); 
                 end generate l_4;

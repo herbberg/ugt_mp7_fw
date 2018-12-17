@@ -54,7 +54,7 @@ begin
             dr_squared_i(i,j) <= CONV_STD_LOGIC_VECTOR((diff_eta_squared(i,j)+diff_phi_squared(i,j)), 2*CONF.DIFF_WIDTH);
             l_4: for l in 0 to (2*CONF.DIFF_WIDTH)-1 generate
                 dr_squared(i,j,l)(0) <= dr_squared_i(i,j)(l);                 
-                out_reg_i : entity work.out_reg_mux
+                out_reg_i : entity work.reg_mux
                     generic map(1, CONF.OUT_REG) 
                     port map(clk, dr_squared(i,j,l), dr_squared_r(i,j,l)); 
                 dr_squared_o(i,j,l) <= dr_squared_r(i,j,l)(0);

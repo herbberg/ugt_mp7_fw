@@ -39,10 +39,10 @@ begin
         l2: for j in 0 to CONF.N_OBJ_2_H generate
             l3: for k in 0 to CONF.DATA_WIDTH-1 generate
                 data_vec(i,j)(k) <= data(i,j,k);
-                in_reg_i : entity work.out_reg_mux
-                    generic map(CONF.DATA_WIDTH, CONF.IN_REG)  
-                    port map(clk, data_vec(i,j), data_vec_i(i,j));
             end generate l3;
+            in_reg_i : entity work.reg_mux
+                generic map(CONF.DATA_WIDTH, CONF.IN_REG)  
+                port map(clk, data_vec(i,j), data_vec_i(i,j));
             if_ge: if CONF.MODE = greater_equal generate
                 comp(i,j) <= '1' when (data_vec_i(i,j) >= REQ_L_I) else '0';
             end generate if_ge;
@@ -58,7 +58,7 @@ begin
                 comp(i,j) <= '1' when (data_vec_i(i,j) = REQ_L_I) else '0';
             end generate if_eq;
             comp_i(i,j)(0) <= comp(i,j);
-            out_reg_i : entity work.out_reg_mux
+            out_reg_i : entity work.reg_mux
                 generic map(1, CONF.OUT_REG) 
                 port map(clk, comp_i(i,j), comp_r(i,j)); 
             comp_o(i,j) <= comp_r(i,j)(0);

@@ -49,7 +49,7 @@ begin
                 ((conv_std_logic_vector((10**CONF.COSH_COS_PREC), CONF.COSH_COS_WIDTH)) - (cos_dphi(i,j)(CONF.COSH_COS_WIDTH-1 downto 0)));
             l_3: for k in 0 to MASS_WIDTH-1 generate
                 transverse_mass_sq_div2(i,j,k)(0) <= transverse_mass_sq_div2_i(i,j)(k);                 
-                out_reg_i : entity work.out_reg_mux
+                out_reg_i : entity work.reg_mux
                     generic map(1, CONF.OUT_REG)  
                     port map(clk, transverse_mass_sq_div2(i,j,k), transverse_mass_sq_div2_r(i,j,k)); 
                 transverse_mass_o(i,j,k) <= transverse_mass_sq_div2_r(i,j,k)(0);

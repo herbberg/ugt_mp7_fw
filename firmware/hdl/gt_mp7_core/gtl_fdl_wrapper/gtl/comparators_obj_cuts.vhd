@@ -40,7 +40,7 @@ architecture rtl of comparators_obj_cuts is
 begin
 
     l1: for i in 0 to CONF.N_OBJ_1_H generate
-        in_reg_i : entity work.out_reg_mux
+        in_reg_i : entity work.reg_mux
             generic map(CONF.DATA_WIDTH, CONF.IN_REG)  
             port map(clk, data(i)(CONF.DATA_WIDTH-1 downto 0), data_i(i));
         if_ge: if CONF.MODE = greater_equal generate
@@ -62,7 +62,7 @@ begin
         end generate if_lut;
     end generate l1;
 
-    out_reg_i : entity work.out_reg_mux
+    out_reg_i : entity work.reg_mux
         generic map(CONF.N_OBJ_1_H+1, CONF.OUT_REG)  
         port map(clk, comp, comp_o);
 

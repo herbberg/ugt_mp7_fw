@@ -61,7 +61,7 @@ begin
                 diff_eta_o(i,j,k) <= diff_eta_vector_i(i,j)(k); 
 -- output register for diff_eta_reg_o for use in second stage, e.g. deta comparison)
                 diff_eta_i(i,j,k)(0) <= diff_eta_vector_i(i,j)(k); 
-                out_reg_diff_i : entity work.out_reg_mux
+                out_reg_diff_i : entity work.reg_mux
                     generic map(1, CONF.OUT_REG)  
                     port map(clk, diff_eta_i(i,j,k), diff_eta_reg(i,j,k));
                 diff_eta_reg_o(i,j,k) <= diff_eta_reg(i,j,k)(0);

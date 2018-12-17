@@ -66,7 +66,7 @@ begin
                 diff_phi_o(i,j,k) <= diff_phi_vector_i(i,j)(k); 
 -- output register for diff_phi_reg_o for use in second stage, e.g. dphi comparison)
                 diff_phi_i(i,j,k)(0) <= diff_phi_vector_i(i,j)(k); 
-                out_reg_diff_i : entity work.out_reg_mux
+                out_reg_diff_i : entity work.reg_mux
                     generic map(1, CONF.OUT_REG)  
                     port map(clk, diff_phi_i(i,j,k), diff_phi_reg(i,j,k)); 
                 diff_phi_reg_o(i,j,k) <= diff_phi_reg(i,j,k)(0);

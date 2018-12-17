@@ -50,29 +50,29 @@ begin
     
     l1: for i in 0 to NR_MUON_OBJECTS-1 generate
         l2: for j in 0 to NR_MUON_OBJECTS-1 generate
-            in_reg_i : entity work.out_reg_mux
+            in_reg_i : entity work.reg_mux
                 generic map(NR_MUON_CHARGE_BITS, true)  
                 port map(clk, cc_double(i,j), cc_double_i(i,j));
             comp_i_double(i,j)(0) <= '1' when (((cc_double_i(i,j) = CC_LS) and (REQ = CC_LS)) or ((cc_double_i(i,j) = CC_OS) and (REQ = CC_OS))) else '0';
-            out_reg_i : entity work.out_reg_mux
+            out_reg_i : entity work.reg_mux
                 generic map(1, OUT_REG)  
                 port map(clk, comp_i_double(i,j), comp_r_double(i,j));
             comp_o_double(i,j) <= comp_r_double(i,j)(0);
             l3: for k in 0 to NR_MUON_OBJECTS-1 generate
-                in_reg_i : entity work.out_reg_mux
+                in_reg_i : entity work.reg_mux
                     generic map(NR_MUON_CHARGE_BITS, true)  
                     port map(clk, cc_triple(i,j,k), cc_triple_i(i,j,k));
                 comp_i_triple(i,j,k)(0) <= '1' when (((cc_triple_i(i,j,k) = CC_LS) and (REQ = CC_LS)) or ((cc_triple_i(i,j,k) = CC_OS) and (REQ = CC_OS))) else '0';
-                out_reg_i : entity work.out_reg_mux
+                out_reg_i : entity work.reg_mux
                     generic map(1, OUT_REG)  
                     port map(clk, comp_i_triple(i,j,k), comp_r_triple(i,j,k));
                 comp_o_triple(i,j,k) <= comp_r_triple(i,j,k)(0);
                 l4: for l in 0 to NR_MUON_OBJECTS-1 generate
-                    in_reg_i : entity work.out_reg_mux
+                    in_reg_i : entity work.reg_mux
                         generic map(NR_MUON_CHARGE_BITS, true)  
                         port map(clk, cc_quad(i,j,k,l), cc_quad_i(i,j,k,l));
                     comp_i_quad(i,j,k,l)(0) <= '1' when (((cc_quad_i(i,j,k,l) = CC_LS) and (REQ = CC_LS)) or ((cc_quad_i(i,j,k,l) = CC_OS) and (REQ = CC_OS))) else '0';
-                    out_reg_i : entity work.out_reg_mux
+                    out_reg_i : entity work.reg_mux
                         generic map(1, OUT_REG)  
                         port map(clk, comp_i_quad(i,j,k,l), comp_r_quad(i,j,k,l));
                     comp_o_quad(i,j,k,l) <= comp_r_quad(i,j,k,l)(0);

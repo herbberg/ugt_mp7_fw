@@ -131,16 +131,16 @@ begin
             calo_sin_phi_vec_i(i) <= CONV_STD_LOGIC_VECTOR(sin_phi_i(i), CALO_SIN_COS_VECTOR_WIDTH);
             conv_mu_cos_phi_vec_i(i) <= CONV_STD_LOGIC_VECTOR(conv_mu_cos_phi_i(i), MUON_SIN_COS_VECTOR_WIDTH);
             conv_mu_sin_phi_vec_i(i) <= CONV_STD_LOGIC_VECTOR(conv_mu_cos_phi_i(i), MUON_SIN_COS_VECTOR_WIDTH);
-            cos_phi_vec_reg_i : entity work.out_reg_mux
+            cos_phi_vec_reg_i : entity work.reg_mux
                     generic map(CALO_SIN_COS_VECTOR_WIDTH, CONF.OUT_REG) 
                     port map(clk, calo_cos_phi_vec_i(i), calo_cos_phi_vec(i)); 
-            sin_phi_vec_reg_i : entity work.out_reg_mux
+            sin_phi_vec_reg_i : entity work.reg_mux
                     generic map(CALO_SIN_COS_VECTOR_WIDTH, CONF.OUT_REG)  
                     port map(clk, calo_sin_phi_vec_i(i), calo_sin_phi_vec(i)); 
-            conv_mu_cos_phi_vec_reg_i : entity work.out_reg_mux
+            conv_mu_cos_phi_vec_reg_i : entity work.reg_mux
                     generic map(MUON_SIN_COS_VECTOR_WIDTH, CONF.OUT_REG)  
                     port map(clk, conv_mu_cos_phi_vec_i(i), conv_mu_cos_phi_vec(i)); 
-            conv_mu_sin_phi_vec_reg_i : entity work.out_reg_mux
+            conv_mu_sin_phi_vec_reg_i : entity work.reg_mux
                     generic map(MUON_SIN_COS_VECTOR_WIDTH, CONF.OUT_REG)  
                     port map(clk, conv_mu_sin_phi_vec_i(i), conv_mu_sin_phi_vec(i));
                     
@@ -160,10 +160,10 @@ begin
 -- Internal register for integer signals directly used directly in next stage => comparison
             muon_cos_phi_vec_i(i) <= CONV_STD_LOGIC_VECTOR(cos_phi_i(i), MUON_SIN_COS_VECTOR_WIDTH);
             muon_sin_phi_vec_i(i) <= CONV_STD_LOGIC_VECTOR(sin_phi_i(i), MUON_SIN_COS_VECTOR_WIDTH);            
-            cos_phi_vec_reg_i : entity work.out_reg_mux
+            cos_phi_vec_reg_i : entity work.reg_mux
                     generic map(MUON_SIN_COS_VECTOR_WIDTH, CONF.OUT_REG)  
                     port map(clk, muon_sin_phi_vec_i(i), muon_cos_phi_vec(i)); 
-            sin_phi_vec_reg_i : entity work.out_reg_mux
+            sin_phi_vec_reg_i : entity work.reg_mux
                     generic map(MUON_SIN_COS_VECTOR_WIDTH, CONF.OUT_REG)  
                     port map(clk, muon_sin_phi_vec_i(i), muon_sin_phi_vec(i));                    
             cos_phi(i) <= CONV_INTEGER(muon_cos_phi_vec(i));
@@ -175,25 +175,25 @@ begin
         phi_integer(i) <= CONV_INTEGER(phi_i(i));
             
 -- Output register for signals directly used directly in next stage => comparison
-        pt_out_reg_i : entity work.out_reg_mux
+        pt_out_reg_i : entity work.reg_mux
             generic map(pt_width, CONF.OUT_REG)  
             port map(clk, pt_i(i), pt(i)(pt_width-1 downto 0)); 
-        eta_out_reg_i : entity work.out_reg_mux
+        eta_out_reg_i : entity work.reg_mux
             generic map(eta_width, CONF.OUT_REG)  
             port map(clk, eta_i(i), eta(i)(eta_width-1 downto 0)); 
-        phi_out_reg_i : entity work.out_reg_mux
+        phi_out_reg_i : entity work.reg_mux
             generic map(phi_width, CONF.OUT_REG)  
             port map(clk, phi_i(i), phi(i)(phi_width-1 downto 0)); 
-        iso_out_reg_i : entity work.out_reg_mux
+        iso_out_reg_i : entity work.reg_mux
             generic map(iso_width, CONF.OUT_REG)  
             port map(clk, iso_i(i), iso(i)(iso_width-1 downto 0)); 
-        qual_out_reg_i : entity work.out_reg_mux
+        qual_out_reg_i : entity work.reg_mux
             generic map(qual_width, CONF.OUT_REG)  
             port map(clk, qual_i(i), qual(i)(qual_width-1 downto 0)); 
-        charge_out_reg_i : entity work.out_reg_mux
+        charge_out_reg_i : entity work.reg_mux
             generic map(charge_width, CONF.OUT_REG)  
             port map(clk, charge_i(i), charge(i)(charge_width-1 downto 0)); 
-        pt_vector_out_reg_i : entity work.out_reg_mux
+        pt_vector_out_reg_i : entity work.reg_mux
             generic map(CONF.PT_VECTOR_WIDTH, CONF.OUT_REG)  
             port map(clk, pt_vector_i(i), pt_vector(i)(CONF.PT_VECTOR_WIDTH-1 downto 0)); 
 

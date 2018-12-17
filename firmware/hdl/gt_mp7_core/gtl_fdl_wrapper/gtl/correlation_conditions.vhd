@@ -74,7 +74,7 @@ begin
         cond_and_or(0) <= tmp;
     end process and_or_p;
 
-    out_reg_i : entity work.out_reg_mux
+    out_reg_i : entity work.reg_mux
         generic map(OUT_REG_WIDTH, CONF.OUT_REG)  
         port map(clk, cond_and_or, cond_o_v);
     
