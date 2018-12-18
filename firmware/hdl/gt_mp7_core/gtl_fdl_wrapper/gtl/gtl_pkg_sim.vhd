@@ -327,6 +327,28 @@ constant MASKS_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"000000
         SLICE_1_L, SLICE_1_H, SLICE_2_L, SLICE_2_H, N_OBJ_1, N_OBJ_2 : natural;
     end record correlation_conditions_conf;
 
+    type eg_record is record
+        pt : std_logic_vector(EG_PT_HIGH-EG_PT_LOW downto 0);
+        eta : std_logic_vector(EG_ETA_HIGH-EG_ETA_LOW downto 0);
+        phi : std_logic_vector(EG_PHI_HIGH-EG_PHI_LOW downto 0);
+        iso : std_logic_vector(EG_ISO_HIGH-EG_ISO_LOW downto 0);
+    end record eg_record;
+    
+    type jet_record is record
+        pt : std_logic_vector(JET_PT_HIGH-JET_PT_LOW downto 0);
+        eta : std_logic_vector(JET_ETA_HIGH-JET_ETA_LOW downto 0);
+        phi : std_logic_vector(JET_PHI_HIGH-JET_PHI_LOW downto 0);
+    end record jet_record;
+    
+    type muon_record is record
+        pt : std_logic_vector(MUON_PT_HIGH-MUON_PT_LOW downto 0);
+        eta : std_logic_vector(MUON_ETA_HIGH-MUON_ETA_LOW downto 0);
+        phi : std_logic_vector(MUON_PHI_HIGH-MUON_PHI_LOW downto 0);
+        iso : std_logic_vector(MUON_ISO_HIGH-MUON_ISO_LOW downto 0);
+        qual : std_logic_vector(MUON_QUAL_HIGH-MUON_QUAL_LOW downto 0);
+        charge : std_logic_vector(MUON_CHARGE_HIGH-MUON_CHARGE_LOW downto 0);
+    end record muon_record;
+    
 -- ==== MUONs - begin ============================================================
     type muon_objects_array is array (natural range <>) of std_logic_vector(MAX_MUON_BITS-1 downto 0);
 
