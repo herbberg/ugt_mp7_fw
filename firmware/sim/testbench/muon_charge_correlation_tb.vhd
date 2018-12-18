@@ -67,7 +67,7 @@ dut_1: entity work.muon_charge_correlations
     );
 
 dut_2: entity work.comparator_muon_charge_corr
-    generic map(true, CC_OS)
+    generic map(true, true, CC_OS)
     port map(
         clk => lhc_clk, cc_double => cc_double, cc_triple => cc_triple, cc_quad => cc_quad, 
         comp_o_double => open, comp_o_triple => open, comp_o_quad => open
