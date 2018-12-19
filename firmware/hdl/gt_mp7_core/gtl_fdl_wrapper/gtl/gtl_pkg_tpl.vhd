@@ -63,7 +63,7 @@ constant MASKS_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"000000
     constant MAX_LUT_WIDTH : positive := 16; -- muon qual lut
     constant MAX_OBJ_BITS : positive := 64; -- muon
 
-    constant MAX_COMP_IN_DATA_WIDTH : positive := 12; -- max. input data width of comparators (esums pt = 12)
+    constant MAX_COMP_DATA_WIDTH : positive := 12; -- max. input data width of comparators (esums pt = 12)
     constant MAX_COMP_CORR_CUTS_DATA_WIDTH : positive := 52; -- max inv mass width (2*MAX_PT_WIDTH+MAX_COSH_COS_WIDTH = 51) - used 52 for hex notation !
     constant MAX_COSH_COS_WIDTH : positive := 27; -- CALO_MUON_COSH_COS_VECTOR_WIDTH 
     constant MAX_PT_WIDTH : positive := 12; -- max. pt width of comparators (esums pt = 12)
@@ -76,7 +76,7 @@ constant MASKS_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"000000
     
 -- *******************************************************************************************************
 -- MUON objects bits
-    constant NR_MUON_OBJECTS : positive := MUON_ARRAY_LENGTH; -- from lhc_data_pkg.vhd
+--     constant NR_MUON_OBJECTS : positive := MUON_ARRAY_LENGTH; -- from lhc_data_pkg.vhd
     constant MAX_MUON_BITS : positive := MUON_DATA_WIDTH; -- from lhc_data_pkg.vhd
 
     constant MUON_PHI_LOW : natural := 0;
@@ -103,9 +103,9 @@ constant MASKS_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"000000
 
 -- *******************************************************************************************************
 -- CALO objects bits
-    constant NR_EG_OBJECTS : positive := EG_ARRAY_LENGTH; -- number eg objects, from lhc_data_pkg.vhd
-    constant NR_JET_OBJECTS : positive := JET_ARRAY_LENGTH; -- number jet objects, from lhc_data_pkg.vhd
-    constant NR_TAU_OBJECTS : positive := TAU_ARRAY_LENGTH; -- number tau objects, from lhc_data_pkg.vhd
+--     constant NR_EG_OBJECTS : positive := EG_ARRAY_LENGTH; -- number eg objects, from lhc_data_pkg.vhd
+--     constant NR_JET_OBJECTS : positive := JET_ARRAY_LENGTH; -- number jet objects, from lhc_data_pkg.vhd
+--     constant NR_TAU_OBJECTS : positive := TAU_ARRAY_LENGTH; -- number tau objects, from lhc_data_pkg.vhd
     constant MAX_CALO_OBJECTS : positive := max(EG_ARRAY_LENGTH, JET_ARRAY_LENGTH, TAU_ARRAY_LENGTH);
     constant MAX_CALO_BITS : positive := max(EG_DATA_WIDTH, JET_DATA_WIDTH, TAU_DATA_WIDTH);
 
@@ -247,7 +247,7 @@ constant MASKS_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"000000
 
 -- *******************************************************************************
 -- Type declarations
-    type comp_in_data_array is array (natural range <>) of std_logic_vector(MAX_COMP_IN_DATA_WIDTH-1 downto 0);    
+    type comp_in_data_array is array (natural range <>) of std_logic_vector(MAX_COMP_DATA_WIDTH-1 downto 0);    
     type cosh_cos_vector_array is array (natural range <>, natural range <>) of std_logic_vector(MAX_COSH_COS_WIDTH-1 downto 0);    
     type pt_array is array (natural range <>) of std_logic_vector((MAX_PT_WIDTH)-1 downto 0);
     type mass_vector_array is array (natural range <>, natural range <>) of std_logic_vector((2*MAX_PT_WIDTH+MAX_COSH_COS_WIDTH)-1 downto 0);
@@ -329,38 +329,44 @@ constant MASKS_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"000000
     end record correlation_conditions_conf;
 
     type eg_record is record
-        pt : std_logic_vector(EG_PT_HIGH-EG_PT_LOW downto 0);
-        eta : std_logic_vector(EG_ETA_HIGH-EG_ETA_LOW downto 0);
-        phi : std_logic_vector(EG_PHI_HIGH-EG_PHI_LOW downto 0);
-        iso : std_logic_vector(EG_ISO_HIGH-EG_ISO_LOW downto 0);
+        pt : std_logic_vector(EG_PT_HIGH downto EG_PT_LOW);
+        eta : std_logic_vector(EG_ETA_HIGH downto EG_ETA_LOW);
+        phi : std_logic_vector(EG_PHI_HIGH downto EG_PHI_LOW);
+        iso : std_logic_vector(EG_ISO_HIGH downto EG_ISO_LOW);
     end record eg_record;
     
+    type eg_record_array is array (natural range <>) of eg_record;
+
     type jet_record is record
-        pt : std_logic_vector(JET_PT_HIGH-JET_PT_LOW downto 0);
-        eta : std_logic_vector(JET_ETA_HIGH-JET_ETA_LOW downto 0);
-        phi : std_logic_vector(JET_PHI_HIGH-JET_PHI_LOW downto 0);
+        pt : std_logic_vector(JET_PT_HIGH downto JET_PT_LOW);
+        eta : std_logic_vector(JET_ETA_HIGH downto JET_ETA_LOW);
+        phi : std_logic_vector(JET_PHI_HIGH downto JET_PHI_LOW);
     end record jet_record;
     
+    type jet_record_array is array (natural range <>) of jet_record;
+
     type muon_record is record
-        pt : std_logic_vector(MUON_PT_HIGH-MUON_PT_LOW downto 0);
-        eta : std_logic_vector(MUON_ETA_HIGH-MUON_ETA_LOW downto 0);
-        phi : std_logic_vector(MUON_PHI_HIGH-MUON_PHI_LOW downto 0);
-        iso : std_logic_vector(MUON_ISO_HIGH-MUON_ISO_LOW downto 0);
-        qual : std_logic_vector(MUON_QUAL_HIGH-MUON_QUAL_LOW downto 0);
-        charge : std_logic_vector(MUON_CHARGE_HIGH-MUON_CHARGE_LOW downto 0);
+        pt : std_logic_vector(MUON_PT_HIGH downto MUON_PT_LOW);
+        eta : std_logic_vector(MUON_ETA_HIGH downto MUON_ETA_LOW);
+        phi : std_logic_vector(MUON_PHI_HIGH downto MUON_PHI_LOW);
+        iso : std_logic_vector(MUON_ISO_HIGH downto MUON_ISO_LOW);
+        qual : std_logic_vector(MUON_QUAL_HIGH downto MUON_QUAL_LOW);
+        charge : std_logic_vector(MUON_CHARGE_HIGH downto MUON_CHARGE_LOW);
     end record muon_record;
     
+    type muon_record_array is array (natural range <>) of muon_record;
+
 -- ==== MUONs - begin ============================================================
     type muon_objects_array is array (natural range <>) of std_logic_vector(MAX_MUON_BITS-1 downto 0);
 
     constant MUON_STRUCT : obj_struct := (MUON_PT_LOW,MUON_PT_HIGH,MUON_ETA_LOW,MUON_ETA_HIGH,MUON_PHI_LOW,MUON_PHI_HIGH,MUON_ISO_LOW,MUON_ISO_HIGH,
         MUON_QUAL_LOW,MUON_QUAL_HIGH,MUON_CHARGE_LOW,MUON_CHARGE_HIGH,0,0,0,0,0,0);
 
-    constant NR_MUON_CHARGE_BITS : positive := MUON_CHARGE_HIGH-MUON_CHARGE_LOW + 1;
-    type muon_charge_bits_array is array (0 to NR_MUON_OBJECTS-1) of std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0);
-    type muon_cc_double_array is array (0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) of std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0);
-    type muon_cc_triple_array is array (0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) of std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0);
-    type muon_cc_quad_array is array (0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) of std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0);
+    constant NR_MUON_CHARGE_BITS : positive := muon_record.charge'length;
+    type muon_charge_bits_array is array (0 to MUON_ARRAY_LENGTH-1) of std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0);
+    type muon_cc_double_array is array (0 to MUON_ARRAY_LENGTH-1, 0 to MUON_ARRAY_LENGTH-1) of std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0);
+    type muon_cc_triple_array is array (0 to MUON_ARRAY_LENGTH-1, 0 to MUON_ARRAY_LENGTH-1, 0 to MUON_ARRAY_LENGTH-1) of std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0);
+    type muon_cc_quad_array is array (0 to MUON_ARRAY_LENGTH-1, 0 to MUON_ARRAY_LENGTH-1, 0 to MUON_ARRAY_LENGTH-1, 0 to MUON_ARRAY_LENGTH-1) of std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0);
     constant CC_NOT_VALID : std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0) := "00"; 
     constant CC_LS : std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0) := "01"; 
     constant CC_OS : std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0) := "10"; 
@@ -409,6 +415,6 @@ constant MASKS_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"000000
 
 -- *******************************************************************************************************
 -- "External conditions" (former "Technical Triggers" and "External Algorithms") definitions
-    constant NR_EXTERNAL_CONDITIONS : positive := EXTERNAL_CONDITIONS_DATA_WIDTH; -- number of "External conditions" inputs (proposed max. NR_EXTERNAL_CONDITIONS = 256), from lhc_data_pkg.vhd
+--     constant NR_EXTERNAL_CONDITIONS : positive := EXTERNAL_CONDITIONS_DATA_WIDTH; -- number of "External conditions" inputs (proposed max. NR_EXTERNAL_CONDITIONS = 256), from lhc_data_pkg.vhd
 
 end package;

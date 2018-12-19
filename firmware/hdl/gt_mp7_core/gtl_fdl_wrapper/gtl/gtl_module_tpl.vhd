@@ -16,9 +16,9 @@ use work.lut_pkg.all;
 entity gtl_module is
     port(
         lhc_clk : in std_logic;
-        eg_data : in calo_objects_array(0 to NR_EG_OBJECTS-1);
-        jet_data : in calo_objects_array(0 to NR_JET_OBJECTS-1);
-        tau_data : in calo_objects_array(0 to NR_TAU_OBJECTS-1);
+        eg_data : in calo_objects_array(0 to EG_ARRAY_LENGTH-1);
+        jet_data : in calo_objects_array(0 to JET_ARRAY_LENGTH-1);
+        tau_data : in calo_objects_array(0 to TAU_ARRAY_LENGTH-1);
         ett_data : in std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
         ht_data : in std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
         etm_data : in std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
@@ -42,8 +42,8 @@ entity gtl_module is
         asymhthf_data : in std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
         centrality_data : in std_logic_vector(NR_CENTRALITY_BITS-1 downto 0);
 -- ****************************************************************************************
-        muon_data : in muon_objects_array(0 to NR_MUON_OBJECTS-1);
-        external_conditions : in std_logic_vector(NR_EXTERNAL_CONDITIONS-1 downto 0);
+        muon_data : in muon_objects_array(0 to MUON_ARRAY_LENGTH-1);
+        external_conditions : in std_logic_vector(EXTERNAL_CONDITIONS_DATA_WIDTH-1 downto 0);
         algo_o : out std_logic_vector(NR_ALGOS-1 downto 0));
 end gtl_module;
 
@@ -51,18 +51,15 @@ architecture rtl of gtl_module is
     constant external_conditions_pipeline_stages: natural := 2; -- pipeline stages for "External conditions" to get same pipeline to algos as conditions
     constant centrality_bits_pipeline_stages: natural := 2; -- pipeline stages for "Centrality" to get same pipeline to algos as conditions
 
--- HB 2016-03-08: "workaraound" for VHDL-Producer output
-    constant NR_MU_OBJECTS: positive := NR_MUON_OBJECTS;
-
-    signal muon_data_i : objects_array(0 to NR_MUON_OBJECTS-1) := (others => (others => '0'));
-    signal eg_data_i : objects_array(0 to NR_EG_OBJECTS-1) := (others => (others => '0'));
-    signal jet_data_i : objects_array(0 to NR_JET_OBJECTS-1) := (others => (others => '0'));
-    signal tau_data_i : objects_array(0 to NR_TAU_OBJECTS-1) := (others => (others => '0'));
+    signal muon_data_i : objects_array(0 to MUON_ARRAY_LENGTH-1) := (others => (others => '0'));
+    signal eg_data_i : objects_array(0 to EG_ARRAY_LENGTH-1) := (others => (others => '0'));
+    signal jet_data_i : objects_array(0 to JET_ARRAY_LENGTH-1) := (others => (others => '0'));
+    signal tau_data_i : objects_array(0 to TAU_ARRAY_LENGTH-1) := (others => (others => '0'));
     
-    signal muon_bx_p2, muon_bx_p1, muon_bx_0, muon_bx_m1, muon_bx_m2 : objects_array(0 to NR_MUON_OBJECTS-1);
-    signal eg_bx_p2, eg_bx_p1, eg_bx_0, eg_bx_m1, eg_bx_m2 : objects_array(0 to NR_EG_OBJECTS-1);
-    signal jet_bx_p2, jet_bx_p1, jet_bx_0, jet_bx_m1, jet_bx_m2 : objects_array(0 to NR_JET_OBJECTS-1);
-    signal tau_bx_p2, tau_bx_p1, tau_bx_0, tau_bx_m1, tau_bx_m2 : objects_array(0 to NR_TAU_OBJECTS-1);
+    signal muon_bx_p2, muon_bx_p1, muon_bx_0, muon_bx_m1, muon_bx_m2 : objects_array(0 to MUON_ARRAY_LENGTH-1);
+    signal eg_bx_p2, eg_bx_p1, eg_bx_0, eg_bx_m1, eg_bx_m2 : objects_array(0 to EG_ARRAY_LENGTH-1);
+    signal jet_bx_p2, jet_bx_p1, jet_bx_0, jet_bx_m1, jet_bx_m2 : objects_array(0 to JET_ARRAY_LENGTH-1);
+    signal tau_bx_p2, tau_bx_p1, tau_bx_0, tau_bx_m1, tau_bx_m2 : objects_array(0 to TAU_ARRAY_LENGTH-1);
     signal ett_bx_p2, ett_bx_p1, ett_bx_0, ett_bx_m1, ett_bx_m2 : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
 -- HB 2015-04-28: changed for "htt" - object type from TME [string(1 to 3)] in esums_conditions.vhd
     signal htt_bx_p2, htt_bx_p1, htt_bx_0, htt_bx_m1, htt_bx_m2 : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
@@ -97,8 +94,8 @@ architecture rtl of gtl_module is
     signal cent7_bx_p2, cent7_bx_p1, cent7_bx_0, cent7_bx_m1, cent7_bx_m2 : std_logic;
 -- ****************************************************************************************
 -- HB 2016-01-08: renamed ext_cond after +/-2bx to ext_cond_bx_p2_int, etc., because ext_cond_bx_p2, etc. used in algos (names coming from TME grammar).
-    signal ext_cond_bx_p2_int, ext_cond_bx_p1_int, ext_cond_bx_0_int, ext_cond_bx_m1_int, ext_cond_bx_m2_int : std_logic_vector(NR_EXTERNAL_CONDITIONS-1 downto 0);
-    signal ext_cond_bx_p2, ext_cond_bx_p1, ext_cond_bx_0, ext_cond_bx_m1, ext_cond_bx_m2 : std_logic_vector(NR_EXTERNAL_CONDITIONS-1 downto 0);
+    signal ext_cond_bx_p2_int, ext_cond_bx_p1_int, ext_cond_bx_0_int, ext_cond_bx_m1_int, ext_cond_bx_m2_int : std_logic_vector(EXTERNAL_CONDITIONS_DATA_WIDTH-1 downto 0);
+    signal ext_cond_bx_p2, ext_cond_bx_p1, ext_cond_bx_0, ext_cond_bx_m1, ext_cond_bx_m2 : std_logic_vector(EXTERNAL_CONDITIONS_DATA_WIDTH-1 downto 0);
 
     signal algo : std_logic_vector(NR_ALGOS-1 downto 0) := (others => '0');
 
@@ -106,25 +103,25 @@ architecture rtl of gtl_module is
 
 begin
 
-muon_data_l1: for i in 0 to NR_MUON_OBJECTS-1 generate
+muon_data_l1: for i in 0 to MUON_ARRAY_LENGTH-1 generate
     muon_data_l2: for j in 0 to MUON_DATA_WIDTH-1 generate
         muon_data_i(i)(j) <= muon_data(i)(j);
     end generate muon_data_l2;
 end generate muon_data_l1;
 
-eg_data_l1: for i in 0 to NR_EG_OBJECTS-1 generate
+eg_data_l1: for i in 0 to EG_ARRAY_LENGTH-1 generate
     eg_data_l2: for j in 0 to EG_DATA_WIDTH-1 generate
         eg_data_i(i)(j) <= eg_data(i)(j);
     end generate eg_data_l2;
 end generate eg_data_l1;
 
-jet_data_l1: for i in 0 to NR_JET_OBJECTS-1 generate
+jet_data_l1: for i in 0 to JET_ARRAY_LENGTH-1 generate
     jet_data_l2: for j in 0 to JET_DATA_WIDTH-1 generate
         jet_data_i(i)(j) <= jet_data(i)(j);
     end generate jet_data_l2;
 end generate jet_data_l1;
 
-tau_data_l1: for i in 0 to NR_TAU_OBJECTS-1 generate
+tau_data_l1: for i in 0 to TAU_ARRAY_LENGTH-1 generate
     tau_data_l2: for j in 0 to TAU_DATA_WIDTH-1 generate
         tau_data_i(i)(j) <= tau_data(i)(j);
     end generate tau_data_l2;
@@ -167,7 +164,7 @@ p_m_2_bx_pipeline_i: entity work.p_m_2_bx_pipeline
 -- Parameterized pipeline stages for External conditions, actually 2 stages (fixed) in conditions, see "constant external_conditions_pipeline_stages ..."
 -- HB 2016-01-08: renamed ext_cond after +/-2bx to ext_cond_bx_p2_int, etc., because ext_cond_bx_p2, etc. used in algos (names coming from TME grammar).
 ext_cond_pipe_p: process(lhc_clk, ext_cond_bx_p2_int, ext_cond_bx_p1_int, ext_cond_bx_0_int, ext_cond_bx_m1_int, ext_cond_bx_m2_int)
-    type ext_cond_pipe_array is array (0 to external_conditions_pipeline_stages+1) of std_logic_vector(NR_EXTERNAL_CONDITIONS-1 downto 0);
+    type ext_cond_pipe_array is array (0 to external_conditions_pipeline_stages+1) of std_logic_vector(EXTERNAL_CONDITIONS_DATA_WIDTH-1 downto 0);
     variable ext_cond_bx_p2_pipe_temp : ext_cond_pipe_array := (others => (others => '0'));
     variable ext_cond_bx_p1_pipe_temp : ext_cond_pipe_array := (others => (others => '0'));
     variable ext_cond_bx_0_pipe_temp : ext_cond_pipe_array := (others => (others => '0'));

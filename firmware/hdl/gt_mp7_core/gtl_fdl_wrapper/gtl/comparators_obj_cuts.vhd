@@ -16,8 +16,8 @@ use work.lut_pkg.all;
 entity comparators_obj_cuts is
     generic(
         CONF : comparators_conf;
-        REQ_L : std_logic_vector(MAX_COMP_IN_DATA_WIDTH-1 downto 0) := (others => '0');
-        REQ_H : std_logic_vector(MAX_COMP_IN_DATA_WIDTH-1 downto 0) := (others => '0');
+        REQ_L : std_logic_vector(MAX_COMP_DATA_WIDTH-1 downto 0) := (others => '0');
+        REQ_H : std_logic_vector(MAX_COMP_DATA_WIDTH-1 downto 0) := (others => '0');
         LUT_REQ : std_logic_vector(MAX_LUT_WIDTH-1 downto 0) := (others => '0') 
     );
     port(

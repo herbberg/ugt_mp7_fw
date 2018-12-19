@@ -14,8 +14,8 @@ entity range_comparator is
         N_OBJ : positive;
         DATA_WIDTH : positive;
         MODE : comp_mode;
-        MIN : std_logic_vector(MAX_COMP_IN_DATA_WIDTH-1 downto 0) := (others => '0');
-        MAX : std_logic_vector(MAX_COMP_IN_DATA_WIDTH-1 downto 0) := (others => '0')
+        MIN : std_logic_vector(MAX_COMP_DATA_WIDTH-1 downto 0) := (others => '0');
+        MAX : std_logic_vector(MAX_COMP_DATA_WIDTH-1 downto 0) := (others => '0')
     );
     port(
         clk : in std_logic;

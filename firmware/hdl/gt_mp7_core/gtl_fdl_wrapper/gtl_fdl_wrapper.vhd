@@ -64,15 +64,15 @@ architecture rtl of gtl_fdl_wrapper is
 
     signal algo : std_logic_vector(nr_algos-1 downto 0);
 
-    signal eg_internal : calo_objects_array(0 to NR_EG_OBJECTS-1);
-    signal jet_internal : calo_objects_array(0 to NR_JET_OBJECTS-1);
-    signal tau_internal : calo_objects_array(0 to NR_TAU_OBJECTS-1);
+    signal eg_internal : calo_objects_array(0 to EG_ARRAY_LENGTH-1);
+    signal jet_internal : calo_objects_array(0 to JET_ARRAY_LENGTH-1);
+    signal tau_internal : calo_objects_array(0 to TAU_ARRAY_LENGTH-1);
     signal ett_internal : std_logic_vector(MAX_ESUMS_BITS-1 downto 0) := (others => '0');
     signal ht_internal : std_logic_vector(MAX_ESUMS_BITS-1 downto 0) := (others => '0');
     signal etm_internal : std_logic_vector(MAX_ESUMS_BITS-1 downto 0) := (others => '0');
     signal htm_internal : std_logic_vector(MAX_ESUMS_BITS-1 downto 0) := (others => '0');
-    signal muon_internal : muon_objects_array(0 to NR_MUON_OBJECTS-1);
-    signal ext_cond_internal : std_logic_vector(NR_EXTERNAL_CONDITIONS-1 downto 0);
+    signal muon_internal : muon_objects_array(0 to MUON_ARRAY_LENGTH-1);
+    signal ext_cond_internal : std_logic_vector(EXTERNAL_CONDITIONS_DATA_WIDTH-1 downto 0);
 -- HB 2016-04-18: updates for "min bias trigger" objects (quantities) for Low-pileup-run May 2016
     signal mbt1hfp_internal : std_logic_vector(MAX_ESUMS_BITS-1 downto 0) := (others => '0');
     signal mbt1hfm_internal : std_logic_vector(MAX_ESUMS_BITS-1 downto 0) := (others => '0');
@@ -92,19 +92,19 @@ architecture rtl of gtl_fdl_wrapper is
 
 begin
 
-    eg_internal_l: for i in 0 to NR_EG_OBJECTS-1 generate
+    eg_internal_l: for i in 0 to EG_ARRAY_LENGTH-1 generate
        eg_internal(i) <= lhc_data.eg(i)(MAX_CALO_BITS-1 downto 0);
     end generate;
 
-    jet_internal_l: for i in 0 to NR_JET_OBJECTS-1 generate
+    jet_internal_l: for i in 0 to JET_ARRAY_LENGTH-1 generate
         jet_internal(i) <= lhc_data.jet(i)(MAX_CALO_BITS-1 downto 0);
     end generate;
 
-    tau_internal_l: for i in 0 to NR_TAU_OBJECTS-1 generate
+    tau_internal_l: for i in 0 to TAU_ARRAY_LENGTH-1 generate
         tau_internal(i) <= lhc_data.tau(i)(MAX_CALO_BITS-1 downto 0);
     end generate;
 
-    muon_internal_l: for i in 0 to NR_MUON_OBJECTS-1 generate
+    muon_internal_l: for i in 0 to MUON_ARRAY_LENGTH-1 generate
         muon_internal(i) <= lhc_data.muon(i)(MAX_MUON_BITS-1 downto 0);
     end generate;
 
@@ -157,7 +157,7 @@ begin
     
 -- ****************************************************************************************
     
-    ext_cond_internal <= lhc_data.external_conditions(NR_EXTERNAL_CONDITIONS-1 downto 0);
+    ext_cond_internal <= lhc_data.external_conditions(EXTERNAL_CONDITIONS_DATA_WIDTH-1 downto 0);
 
 gtl_module_i: entity work.gtl_module
     port map( 

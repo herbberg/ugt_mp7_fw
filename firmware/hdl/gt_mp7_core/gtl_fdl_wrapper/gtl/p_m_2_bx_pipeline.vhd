@@ -20,35 +20,36 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
+use work.lhc_data_pkg.all;
 use work.gtl_pkg.all;
 
 entity p_m_2_bx_pipeline is
 	port(
         clk		     : in std_logic;
-        muon_data    : in objects_array(0 to nr_muon_objects-1);
-        muon_bx_p2  : out objects_array(0 to nr_muon_objects-1);
-        muon_bx_p1  : out objects_array(0 to nr_muon_objects-1);
-        muon_bx_0    : out objects_array(0 to nr_muon_objects-1);
-        muon_bx_m1  : out objects_array(0 to nr_muon_objects-1);
-        muon_bx_m2  : out objects_array(0 to nr_muon_objects-1);
-        eg_data      : in objects_array(0 to nr_eg_objects-1);
-        eg_bx_p2    : out objects_array(0 to nr_eg_objects-1);
-        eg_bx_p1    : out objects_array(0 to nr_eg_objects-1);
-        eg_bx_0      : out objects_array(0 to nr_eg_objects-1);
-        eg_bx_m1    : out objects_array(0 to nr_eg_objects-1);
-        eg_bx_m2    : out objects_array(0 to nr_eg_objects-1);
-        jet_data     : in objects_array(0 to nr_jet_objects-1);
-        jet_bx_p2   : out objects_array(0 to nr_jet_objects-1);
-        jet_bx_p1   : out objects_array(0 to nr_jet_objects-1);
-        jet_bx_0     : out objects_array(0 to nr_jet_objects-1);
-        jet_bx_m1   : out objects_array(0 to nr_jet_objects-1);
-        jet_bx_m2   : out objects_array(0 to nr_jet_objects-1);
-        tau_data     : in objects_array(0 to nr_tau_objects-1);
-        tau_bx_p2   : out objects_array(0 to nr_tau_objects-1);
-        tau_bx_p1   : out objects_array(0 to nr_tau_objects-1);
-        tau_bx_0     : out objects_array(0 to nr_tau_objects-1);
-        tau_bx_m1   : out objects_array(0 to nr_tau_objects-1);
-        tau_bx_m2   : out objects_array(0 to nr_tau_objects-1);
+        muon_data    : in objects_array(0 to MUON_ARRAY_LENGTH-1);
+        muon_bx_p2  : out objects_array(0 to MUON_ARRAY_LENGTH-1);
+        muon_bx_p1  : out objects_array(0 to MUON_ARRAY_LENGTH-1);
+        muon_bx_0    : out objects_array(0 to MUON_ARRAY_LENGTH-1);
+        muon_bx_m1  : out objects_array(0 to MUON_ARRAY_LENGTH-1);
+        muon_bx_m2  : out objects_array(0 to MUON_ARRAY_LENGTH-1);
+        eg_data      : in objects_array(0 to EG_ARRAY_LENGTH-1);
+        eg_bx_p2    : out objects_array(0 to EG_ARRAY_LENGTH-1);
+        eg_bx_p1    : out objects_array(0 to EG_ARRAY_LENGTH-1);
+        eg_bx_0      : out objects_array(0 to EG_ARRAY_LENGTH-1);
+        eg_bx_m1    : out objects_array(0 to EG_ARRAY_LENGTH-1);
+        eg_bx_m2    : out objects_array(0 to EG_ARRAY_LENGTH-1);
+        jet_data     : in objects_array(0 to JET_ARRAY_LENGTH-1);
+        jet_bx_p2   : out objects_array(0 to JET_ARRAY_LENGTH-1);
+        jet_bx_p1   : out objects_array(0 to JET_ARRAY_LENGTH-1);
+        jet_bx_0     : out objects_array(0 to JET_ARRAY_LENGTH-1);
+        jet_bx_m1   : out objects_array(0 to JET_ARRAY_LENGTH-1);
+        jet_bx_m2   : out objects_array(0 to JET_ARRAY_LENGTH-1);
+        tau_data     : in objects_array(0 to TAU_ARRAY_LENGTH-1);
+        tau_bx_p2   : out objects_array(0 to TAU_ARRAY_LENGTH-1);
+        tau_bx_p1   : out objects_array(0 to TAU_ARRAY_LENGTH-1);
+        tau_bx_0     : out objects_array(0 to TAU_ARRAY_LENGTH-1);
+        tau_bx_m1   : out objects_array(0 to TAU_ARRAY_LENGTH-1);
+        tau_bx_m2   : out objects_array(0 to TAU_ARRAY_LENGTH-1);
         ett_data     : in std_logic_vector(max_esums_bits-1 downto 0);
         ett_bx_p2   : out std_logic_vector(max_esums_bits-1 downto 0);
         ett_bx_p1   : out std_logic_vector(max_esums_bits-1 downto 0);
@@ -157,21 +158,21 @@ entity p_m_2_bx_pipeline is
         cent_bx_m1   : out std_logic_vector(NR_CENTRALITY_BITS-1 downto 0);
         cent_bx_m2   : out std_logic_vector(NR_CENTRALITY_BITS-1 downto 0);
 -- ****************************************************************************************
-        ext_cond_data     : in std_logic_vector(nr_external_conditions-1 downto 0);
-        ext_cond_bx_p2   : out std_logic_vector(nr_external_conditions-1 downto 0);
-        ext_cond_bx_p1   : out std_logic_vector(nr_external_conditions-1 downto 0);
-        ext_cond_bx_0     : out std_logic_vector(nr_external_conditions-1 downto 0);
-        ext_cond_bx_m1   : out std_logic_vector(nr_external_conditions-1 downto 0);
-        ext_cond_bx_m2   : out std_logic_vector(nr_external_conditions-1 downto 0)
+        ext_cond_data     : in std_logic_vector(EXTERNAL_CONDITIONS_DATA_WIDTH-1 downto 0);
+        ext_cond_bx_p2   : out std_logic_vector(EXTERNAL_CONDITIONS_DATA_WIDTH-1 downto 0);
+        ext_cond_bx_p1   : out std_logic_vector(EXTERNAL_CONDITIONS_DATA_WIDTH-1 downto 0);
+        ext_cond_bx_0     : out std_logic_vector(EXTERNAL_CONDITIONS_DATA_WIDTH-1 downto 0);
+        ext_cond_bx_m1   : out std_logic_vector(EXTERNAL_CONDITIONS_DATA_WIDTH-1 downto 0);
+        ext_cond_bx_m2   : out std_logic_vector(EXTERNAL_CONDITIONS_DATA_WIDTH-1 downto 0)
     );
 end p_m_2_bx_pipeline;
 
 architecture rtl of p_m_2_bx_pipeline is
 
-    signal eg_bx_p1_tmp, eg_bx_0_tmp, eg_bx_m1_tmp, eg_bx_m2_tmp : objects_array(0 to nr_eg_objects-1) := (others => (others => '0'));
-    signal jet_bx_p1_tmp, jet_bx_0_tmp, jet_bx_m1_tmp, jet_bx_m2_tmp : objects_array(0 to nr_jet_objects-1) := (others => (others => '0'));
-    signal tau_bx_p1_tmp, tau_bx_0_tmp, tau_bx_m1_tmp, tau_bx_m2_tmp : objects_array(0 to nr_tau_objects-1) := (others => (others => '0'));
-    signal muon_bx_p1_tmp, muon_bx_0_tmp, muon_bx_m1_tmp, muon_bx_m2_tmp : objects_array(0 to nr_muon_objects-1) := (others => (others => '0'));
+    signal eg_bx_p1_tmp, eg_bx_0_tmp, eg_bx_m1_tmp, eg_bx_m2_tmp : objects_array(0 to EG_ARRAY_LENGTH-1) := (others => (others => '0'));
+    signal jet_bx_p1_tmp, jet_bx_0_tmp, jet_bx_m1_tmp, jet_bx_m2_tmp : objects_array(0 to JET_ARRAY_LENGTH-1) := (others => (others => '0'));
+    signal tau_bx_p1_tmp, tau_bx_0_tmp, tau_bx_m1_tmp, tau_bx_m2_tmp : objects_array(0 to TAU_ARRAY_LENGTH-1) := (others => (others => '0'));
+    signal muon_bx_p1_tmp, muon_bx_0_tmp, muon_bx_m1_tmp, muon_bx_m2_tmp : objects_array(0 to MUON_ARRAY_LENGTH-1) := (others => (others => '0'));
     signal ett_bx_p1_tmp, ett_bx_0_tmp, ett_bx_m1_tmp, ett_bx_m2_tmp : std_logic_vector(max_esums_bits-1 downto 0) := (others => '0');
     signal ht_bx_p1_tmp, ht_bx_0_tmp, ht_bx_m1_tmp, ht_bx_m2_tmp : std_logic_vector(max_esums_bits-1 downto 0) := (others => '0');
     signal etm_bx_p1_tmp, etm_bx_0_tmp, etm_bx_m1_tmp, etm_bx_m2_tmp : std_logic_vector(max_esums_bits-1 downto 0) := (others => '0');
@@ -195,7 +196,7 @@ architecture rtl of p_m_2_bx_pipeline is
     signal asym3_bx_p1_tmp, asym3_bx_0_tmp, asym3_bx_m1_tmp, asym3_bx_m2_tmp : std_logic_vector(max_esums_bits-1 downto 0) := (others => '0');
     signal cent_bx_p1_tmp, cent_bx_0_tmp, cent_bx_m1_tmp, cent_bx_m2_tmp : std_logic_vector(NR_CENTRALITY_BITS-1 downto 0) := (others => '0');
 -- ****************************************************************************************
-    signal ext_cond_bx_p1_tmp, ext_cond_bx_0_tmp, ext_cond_bx_m1_tmp, ext_cond_bx_m2_tmp : std_logic_vector(nr_external_conditions-1 downto 0) := (others => '0');
+    signal ext_cond_bx_p1_tmp, ext_cond_bx_0_tmp, ext_cond_bx_m1_tmp, ext_cond_bx_m2_tmp : std_logic_vector(EXTERNAL_CONDITIONS_DATA_WIDTH-1 downto 0) := (others => '0');
 
 begin
 
