@@ -14,8 +14,8 @@ entity range_comparator is
         N_OBJ : positive;
         DATA_WIDTH : positive;
         MODE : comp_mode;
-        MIN : std_logic_vector(MAX_COMP_DATA_WIDTH-1 downto 0) := (others => '0');
-        MAX : std_logic_vector(MAX_COMP_DATA_WIDTH-1 downto 0) := (others => '0')
+        MINI : std_logic_vector(MAX_COMP_DATA_WIDTH-1 downto 0) := (others => '0');
+        MAXI : std_logic_vector(MAX_COMP_DATA_WIDTH-1 downto 0) := (others => '0')
     );
     port(
         clk : in std_logic;
@@ -26,8 +26,8 @@ end range_comparator;
 
 architecture rtl of range_comparator is
 
-    constant MIN_I : std_logic_vector(DATA_WIDTH-1 downto 0) := MIN(DATA_WIDTH-1 downto 0);
-    constant MAX_I : std_logic_vector(DATA_WIDTH-1 downto 0) := MAX(DATA_WIDTH-1 downto 0);
+    constant MINI_I : std_logic_vector(DATA_WIDTH-1 downto 0) := MINI(DATA_WIDTH-1 downto 0);
+    constant MAXI_I : std_logic_vector(DATA_WIDTH-1 downto 0) := MAXI(DATA_WIDTH-1 downto 0);
     signal comp : std_logic_vector(0 to N_OBJ-1);
     type data_i_array is array(0 to N_OBJ-1) of std_logic_vector(DATA_WIDTH-1 downto 0);
     signal data_i : data_i_array;
@@ -40,11 +40,11 @@ begin
             port map(clk, data(i)(DATA_WIDTH-1 downto 0), data_i(i));
         if_win_sign: if MODE = win_sign generate
             comp_signed_i : entity work.comp_signed
-                generic map(MIN_I, MAX_I)  
+                generic map(MINI_I, MAXI_I)  
                 port map(data_i(i), comp(i));
         end generate if_win_sign;
         if_win_unsign: if MODE = win_unsign generate
-            comp(i) <= '1' when (data_i(i) >= MIN_I(DATA_WIDTH-1 downto 0)) and (data_i(i) <= MAX_I(DATA_WIDTH-1 downto 0)) else '0';
+            comp(i) <= '1' when (data_i(i) >= MINI_I(DATA_WIDTH-1 downto 0)) and (data_i(i) <= MAXI_I(DATA_WIDTH-1 downto 0)) else '0';
         end generate if_win_unsign;
     end generate l1;
 

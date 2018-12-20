@@ -70,11 +70,13 @@ constant MASKS_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"000000
     constant MAX_PT_WIDTH : positive := 12; -- max. pt width of comparators (esums pt = 12)
     constant MAX_PT_VECTOR_WIDTH : positive := 15; -- esums - max. value 2047.5 GeV => 20475 (2047.5 * 10) => 0x4FFB
 
-    constant OUT_REG_CONV_CALC: boolean := false;
+    constant OUT_REG_CALC: boolean := false;
     constant IN_REG_COMP: boolean := true;
     constant OUT_REG_COMP: boolean := true;
     constant OUT_REG_COND: boolean := false;
     
+    constant EXT_COND_STAGES: natural := 2; -- pipeline stages for "External conditions" to get same pipeline to algos as conditions
+    constant CENTRALITY_STAGES: natural := 2; -- pipeline stages for "Centrality" to get same pipeline to algos as conditions
 -- *******************************************************************************************************
 -- MUON objects bits
 --     constant NR_MUON_OBJECTS : positive := MUON_ARRAY_LENGTH; -- from lhc_data_pkg.vhd
