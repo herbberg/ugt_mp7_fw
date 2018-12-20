@@ -161,34 +161,35 @@ begin
 
 gtl_module_i: entity work.gtl_module
     port map( 
-        lhc_clk         => lhc_clk,
-        eg_data         => eg_internal,
-        jet_data        => jet_internal,
-        tau_data        => tau_internal,
-        ett_data        => ett_internal,
-        ht_data         => ht_internal,
-        etm_data        => etm_internal,
-        htm_data        => htm_internal,
--- ****************************************************************************************
--- HB 2016-04-18: updates for "min bias trigger" objects (quantities) for Low-pileup-run May 2016
-        mbt1hfp_data    => mbt1hfp_internal,
-        mbt1hfm_data    => mbt1hfm_internal,
-        mbt0hfp_data    => mbt0hfp_internal,
-        mbt0hfm_data    => mbt0hfm_internal,
--- HB 2016-09-16: inserted new esums
-        ettem_data      => ettem_internal,
-        etmhf_data      => etmhf_internal,
-        htmhf_data      => htmhf_internal,
-        towercount_data => towercount_internal,
--- HB 2018-08-06: inserted signals for "Asymmetry" and "Centrality" (included in esums data structure).
-        asymet_data      => asymet_internal,
-        asymht_data      => asymht_internal,
-        asymethf_data      => asymethf_internal,
-        asymhthf_data      => asymhthf_internal,
-        centrality_data       => centrality_internal,
--- ****************************************************************************************
-        muon_data       => muon_internal,
-        external_conditions => ext_cond_internal,
+        lhc_clk => lhc_clk,
+        data => data,
+--         eg_data         => eg_internal,
+--         jet_data        => jet_internal,
+--         tau_data        => tau_internal,
+--         ett_data        => ett_internal,
+--         ht_data         => ht_internal,
+--         etm_data        => etm_internal,
+--         htm_data        => htm_internal,
+-- -- ****************************************************************************************
+-- -- HB 2016-04-18: updates for "min bias trigger" objects (quantities) for Low-pileup-run May 2016
+--         mbt1hfp_data    => mbt1hfp_internal,
+--         mbt1hfm_data    => mbt1hfm_internal,
+--         mbt0hfp_data    => mbt0hfp_internal,
+--         mbt0hfm_data    => mbt0hfm_internal,
+-- -- HB 2016-09-16: inserted new esums
+--         ettem_data      => ettem_internal,
+--         etmhf_data      => etmhf_internal,
+--         htmhf_data      => htmhf_internal,
+--         towercount_data => towercount_internal,
+-- -- HB 2018-08-06: inserted signals for "Asymmetry" and "Centrality" (included in esums data structure).
+--         asymet_data      => asymet_internal,
+--         asymht_data      => asymht_internal,
+--         asymethf_data      => asymethf_internal,
+--         asymhthf_data      => asymhthf_internal,
+--         centrality_data       => centrality_internal,
+-- -- ****************************************************************************************
+--         muon_data       => muon_internal,
+--         external_conditions => ext_cond_internal,
         algo_o          => algo
     );
 

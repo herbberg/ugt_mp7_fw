@@ -329,6 +329,37 @@ constant MASKS_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"000000
         SLICE_1_L, SLICE_1_H, SLICE_2_L, SLICE_2_H, N_OBJ_1, N_OBJ_2 : natural;
     end record correlation_conditions_conf;
 
+    type gtl_data_record is record
+        eg_data : calo_objects_array(0 to EG_ARRAY_LENGTH-1);
+        jet_data : calo_objects_array(0 to JET_ARRAY_LENGTH-1);
+        tau_data : calo_objects_array(0 to TAU_ARRAY_LENGTH-1);
+        ett_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
+        ht_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
+        etm_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
+        htm_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
+-- ****************************************************************************************
+-- HB 2016-04-18: updates for "min bias trigger" objects (quantities) for Low-pileup-run May 2016
+        mbt1hfp_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
+        mbt1hfm_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
+        mbt0hfp_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
+        mbt0hfm_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
+-- HB 2016-06-07: inserted new esums quantities (ETTEM and ETMHF).
+        ettem_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
+        etmhf_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
+-- HB 2016-09-16: inserted HTMHF and TOWERCNT
+        htmhf_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
+        towercount_data : std_logic_vector(MAX_TOWERCOUNT_BITS-1 downto 0);
+-- HB 2018-08-06: inserted signals for "Asymmetry" and "Centrality" (included in esums data structure).
+        asymet_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
+        asymht_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
+        asymethf_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
+        asymhthf_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
+        centrality_data : std_logic_vector(NR_CENTRALITY_BITS-1 downto 0);
+-- ****************************************************************************************
+        muon_data : muon_objects_array(0 to MUON_ARRAY_LENGTH-1);
+        external_conditions : std_logic_vector(EXTERNAL_CONDITIONS_DATA_WIDTH-1 downto 0);
+    end record gtl_data_record;
+    
     type eg_record is record
         pt : std_logic_vector(EG_PT_HIGH downto EG_PT_LOW);
         eta : std_logic_vector(EG_ETA_HIGH downto EG_ETA_LOW);
