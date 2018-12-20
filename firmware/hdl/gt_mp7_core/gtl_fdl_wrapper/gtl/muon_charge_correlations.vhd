@@ -27,10 +27,6 @@ end muon_charge_correlations;
 
 architecture rtl of muon_charge_correlations is
     
---     signal cc_double : muon_cc_double_array;
---     signal cc_triple : muon_cc_triple_array;
---     signal cc_quad : muon_cc_quad_array;
-    
 begin
 
 -- *********************************************************
@@ -92,23 +88,4 @@ begin
         end loop;
     end process charge_corr_p;
     
---     l_1 : for i in MUON_ARRAY_LENGTH-1 downto 0 generate
---         l_2 : for j in MUON_ARRAY_LENGTH-1 downto 0 generate
---             out_reg_double_i : entity work.reg_mux
---                 generic map(NR_MUON_CHARGE_BITS, OUT_REG)  
---                 port map(clk, cc_double(i,j), cc_double(i,j)); 
---             l_3 : for k in MUON_ARRAY_LENGTH-1 downto 0 generate
---                 out_reg_triple_i : entity work.reg_mux
---                     generic map(NR_MUON_CHARGE_BITS, OUT_REG)  
---                     port map(clk, cc_triple(i,j,k), cc_triple(i,j,k)); 
---                 l_4 : for l in MUON_ARRAY_LENGTH-1 downto 0 generate
---                     out_reg_quad_i : entity work.reg_mux
---                         generic map(NR_MUON_CHARGE_BITS, OUT_REG)  
---                         port map(clk, cc_quad(i,j,k,l), cc_quad(i,j,k,l)); 
---                 end generate l_4;
---             end generate l_3;
---         end generate l_2;
---     end generate l_1;
--- 
-
 end architecture rtl;
