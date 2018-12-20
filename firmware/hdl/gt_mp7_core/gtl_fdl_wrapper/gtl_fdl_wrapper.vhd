@@ -64,49 +64,51 @@ architecture rtl of gtl_fdl_wrapper is
 
     signal algo : std_logic_vector(nr_algos-1 downto 0);
 
-    signal eg_internal : calo_objects_array(0 to EG_ARRAY_LENGTH-1);
-    signal jet_internal : calo_objects_array(0 to JET_ARRAY_LENGTH-1);
-    signal tau_internal : calo_objects_array(0 to TAU_ARRAY_LENGTH-1);
-    signal ett_internal : std_logic_vector(MAX_ESUMS_BITS-1 downto 0) := (others => '0');
-    signal ht_internal : std_logic_vector(MAX_ESUMS_BITS-1 downto 0) := (others => '0');
-    signal etm_internal : std_logic_vector(MAX_ESUMS_BITS-1 downto 0) := (others => '0');
-    signal htm_internal : std_logic_vector(MAX_ESUMS_BITS-1 downto 0) := (others => '0');
-    signal muon_internal : muon_objects_array(0 to MUON_ARRAY_LENGTH-1);
-    signal ext_cond_internal : std_logic_vector(EXTERNAL_CONDITIONS_DATA_WIDTH-1 downto 0);
--- HB 2016-04-18: updates for "min bias trigger" objects (quantities) for Low-pileup-run May 2016
-    signal mbt1hfp_internal : std_logic_vector(MAX_ESUMS_BITS-1 downto 0) := (others => '0');
-    signal mbt1hfm_internal : std_logic_vector(MAX_ESUMS_BITS-1 downto 0) := (others => '0');
-    signal mbt0hfp_internal : std_logic_vector(MAX_ESUMS_BITS-1 downto 0) := (others => '0');
-    signal mbt0hfm_internal : std_logic_vector(MAX_ESUMS_BITS-1 downto 0) := (others => '0');
--- HB 2016-09-16: inserted new esums
-    signal ettem_internal : std_logic_vector(MAX_ESUMS_BITS-1 downto 0) := (others => '0');
-    signal etmhf_internal : std_logic_vector(MAX_ESUMS_BITS-1 downto 0) := (others => '0');
-    signal htmhf_internal : std_logic_vector(MAX_ESUMS_BITS-1 downto 0) := (others => '0');
-    signal towercount_internal : std_logic_vector(MAX_TOWERCOUNT_BITS-1 downto 0) := (others => '0');
--- HB 2018-08-06: inserted signals for "Asymmetry" and "Centrality"
-    signal asymet_internal : std_logic_vector(MAX_ESUMS_BITS-1 downto 0) := (others => '0');
-    signal asymht_internal : std_logic_vector(MAX_ESUMS_BITS-1 downto 0) := (others => '0');
-    signal asymethf_internal : std_logic_vector(MAX_ESUMS_BITS-1 downto 0) := (others => '0');
-    signal asymhthf_internal : std_logic_vector(MAX_ESUMS_BITS-1 downto 0) := (others => '0');
-    signal centrality_internal : std_logic_vector(NR_CENTRALITY_BITS-1 downto 0);
+    signal data : gtl_data_record;
+
+--     signal eg_internal : calo_objects_array(0 to EG_ARRAY_LENGTH-1);
+--     signal jet_internal : calo_objects_array(0 to JET_ARRAY_LENGTH-1);
+--     signal tau_internal : calo_objects_array(0 to TAU_ARRAY_LENGTH-1);
+--     signal ett_internal : std_logic_vector(MAX_ESUMS_BITS-1 downto 0) := (others => '0');
+--     signal ht_internal : std_logic_vector(MAX_ESUMS_BITS-1 downto 0) := (others => '0');
+--     signal etm_internal : std_logic_vector(MAX_ESUMS_BITS-1 downto 0) := (others => '0');
+--     signal htm_internal : std_logic_vector(MAX_ESUMS_BITS-1 downto 0) := (others => '0');
+--     signal muon_internal : muon_objects_array(0 to MUON_ARRAY_LENGTH-1);
+--     signal ext_cond_internal : std_logic_vector(EXTERNAL_CONDITIONS_DATA_WIDTH-1 downto 0);
+-- -- HB 2016-04-18: updates for "min bias trigger" objects (quantities) for Low-pileup-run May 2016
+--     signal mbt1hfp_internal : std_logic_vector(MAX_ESUMS_BITS-1 downto 0) := (others => '0');
+--     signal mbt1hfm_internal : std_logic_vector(MAX_ESUMS_BITS-1 downto 0) := (others => '0');
+--     signal mbt0hfp_internal : std_logic_vector(MAX_ESUMS_BITS-1 downto 0) := (others => '0');
+--     signal mbt0hfm_internal : std_logic_vector(MAX_ESUMS_BITS-1 downto 0) := (others => '0');
+-- -- HB 2016-09-16: inserted new esums
+--     signal ettem_internal : std_logic_vector(MAX_ESUMS_BITS-1 downto 0) := (others => '0');
+--     signal etmhf_internal : std_logic_vector(MAX_ESUMS_BITS-1 downto 0) := (others => '0');
+--     signal htmhf_internal : std_logic_vector(MAX_ESUMS_BITS-1 downto 0) := (others => '0');
+--     signal towercount_internal : std_logic_vector(MAX_TOWERCOUNT_BITS-1 downto 0) := (others => '0');
+-- -- HB 2018-08-06: inserted signals for "Asymmetry" and "Centrality"
+--     signal asymet_internal : std_logic_vector(MAX_ESUMS_BITS-1 downto 0) := (others => '0');
+--     signal asymht_internal : std_logic_vector(MAX_ESUMS_BITS-1 downto 0) := (others => '0');
+--     signal asymethf_internal : std_logic_vector(MAX_ESUMS_BITS-1 downto 0) := (others => '0');
+--     signal asymhthf_internal : std_logic_vector(MAX_ESUMS_BITS-1 downto 0) := (others => '0');
+--     signal centrality_internal : std_logic_vector(NR_CENTRALITY_BITS-1 downto 0);
 
 begin
 
-    eg_internal_l: for i in 0 to EG_ARRAY_LENGTH-1 generate
-       eg_internal(i) <= lhc_data.eg(i)(MAX_CALO_BITS-1 downto 0);
-    end generate;
+    eg_data_l: for i in 0 to EG_ARRAY_LENGTH-1 generate
+       data.eg_data(i) <= lhc_data.eg(i)(MAX_CALO_BITS-1 downto 0);
+    end generate eg_data_l;
 
-    jet_internal_l: for i in 0 to JET_ARRAY_LENGTH-1 generate
-        jet_internal(i) <= lhc_data.jet(i)(MAX_CALO_BITS-1 downto 0);
-    end generate;
+    jet_data_l: for i in 0 to JET_ARRAY_LENGTH-1 generate
+        data.jet_data(i) <= lhc_data.jet(i)(MAX_CALO_BITS-1 downto 0);
+    end generate jet_data_l;
 
-    tau_internal_l: for i in 0 to TAU_ARRAY_LENGTH-1 generate
-        tau_internal(i) <= lhc_data.tau(i)(MAX_CALO_BITS-1 downto 0);
-    end generate;
+    tau_data_l: for i in 0 to TAU_ARRAY_LENGTH-1 generate
+        data.tau_data(i) <= lhc_data.tau(i)(MAX_CALO_BITS-1 downto 0);
+    end generate tau_data_l;
 
-    muon_internal_l: for i in 0 to MUON_ARRAY_LENGTH-1 generate
-        muon_internal(i) <= lhc_data.muon(i)(MAX_MUON_BITS-1 downto 0);
-    end generate;
+    muon_data_l: for i in 0 to MUON_ARRAY_LENGTH-1 generate
+        data.muon_data(i) <= lhc_data.muon(i)(MAX_MUON_BITS-1 downto 0);
+    end generate muon_data_l;
 
 -- ****************************************************************************************
 -- HB 2016-04-18: updates for "min bias trigger" objects (quantities) for Low-pileup-run May 2016
@@ -121,20 +123,20 @@ begin
 -- HF+ thresh 1 => MBT1HFP
 -- HF- thresh 1 => MBT1HFM
 
-    ett_internal(ETT_STRUCT.pt_h downto ETT_STRUCT.pt_l) <= lhc_data.ett(ETT_STRUCT.pt_h downto ETT_STRUCT.pt_l);
-    ht_internal(HTT_STRUCT.pt_h downto HTT_STRUCT.pt_l) <= lhc_data.ht(HTT_STRUCT.pt_h downto HTT_STRUCT.pt_l);
-    etm_internal(ETM_STRUCT.phi_h downto ETM_STRUCT.pt_l) <= lhc_data.etm(ETM_STRUCT.phi_h downto ETM_STRUCT.pt_l);
-    htm_internal(HTM_STRUCT.phi_h downto HTM_STRUCT.pt_l) <= lhc_data.htm(HTM_STRUCT.phi_h downto HTM_STRUCT.pt_l);
+    data.ett_data(ETT_STRUCT.pt_h downto ETT_STRUCT.pt_l) <= lhc_data.ett(ETT_STRUCT.pt_h downto ETT_STRUCT.pt_l);
+    data.ht_data(HTT_STRUCT.pt_h downto HTT_STRUCT.pt_l) <= lhc_data.ht(HTT_STRUCT.pt_h downto HTT_STRUCT.pt_l);
+    data.etm_data(ETM_STRUCT.phi_h downto ETM_STRUCT.pt_l) <= lhc_data.etm(ETM_STRUCT.phi_h downto ETM_STRUCT.pt_l);
+    data.htm_data(HTM_STRUCT.phi_h downto HTM_STRUCT.pt_l) <= lhc_data.htm(HTM_STRUCT.phi_h downto HTM_STRUCT.pt_l);
 -- HB 2016-09-16: inserted new esums
-    ettem_internal(ETTEM_STRUCT.pt_h downto ETTEM_STRUCT.pt_l) <= lhc_data.ett(ETTEM_IN_ETT_HIGH downto ETTEM_IN_ETT_LOW);
-    etmhf_internal(ETMHF_STRUCT.phi_h downto ETMHF_STRUCT.pt_l) <= lhc_data.etmhf(ETMHF_STRUCT.phi_h downto ETMHF_STRUCT.pt_l);
-    htmhf_internal(HTMHF_STRUCT.phi_h downto HTMHF_STRUCT.pt_l) <= lhc_data.htmhf(HTMHF_STRUCT.phi_h downto HTMHF_STRUCT.pt_l);
-    towercount_internal(TOWERCOUNT_STRUCT.high-TOWERCOUNT_STRUCT.low downto 0) <= lhc_data.ht(TOWERCOUNT_IN_HTT_HIGH downto TOWERCOUNT_IN_HTT_LOW);
+    data.ettem_data(ETTEM_STRUCT.pt_h downto ETTEM_STRUCT.pt_l) <= lhc_data.ett(ETTEM_IN_ETT_HIGH downto ETTEM_IN_ETT_LOW);
+    data.etmhf_data(ETMHF_STRUCT.phi_h downto ETMHF_STRUCT.pt_l) <= lhc_data.etmhf(ETMHF_STRUCT.phi_h downto ETMHF_STRUCT.pt_l);
+    data.htmhf_data(HTMHF_STRUCT.phi_h downto HTMHF_STRUCT.pt_l) <= lhc_data.htmhf(HTMHF_STRUCT.phi_h downto HTMHF_STRUCT.pt_l);
+    data.towercount_data(TOWERCOUNT_STRUCT.high-TOWERCOUNT_STRUCT.low downto 0) <= lhc_data.ht(TOWERCOUNT_IN_HTT_HIGH downto TOWERCOUNT_IN_HTT_LOW);
 
-    mbt0hfp_internal(MBT0HFP_STRUCT.high downto MBT0HFP_STRUCT.low) <= lhc_data.ett(MBT0HFP_IN_ETT_HIGH downto MBT0HFP_IN_ETT_LOW);
-    mbt0hfm_internal(MBT0HFM_STRUCT.high downto MBT0HFM_STRUCT.low) <= lhc_data.ht(MBT0HFM_IN_HTT_HIGH downto MBT0HFM_IN_HTT_LOW);
-    mbt1hfp_internal(MBT1HFP_STRUCT.high downto MBT1HFP_STRUCT.low) <= lhc_data.etm(MBT1HFP_IN_ETM_HIGH downto MBT1HFP_IN_ETM_LOW);
-    mbt1hfm_internal(MBT1HFM_STRUCT.high downto MBT1HFM_STRUCT.low) <= lhc_data.htm(MBT1HFM_IN_HTM_HIGH downto MBT1HFM_IN_HTM_LOW);
+    data.mbt0hfp_data(MBT0HFP_STRUCT.high downto MBT0HFP_STRUCT.low) <= lhc_data.ett(MBT0HFP_IN_ETT_HIGH downto MBT0HFP_IN_ETT_LOW);
+    data.mbt0hfm_data(MBT0HFM_STRUCT.high downto MBT0HFM_STRUCT.low) <= lhc_data.ht(MBT0HFM_IN_HTT_HIGH downto MBT0HFM_IN_HTT_LOW);
+    data.mbt1hfp_data(MBT1HFP_STRUCT.high downto MBT1HFP_STRUCT.low) <= lhc_data.etm(MBT1HFP_IN_ETM_HIGH downto MBT1HFP_IN_ETM_LOW);
+    data.mbt1hfm_data(MBT1HFM_STRUCT.high downto MBT1HFM_STRUCT.low) <= lhc_data.htm(MBT1HFM_IN_HTM_HIGH downto MBT1HFM_IN_HTM_LOW);
 
 -- HB 2018-08-06: inserted signals for "Asymmetry" and "Centrality" (included in esums data structure).
 -- see: https://indico.cern.ch/event/746381/contributions/3085360/subcontributions/260912/attachments/1693846/2725976/DemuxOutput.pdf
@@ -147,17 +149,17 @@ begin
 -- Frame 4, ETMHF: bits 31..28 => CENT3..CENT0
 -- Frame 5, HTMHF: bits 31..28 => CENT7..CENT4
 
-    asymet_internal(ASYMET_STRUCT.high downto ASYMET_STRUCT.low) <= lhc_data.etm(ASYMET_IN_ETM_HIGH downto ASYMET_IN_ETM_LOW);
-    asymht_internal(ASYMHT_STRUCT.high downto ASYMHT_STRUCT.low) <= lhc_data.htm(ASYMHT_IN_HTM_HIGH downto ASYMHT_IN_HTM_LOW);
-    asymethf_internal(ASYMETHF_STRUCT.high downto ASYMETHF_STRUCT.low) <= lhc_data.etmhf(ASYMETHF_IN_ETMHF_HIGH downto ASYMETHF_IN_ETMHF_LOW);
-    asymhthf_internal(ASYMHTHF_STRUCT.high downto ASYMHTHF_STRUCT.low) <= lhc_data.htmhf(ASYMHTHF_IN_HTMHF_HIGH downto ASYMHTHF_IN_HTMHF_LOW);
+    data.asymet_data(ASYMET_STRUCT.high downto ASYMET_STRUCT.low) <= lhc_data.etm(ASYMET_IN_ETM_HIGH downto ASYMET_IN_ETM_LOW);
+    data.asymht_data(ASYMHT_STRUCT.high downto ASYMHT_STRUCT.low) <= lhc_data.htm(ASYMHT_IN_HTM_HIGH downto ASYMHT_IN_HTM_LOW);
+    data.asymethf_data(ASYMETHF_STRUCT.high downto ASYMETHF_STRUCT.low) <= lhc_data.etmhf(ASYMETHF_IN_ETMHF_HIGH downto ASYMETHF_IN_ETMHF_LOW);
+    data.asymhthf_data(ASYMHTHF_STRUCT.high downto ASYMHTHF_STRUCT.low) <= lhc_data.htmhf(ASYMHTHF_IN_HTMHF_HIGH downto ASYMHTHF_IN_HTMHF_LOW);
     
-    centrality_internal(CENT_LBITS_HIGH downto CENT_LBITS_LOW) <= lhc_data.etmhf(CENT_IN_ETMHF_HIGH downto CENT_IN_ETMHF_LOW);
-    centrality_internal(CENT_UBITS_HIGH downto CENT_UBITS_LOW) <= lhc_data.htmhf(CENT_IN_HTMHF_HIGH downto CENT_IN_HTMHF_LOW);
+    data.centrality_data(CENT_LBITS_HIGH downto CENT_LBITS_LOW) <= lhc_data.etmhf(CENT_IN_ETMHF_HIGH downto CENT_IN_ETMHF_LOW);
+    data.centrality_data(CENT_UBITS_HIGH downto CENT_UBITS_LOW) <= lhc_data.htmhf(CENT_IN_HTMHF_HIGH downto CENT_IN_HTMHF_LOW);
     
 -- ****************************************************************************************
     
-    ext_cond_internal <= lhc_data.external_conditions(EXTERNAL_CONDITIONS_DATA_WIDTH-1 downto 0);
+    data.external_conditions <= lhc_data.external_conditions(EXTERNAL_CONDITIONS_DATA_WIDTH-1 downto 0);
 
 gtl_module_i: entity work.gtl_module
     port map( 

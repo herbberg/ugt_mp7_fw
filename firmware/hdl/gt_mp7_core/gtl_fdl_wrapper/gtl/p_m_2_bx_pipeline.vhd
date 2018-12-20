@@ -1,21 +1,5 @@
---------------------------------------------------------------------------------
--- Synthesizer : ISE 13.2
--- Platform    : Linux Ubuntu 10.04
--- Targets     : Synthese
---------------------------------------------------------------------------------
--- This work is held in copyright as an unpublished work by HEPHY (Institute
--- of High Energy Physics) All rights reserved.  This work may not be used
--- except by authorized licensees of HEPHY. This work is the
--- confidential information of HEPHY.
---------------------------------------------------------------------------------
--- $HeadURL: svn://heros.hephy.at/GlobalTriggerUpgrade/firmware/gt_mp7/branches/hb_algo_2_buffer/src/gt_mp7_core/gtl_fdl_wrapper/gtl/p_m_2_bx_pipeline.vhd $
--- $Date: 2015-04-30 10:46:28 +0200 (Don, 30 Apr 2015) $
--- $Author: bergauer $
--- $Revision: 3878 $
---------------------------------------------------------------------------------
 
 -- Version-history:
--- HB 2016-09-16: inserted new esums.
 
 library ieee;
 use ieee.std_logic_1164.all;

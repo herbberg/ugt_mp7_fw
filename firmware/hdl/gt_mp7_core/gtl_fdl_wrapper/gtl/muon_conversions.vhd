@@ -19,7 +19,7 @@ use work.lut_pkg.all;
 entity muon_conversions is
     port(
         clk : in std_logic;
-        obj : in objects_array(0 to MUON_ARRAY_LENGTH-1);
+        obj : in muon_objects_array(0 to MUON_ARRAY_LENGTH-1);
         pt : out comp_in_data_array(0 to MUON_ARRAY_LENGTH-1) := (others => (others => '0'));
         eta : out comp_in_data_array(0 to MUON_ARRAY_LENGTH-1) := (others => (others => '0'));
         phi : out comp_in_data_array(0 to MUON_ARRAY_LENGTH-1) := (others => (others => '0'));
