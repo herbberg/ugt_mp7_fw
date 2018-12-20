@@ -12,9 +12,9 @@ use work.lhc_data_pkg.all;
 use work.gtl_pkg.all;
 
 entity muon_charge_correlations is
-    generic(
-        OUT_REG : boolean
-    );
+--     generic(
+--         OUT_REG : boolean
+--     );
     port(
         clk : in std_logic;
         in_1: in comp_in_data_array(0 to MUON_ARRAY_LENGTH-1);
@@ -27,9 +27,9 @@ end muon_charge_correlations;
 
 architecture rtl of muon_charge_correlations is
     
-    signal cc_double_i : muon_cc_double_array;
-    signal cc_triple_i : muon_cc_triple_array;
-    signal cc_quad_i : muon_cc_quad_array;
+--     signal cc_double : muon_cc_double_array;
+--     signal cc_triple : muon_cc_triple_array;
+--     signal cc_quad : muon_cc_quad_array;
     
 begin
 
@@ -53,38 +53,38 @@ begin
                 charge_bits_obj_2(i) := in_2(i)(NR_MUON_CHARGE_BITS-1 downto 0);
                 if (charge_bits_obj_1(i)(1)='1' and charge_bits_obj_2(j)(1)='1') then
                     if charge_bits_obj_1(i)(0)='1' and charge_bits_obj_2(j)(0)='1' then
-                        cc_double_i(i,j) <= CC_LS;
+                        cc_double(i,j) <= CC_LS;
                     elsif charge_bits_obj_1(i)(0)='0' and charge_bits_obj_2(j)(0)='0' then
-                        cc_double_i(i,j) <= CC_LS;
+                        cc_double(i,j) <= CC_LS;
                     else
-                        cc_double_i(i,j) <= CC_OS;                        
+                        cc_double(i,j) <= CC_OS;                        
                     end if;
                 else
-                    cc_double_i(i,j) <= CC_NOT_VALID;                                            
+                    cc_double(i,j) <= CC_NOT_VALID;                                            
                 end if;
                 for k in MUON_ARRAY_LENGTH-1 downto 0 loop
                     if charge_bits_obj_1(i)(1)='1' and charge_bits_obj_1(j)(1)='1' and charge_bits_obj_1(k)(1)='1' then
                         if charge_bits_obj_1(i)(0)='1' and charge_bits_obj_1(j)(0)='1' and charge_bits_obj_1(k)(0)='1' then
-                            cc_triple_i(i,j,k) <= CC_LS;
+                            cc_triple(i,j,k) <= CC_LS;
                         elsif charge_bits_obj_1(i)(0)='0' and charge_bits_obj_1(j)(0)='0' and charge_bits_obj_1(k)(0)='0' then
-                            cc_triple_i(i,j,k) <= CC_LS;
+                            cc_triple(i,j,k) <= CC_LS;
                         else
-                            cc_triple_i(i,j,k) <= CC_OS;                        
+                            cc_triple(i,j,k) <= CC_OS;                        
                         end if;
                     else
-                        cc_triple_i(i,j,k) <= CC_NOT_VALID;                                            
+                        cc_triple(i,j,k) <= CC_NOT_VALID;                                            
                     end if;
                     for l in MUON_ARRAY_LENGTH-1 downto 0 loop
                         if charge_bits_obj_1(i)(1)='1' and charge_bits_obj_1(j)(1)='1' and charge_bits_obj_1(k)(1)='1' and charge_bits_obj_1(l)(1)='1' then
                             if charge_bits_obj_1(i)(0)='1' and charge_bits_obj_1(j)(0)='1' and charge_bits_obj_1(k)(0)='1' and charge_bits_obj_1(l)(0)='1' then
-                                cc_quad_i(i,j,k,l) <= CC_LS;
+                                cc_quad(i,j,k,l) <= CC_LS;
                             elsif charge_bits_obj_1(i)(0)='0' and charge_bits_obj_1(j)(0)='0' and charge_bits_obj_1(k)(0)='0' and charge_bits_obj_1(l)(0)='0' then
-                                cc_quad_i(i,j,k,l) <= CC_LS;
+                                cc_quad(i,j,k,l) <= CC_LS;
                             else
-                                cc_quad_i(i,j,k,l) <= CC_OS;                        
+                                cc_quad(i,j,k,l) <= CC_OS;                        
                             end if;
                         else
-                            cc_quad_i(i,j,k,l) <= CC_NOT_VALID;                                            
+                            cc_quad(i,j,k,l) <= CC_NOT_VALID;                                            
                         end if;
                     end loop;
                 end loop;
@@ -92,88 +92,23 @@ begin
         end loop;
     end process charge_corr_p;
     
-    l_1 : for i in MUON_ARRAY_LENGTH-1 downto 0 generate
-        l_2 : for j in MUON_ARRAY_LENGTH-1 downto 0 generate
-            out_reg_double_i : entity work.reg_mux
-                generic map(NR_MUON_CHARGE_BITS, OUT_REG)  
-                port map(clk, cc_double_i(i,j), cc_double(i,j)); 
-            l_3 : for k in MUON_ARRAY_LENGTH-1 downto 0 generate
-                out_reg_triple_i : entity work.reg_mux
-                    generic map(NR_MUON_CHARGE_BITS, OUT_REG)  
-                    port map(clk, cc_triple_i(i,j,k), cc_triple(i,j,k)); 
-                l_4 : for l in MUON_ARRAY_LENGTH-1 downto 0 generate
-                    out_reg_quad_i : entity work.reg_mux
-                        generic map(NR_MUON_CHARGE_BITS, OUT_REG)  
-                        port map(clk, cc_quad_i(i,j,k,l), cc_quad(i,j,k,l)); 
-                end generate l_4;
-            end generate l_3;
-        end generate l_2;
-    end generate l_1;
-
---     charge_corr_p: process(in_1, in_2)
---         variable charge_bits_obj_1, charge_bits_obj_2 : muon_charge_bits_array;
---     begin
---         for i in 0 to MUON_ARRAY_LENGTH-1 loop
---             for j in 0 to MUON_ARRAY_LENGTH-1 loop
---                 charge_bits_obj_1(i) := in_1(i)(NR_MUON_CHARGE_BITS-1 downto 0);
---                 charge_bits_obj_2(i) := in_2(i)(NR_MUON_CHARGE_BITS-1 downto 0);
---                 if (charge_bits_obj_1(i)(1)='1' and charge_bits_obj_2(j)(1)='1') then
---                     if charge_bits_obj_1(i)(0)='1' and charge_bits_obj_2(j)(0)='1' then
---                         cc_double_i(i,j) <= CC_LS;
---                     elsif charge_bits_obj_1(i)(0)='0' and charge_bits_obj_2(j)(0)='0' then
---                         cc_double_i(i,j) <= CC_LS;
---                     else
---                         cc_double_i(i,j) <= CC_OS;                        
---                     end if;
---                 else
---                     cc_double_i(i,j) <= CC_NOT_VALID;                                            
---                 end if;
---                 for k in 0 to MUON_ARRAY_LENGTH-1 loop
---                     if charge_bits_obj_1(i)(1)='1' and charge_bits_obj_1(j)(1)='1' and charge_bits_obj_1(k)(1)='1' then
---                         if charge_bits_obj_1(i)(0)='1' and charge_bits_obj_1(j)(0)='1' and charge_bits_obj_1(k)(0)='1' then
---                             cc_triple_i(i,j,k) <= CC_LS;
---                         elsif charge_bits_obj_1(i)(0)='0' and charge_bits_obj_1(j)(0)='0' and charge_bits_obj_1(k)(0)='0' then
---                             cc_triple_i(i,j,k) <= CC_LS;
---                         else
---                             cc_triple_i(i,j,k) <= CC_OS;                        
---                         end if;
---                     else
---                         cc_triple_i(i,j,k) <= CC_NOT_VALID;                                            
---                     end if;
---                     for l in 0 to MUON_ARRAY_LENGTH-1 loop
---                         if charge_bits_obj_1(i)(1)='1' and charge_bits_obj_1(j)(1)='1' and charge_bits_obj_1(k)(1)='1' and charge_bits_obj_1(l)(1)='1' then
---                             if charge_bits_obj_1(i)(0)='1' and charge_bits_obj_1(j)(0)='1' and charge_bits_obj_1(k)(0)='1' and charge_bits_obj_1(l)(0)='1' then
---                                 cc_quad_i(i,j,k,l) <= CC_LS;
---                             elsif charge_bits_obj_1(i)(0)='0' and charge_bits_obj_1(j)(0)='0' and charge_bits_obj_1(k)(0)='0' and charge_bits_obj_1(l)(0)='0' then
---                                 cc_quad_i(i,j,k,l) <= CC_LS;
---                             else
---                                 cc_quad_i(i,j,k,l) <= CC_OS;                        
---                             end if;
---                         else
---                             cc_quad_i(i,j,k,l) <= CC_NOT_VALID;                                            
---                         end if;
---                     end loop;
---                 end loop;
---             end loop;
---         end loop;
---     end process charge_corr_p;
---     
---     l_1 : for i in 0 to MUON_ARRAY_LENGTH-1 generate
---         l_2 : for j in 0 to MUON_ARRAY_LENGTH-1 generate
+--     l_1 : for i in MUON_ARRAY_LENGTH-1 downto 0 generate
+--         l_2 : for j in MUON_ARRAY_LENGTH-1 downto 0 generate
 --             out_reg_double_i : entity work.reg_mux
 --                 generic map(NR_MUON_CHARGE_BITS, OUT_REG)  
---                 port map(clk, cc_double_i(i,j), cc_double(i,j)); 
---             l_3 : for k in 0 to MUON_ARRAY_LENGTH-1 generate
+--                 port map(clk, cc_double(i,j), cc_double(i,j)); 
+--             l_3 : for k in MUON_ARRAY_LENGTH-1 downto 0 generate
 --                 out_reg_triple_i : entity work.reg_mux
 --                     generic map(NR_MUON_CHARGE_BITS, OUT_REG)  
---                     port map(clk, cc_triple_i(i,j,k), cc_triple(i,j,k)); 
---                 l_4 : for l in 0 to MUON_ARRAY_LENGTH-1 generate
+--                     port map(clk, cc_triple(i,j,k), cc_triple(i,j,k)); 
+--                 l_4 : for l in MUON_ARRAY_LENGTH-1 downto 0 generate
 --                     out_reg_quad_i : entity work.reg_mux
 --                         generic map(NR_MUON_CHARGE_BITS, OUT_REG)  
---                         port map(clk, cc_quad_i(i,j,k,l), cc_quad(i,j,k,l)); 
+--                         port map(clk, cc_quad(i,j,k,l), cc_quad(i,j,k,l)); 
 --                 end generate l_4;
 --             end generate l_3;
 --         end generate l_2;
 --     end generate l_1;
+-- 
 
 end architecture rtl;

@@ -63,6 +63,7 @@ constant MASKS_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"000000
     constant MAX_LUT_WIDTH : positive := 16; -- muon qual lut
     constant MAX_OBJ_BITS : positive := 64; -- muon
 
+    constant MAX_COMP_DATA_WIDTH_ALL : positive := 64;
     constant MAX_COMP_DATA_WIDTH : positive := 12; -- max. input data width of comparators (esums pt = 12)
     constant MAX_COMP_CORR_CUTS_DATA_WIDTH : positive := 52; -- max inv mass width (2*MAX_PT_WIDTH+MAX_COSH_COS_WIDTH = 51) - used 52 for hex notation !
     constant MAX_COSH_COS_WIDTH : positive := 27; -- CALO_MUON_COSH_COS_VECTOR_WIDTH 
@@ -344,6 +345,15 @@ constant MASKS_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"000000
     end record jet_record;
     
     type jet_record_array is array (natural range <>) of jet_record;
+
+    type tau_record is record
+        pt : std_logic_vector(TAU_PT_HIGH downto TAU_PT_LOW);
+        eta : std_logic_vector(TAU_ETA_HIGH downto TAU_ETA_LOW);
+        phi : std_logic_vector(TAU_PHI_HIGH downto TAU_PHI_LOW);
+        iso : std_logic_vector(TAU_ISO_HIGH downto TAU_ISO_LOW);
+    end record tau_record;
+    
+    type tau_record_array is array (natural range <>) of tau_record;
 
     type muon_record is record
         pt : std_logic_vector(MUON_PT_HIGH downto MUON_PT_LOW);

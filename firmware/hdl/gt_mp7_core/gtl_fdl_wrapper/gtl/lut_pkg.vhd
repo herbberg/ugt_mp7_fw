@@ -1273,6 +1273,8 @@ constant MU_PT_LUT : muon_pt_lut_array := (
 2478, 2483, 2488, 2493, 2498, 2503, 2508, 2513, 2518, 2523, 2528, 2533, 2538, 2543, 2548, 2553
 );
 
+constant MUON_PT_LUT : muon_pt_lut_array := MU_PT_LUT;
+
 -- calo-calo cosh deta LUTs
 type calo_calo_cosh_deta_lut_array is array (0 to 2**MAX_CALO_ETA_BITS-1) of natural range 0 to 10597282;
 -- type eg_eg_cosh_deta_lut_array is array (0 to 2**MAX_CALO_ETA_BITS-1) of natural range 0 to 10597282;
