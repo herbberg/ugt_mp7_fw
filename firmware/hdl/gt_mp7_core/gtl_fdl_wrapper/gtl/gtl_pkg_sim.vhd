@@ -63,19 +63,23 @@ constant MASKS_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"000000
     constant MAX_LUT_WIDTH : positive := 16; -- muon qual lut
     constant MAX_OBJ_BITS : positive := 64; -- muon
 
-    constant MAX_COMP_IN_DATA_WIDTH : positive := 12; -- max. input data width of comparators (esums pt = 12)
+    constant MAX_COMP_DATA_WIDTH_ALL : positive := 64;
+    constant MAX_COMP_DATA_WIDTH : positive := 12; -- max. input data width of comparators (esums pt = 12)
     constant MAX_COMP_CORR_CUTS_DATA_WIDTH : positive := 52; -- max inv mass width (2*MAX_PT_WIDTH+MAX_COSH_COS_WIDTH = 51) - used 52 for hex notation !
     constant MAX_COSH_COS_WIDTH : positive := 27; -- CALO_MUON_COSH_COS_VECTOR_WIDTH 
     constant MAX_PT_WIDTH : positive := 12; -- max. pt width of comparators (esums pt = 12)
     constant MAX_PT_VECTOR_WIDTH : positive := 15; -- esums - max. value 2047.5 GeV => 20475 (2047.5 * 10) => 0x4FFB
 
-    constant OUT_REG_CONV_CALC: boolean := true;
+    constant OUT_REG_CALC: boolean := false;
+    constant IN_REG_COMP: boolean := true;
     constant OUT_REG_COMP: boolean := true;
     constant OUT_REG_COND: boolean := false;
     
+    constant EXT_COND_STAGES: natural := 2; -- pipeline stages for "External conditions" to get same pipeline to algos as conditions
+    constant CENTRALITY_STAGES: natural := 2; -- pipeline stages for "Centrality" to get same pipeline to algos as conditions
 -- *******************************************************************************************************
 -- MUON objects bits
-    constant NR_MUON_OBJECTS : positive := MUON_ARRAY_LENGTH; -- from lhc_data_pkg.vhd
+--     constant NR_MUON_OBJECTS : positive := MUON_ARRAY_LENGTH; -- from lhc_data_pkg.vhd
     constant MAX_MUON_BITS : positive := MUON_DATA_WIDTH; -- from lhc_data_pkg.vhd
 
     constant MUON_PHI_LOW : natural := 0;
@@ -102,9 +106,9 @@ constant MASKS_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"000000
 
 -- *******************************************************************************************************
 -- CALO objects bits
-    constant NR_EG_OBJECTS : positive := EG_ARRAY_LENGTH; -- number eg objects, from lhc_data_pkg.vhd
-    constant NR_JET_OBJECTS : positive := JET_ARRAY_LENGTH; -- number jet objects, from lhc_data_pkg.vhd
-    constant NR_TAU_OBJECTS : positive := TAU_ARRAY_LENGTH; -- number tau objects, from lhc_data_pkg.vhd
+--     constant NR_EG_OBJECTS : positive := EG_ARRAY_LENGTH; -- number eg objects, from lhc_data_pkg.vhd
+--     constant NR_JET_OBJECTS : positive := JET_ARRAY_LENGTH; -- number jet objects, from lhc_data_pkg.vhd
+--     constant NR_TAU_OBJECTS : positive := TAU_ARRAY_LENGTH; -- number tau objects, from lhc_data_pkg.vhd
     constant MAX_CALO_OBJECTS : positive := max(EG_ARRAY_LENGTH, JET_ARRAY_LENGTH, TAU_ARRAY_LENGTH);
     constant MAX_CALO_BITS : positive := max(EG_DATA_WIDTH, JET_DATA_WIDTH, TAU_DATA_WIDTH);
 
@@ -246,7 +250,7 @@ constant MASKS_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"000000
 
 -- *******************************************************************************
 -- Type declarations
-    type comp_in_data_array is array (natural range <>) of std_logic_vector(MAX_COMP_IN_DATA_WIDTH-1 downto 0);    
+    type comp_in_data_array is array (natural range <>) of std_logic_vector(MAX_COMP_DATA_WIDTH-1 downto 0);    
     type cosh_cos_vector_array is array (natural range <>, natural range <>) of std_logic_vector(MAX_COSH_COS_WIDTH-1 downto 0);    
     type pt_array is array (natural range <>) of std_logic_vector((MAX_PT_WIDTH)-1 downto 0);
     type mass_vector_array is array (natural range <>, natural range <>) of std_logic_vector((2*MAX_PT_WIDTH+MAX_COSH_COS_WIDTH)-1 downto 0);
@@ -265,7 +269,9 @@ constant MASKS_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"000000
 
     type pt_vector_array is array (natural range <>) of std_logic_vector(MAX_PT_VECTOR_WIDTH-1 downto 0);
 
-    type comp_mode is (greater_equal,window,equal,lut);
+    type comp_mode is (greater_equal,win_sign,win_unsign,equal,lut);
+
+    type slices_type is array (0 to 2*MAX_N_REQ-1) of natural;
 
     type obj_struct is record
         pt_l,pt_h,eta_l,eta_h,phi_l,phi_h,iso_l,
@@ -281,85 +287,54 @@ constant MASKS_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"000000
         high, low : natural;
     end record vec_struct;
 
-    type conversions_conf is record
-        N_OBJ : natural;
-        OBJ_T : obj_type;
-        OBJ_S : obj_struct;
-        PT_VECTOR_WIDTH : positive;
-        OUT_REG : boolean;
-    end record conversions_conf;
-
-    type differences_conf is record
-        N_OBJ_1, N_OBJ_2, PHI_HALF_RANGE, DIFF_WIDTH, COSH_COS_WIDTH : positive;
-        OUT_REG : boolean;
-        OBJ_CORR : obj_corr_type;
-    end record differences_conf;
-
-    type dr_conf is record
-        N_OBJ_1, N_OBJ_2, DIFF_WIDTH : positive;
-        OUT_REG : boolean;
-    end record dr_conf;
-
-    type mass_conf is record
-        N_OBJ_1, N_OBJ_2, PT1_WIDTH, PT2_WIDTH, COSH_COS_WIDTH, COSH_COS_PREC : positive;
-        OUT_REG : boolean;
-    end record mass_conf;
-
-    type comparators_conf is record
-        N_OBJ_1_H, N_OBJ_2_H, DATA_WIDTH, LUT_HIGH_BIT : natural;
-        MODE : comp_mode;
-        OUT_REG : boolean;
-    end record comparators_conf;
-    
-    type comparator_muon_charge_corr_conf is record
-        OUT_REG : boolean;
-    end record comparator_muon_charge_corr_conf;
-
-    type combinatorial_conditions_conf is record
-        OUT_REG, TBPT_SEL, CHARGE_CORR_SEL, CHARGE_SEL, QUAL_SEL, ISO_SEL, PHI_SEL, ETA_SEL : boolean;
-        SLICE_4_L, SLICE_4_H, SLICE_3_L, SLICE_3_H, SLICE_2_L, SLICE_2_H, SLICE_1_L, SLICE_1_H, N_OBJ, N_REQ : natural;
-    end record combinatorial_conditions_conf;
-
-    type correlation_conditions_conf is record
-        OUT_REG, DETA_SEL, DPHI_SEL, DR_SEL, INV_MASS_SEL, TRANS_MASS_SEL, TBPT_SEL, CHARGE_CORR_SEL, 
-        CHARGE_1_SEL, QUAL_1_SEL, ISO_1_SEL, PHI_1_SEL, ETA_1_SEL,
-        CHARGE_2_SEL, QUAL_2_SEL, ISO_2_SEL, PHI_2_SEL, ETA_2_SEL : boolean;
-        SLICE_1_L, SLICE_1_H, SLICE_2_L, SLICE_2_H, N_OBJ_1, N_OBJ_2 : natural;
-    end record correlation_conditions_conf;
-
     type eg_record is record
-        pt : std_logic_vector(EG_PT_HIGH-EG_PT_LOW downto 0);
-        eta : std_logic_vector(EG_ETA_HIGH-EG_ETA_LOW downto 0);
-        phi : std_logic_vector(EG_PHI_HIGH-EG_PHI_LOW downto 0);
-        iso : std_logic_vector(EG_ISO_HIGH-EG_ISO_LOW downto 0);
+        pt : std_logic_vector(EG_PT_HIGH downto EG_PT_LOW);
+        eta : std_logic_vector(EG_ETA_HIGH downto EG_ETA_LOW);
+        phi : std_logic_vector(EG_PHI_HIGH downto EG_PHI_LOW);
+        iso : std_logic_vector(EG_ISO_HIGH downto EG_ISO_LOW);
     end record eg_record;
     
+    type eg_record_array is array (natural range <>) of eg_record;
+
     type jet_record is record
-        pt : std_logic_vector(JET_PT_HIGH-JET_PT_LOW downto 0);
-        eta : std_logic_vector(JET_ETA_HIGH-JET_ETA_LOW downto 0);
-        phi : std_logic_vector(JET_PHI_HIGH-JET_PHI_LOW downto 0);
+        pt : std_logic_vector(JET_PT_HIGH downto JET_PT_LOW);
+        eta : std_logic_vector(JET_ETA_HIGH downto JET_ETA_LOW);
+        phi : std_logic_vector(JET_PHI_HIGH downto JET_PHI_LOW);
     end record jet_record;
     
+    type jet_record_array is array (natural range <>) of jet_record;
+
+    type tau_record is record
+        pt : std_logic_vector(TAU_PT_HIGH downto TAU_PT_LOW);
+        eta : std_logic_vector(TAU_ETA_HIGH downto TAU_ETA_LOW);
+        phi : std_logic_vector(TAU_PHI_HIGH downto TAU_PHI_LOW);
+        iso : std_logic_vector(TAU_ISO_HIGH downto TAU_ISO_LOW);
+    end record tau_record;
+    
+    type tau_record_array is array (natural range <>) of tau_record;
+
     type muon_record is record
-        pt : std_logic_vector(MUON_PT_HIGH-MUON_PT_LOW downto 0);
-        eta : std_logic_vector(MUON_ETA_HIGH-MUON_ETA_LOW downto 0);
-        phi : std_logic_vector(MUON_PHI_HIGH-MUON_PHI_LOW downto 0);
-        iso : std_logic_vector(MUON_ISO_HIGH-MUON_ISO_LOW downto 0);
-        qual : std_logic_vector(MUON_QUAL_HIGH-MUON_QUAL_LOW downto 0);
-        charge : std_logic_vector(MUON_CHARGE_HIGH-MUON_CHARGE_LOW downto 0);
+        pt : std_logic_vector(MUON_PT_HIGH downto MUON_PT_LOW);
+        eta : std_logic_vector(MUON_ETA_HIGH downto MUON_ETA_LOW);
+        phi : std_logic_vector(MUON_PHI_HIGH downto MUON_PHI_LOW);
+        iso : std_logic_vector(MUON_ISO_HIGH downto MUON_ISO_LOW);
+        qual : std_logic_vector(MUON_QUAL_HIGH downto MUON_QUAL_LOW);
+        charge : std_logic_vector(MUON_CHARGE_HIGH downto MUON_CHARGE_LOW);
     end record muon_record;
     
+    type muon_record_array is array (natural range <>) of muon_record;
+
 -- ==== MUONs - begin ============================================================
     type muon_objects_array is array (natural range <>) of std_logic_vector(MAX_MUON_BITS-1 downto 0);
 
     constant MUON_STRUCT : obj_struct := (MUON_PT_LOW,MUON_PT_HIGH,MUON_ETA_LOW,MUON_ETA_HIGH,MUON_PHI_LOW,MUON_PHI_HIGH,MUON_ISO_LOW,MUON_ISO_HIGH,
         MUON_QUAL_LOW,MUON_QUAL_HIGH,MUON_CHARGE_LOW,MUON_CHARGE_HIGH,0,0,0,0,0,0);
 
-    constant NR_MUON_CHARGE_BITS : positive := MUON_CHARGE_HIGH-MUON_CHARGE_LOW + 1;
-    type muon_charge_bits_array is array (0 to NR_MUON_OBJECTS-1) of std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0);
-    type muon_cc_double_array is array (0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) of std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0);
-    type muon_cc_triple_array is array (0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) of std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0);
-    type muon_cc_quad_array is array (0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1, 0 to NR_MUON_OBJECTS-1) of std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0);
+    constant NR_MUON_CHARGE_BITS : positive := muon_record.charge'length;
+    type muon_charge_bits_array is array (0 to MUON_ARRAY_LENGTH-1) of std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0);
+    type muon_cc_double_array is array (0 to MUON_ARRAY_LENGTH-1, 0 to MUON_ARRAY_LENGTH-1) of std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0);
+    type muon_cc_triple_array is array (0 to MUON_ARRAY_LENGTH-1, 0 to MUON_ARRAY_LENGTH-1, 0 to MUON_ARRAY_LENGTH-1) of std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0);
+    type muon_cc_quad_array is array (0 to MUON_ARRAY_LENGTH-1, 0 to MUON_ARRAY_LENGTH-1, 0 to MUON_ARRAY_LENGTH-1, 0 to MUON_ARRAY_LENGTH-1) of std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0);
     constant CC_NOT_VALID : std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0) := "00"; 
     constant CC_LS : std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0) := "01"; 
     constant CC_OS : std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0) := "10"; 
@@ -407,7 +382,55 @@ constant MASKS_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"000000
     constant MBT1HFM_STRUCT : vec_struct := (MB_COUNT_HIGH,MB_COUNT_LOW);
 
 -- *******************************************************************************************************
--- "External conditions" (former "Technical Triggers" and "External Algorithms") definitions
-    constant NR_EXTERNAL_CONDITIONS : positive := EXTERNAL_CONDITIONS_DATA_WIDTH; -- number of "External conditions" inputs (proposed max. NR_EXTERNAL_CONDITIONS = 256), from lhc_data_pkg.vhd
 
+--     type gtl_data_record is record
+--         muon_data : muon_objects_array(0 to MUON_ARRAY_LENGTH-1);
+--         eg_data : calo_objects_array(0 to EG_ARRAY_LENGTH-1);
+--         jet_data : calo_objects_array(0 to JET_ARRAY_LENGTH-1);
+--         tau_data : calo_objects_array(0 to TAU_ARRAY_LENGTH-1);
+--         ett_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
+--         ht_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
+--         etm_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
+--         htm_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
+--         mbt1hfp_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
+--         mbt1hfm_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
+--         mbt0hfp_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
+--         mbt0hfm_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
+--         ettem_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
+--         etmhf_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
+--         htmhf_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
+--         towercount_data : std_logic_vector(MAX_TOWERCOUNT_BITS-1 downto 0);
+--         asymet_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
+--         asymht_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
+--         asymethf_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
+--         asymhthf_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
+--         centrality_data : std_logic_vector(NR_CENTRALITY_BITS-1 downto 0);
+--         external_conditions : std_logic_vector(EXTERNAL_CONDITIONS_DATA_WIDTH-1 downto 0);
+--     end record gtl_data_record;
+    
+    type gtl_data_record is record
+        muon_data : muon_record_array(0 to MUON_ARRAY_LENGTH-1);
+        eg_data : eg_record_array(0 to EG_ARRAY_LENGTH-1);
+        jet_data : jet_record_array(0 to JET_ARRAY_LENGTH-1);
+        tau_data : tau_record_array(0 to TAU_ARRAY_LENGTH-1);
+        ett_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
+        ht_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
+        etm_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
+        htm_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
+        mbt1hfp_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
+        mbt1hfm_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
+        mbt0hfp_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
+        mbt0hfm_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
+        ettem_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
+        etmhf_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
+        htmhf_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
+        towercount_data : std_logic_vector(MAX_TOWERCOUNT_BITS-1 downto 0);
+        asymet_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
+        asymht_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
+        asymethf_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
+        asymhthf_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
+        centrality_data : std_logic_vector(NR_CENTRALITY_BITS-1 downto 0);
+        external_conditions : std_logic_vector(EXTERNAL_CONDITIONS_DATA_WIDTH-1 downto 0);
+    end record gtl_data_record;
+    
 end package;

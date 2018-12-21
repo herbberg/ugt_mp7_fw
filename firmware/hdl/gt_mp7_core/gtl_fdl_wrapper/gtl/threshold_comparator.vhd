@@ -13,7 +13,7 @@ entity threshold_comparator is
     generic(
         N_OBJ : positive;
         DATA_WIDTH : positive;
-        MODE : comp_mode;
+        MODE : comp_mode := greater_equal;
         THRESHOLD : std_logic_vector(MAX_COMP_DATA_WIDTH-1 downto 0) := (others => '0')
     );
     port(
