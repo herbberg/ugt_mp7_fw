@@ -271,6 +271,8 @@ constant MASKS_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"000000
 
     type comp_mode is (greater_equal,win_sign,win_unsign,equal,lut);
 
+    type slices_type is array (0 to 2*MAX_N_REQ-1) of natural;
+
     type obj_struct is record
         pt_l,pt_h,eta_l,eta_h,phi_l,phi_h,iso_l,
         iso_h,qual_l,qual_h,charge_l,charge_h,
