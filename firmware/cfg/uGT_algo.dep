@@ -28,16 +28,17 @@ src gt_mp7_core/gtl_fdl_wrapper/fdl/update_process.vhd
 src gt_mp7_core/gtl_fdl_wrapper/fdl/pulse_converter.vhd
 src gt_mp7_core/gtl_fdl_wrapper/fdl/algo_slice.vhd
 #
-src gt_mp7_core/gtl_fdl_wrapper/gtl/p_m_2_bx_pipeline.vhd
+src gt_mp7_core/gtl_fdl_wrapper/gtl/bx_pipeline.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/comp_signed.vhd
-src gt_mp7_core/gtl_fdl_wrapper/gtl/conversions.vhd
+src gt_mp7_core/gtl_fdl_wrapper/gtl/eg_conversions.vhd
+src gt_mp7_core/gtl_fdl_wrapper/gtl/jet_conversions.vhd
+src gt_mp7_core/gtl_fdl_wrapper/gtl/tau_conversions.vhd
+src gt_mp7_core/gtl_fdl_wrapper/gtl/muon_conversions.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/lut_comparator.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/range_comparator.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/threshold_comparator.vhd
-src gt_mp7_core/gtl_fdl_wrapper/gtl/comparators_obj_cuts.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/comparators_corr_cuts.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/comparator_muon_charge_corr.vhd
-#src gt_mp7_core/gtl_fdl_wrapper/gtl/combinatorial_and.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/combinatorial_conditions.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/correlation_conditions.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/difference_eta.vhd

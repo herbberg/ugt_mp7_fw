@@ -287,52 +287,6 @@ constant MASKS_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"000000
         high, low : natural;
     end record vec_struct;
 
-    type conversions_conf is record
-        N_OBJ : natural;
-        OBJ_T : obj_type;
-        OBJ_S : obj_struct;
-        PT_VECTOR_WIDTH : positive;
-        OUT_REG : boolean;
-    end record conversions_conf;
-
-    type differences_conf is record
-        N_OBJ_1, N_OBJ_2, PHI_HALF_RANGE, DIFF_WIDTH, COSH_COS_WIDTH : positive;
-        OUT_REG : boolean;
-        OBJ_CORR : obj_corr_type;
-    end record differences_conf;
-
-    type dr_conf is record
-        N_OBJ_1, N_OBJ_2, DIFF_WIDTH : positive;
-        OUT_REG : boolean;
-    end record dr_conf;
-
-    type mass_conf is record
-        N_OBJ_1, N_OBJ_2, PT1_WIDTH, PT2_WIDTH, COSH_COS_WIDTH, COSH_COS_PREC : positive;
-        OUT_REG : boolean;
-    end record mass_conf;
-
-    type comparators_conf is record
-        N_OBJ_1_H, N_OBJ_2_H, DATA_WIDTH, LUT_HIGH_BIT : natural;
-        MODE : comp_mode;
-        IN_REG, OUT_REG : boolean;
-    end record comparators_conf;
-    
---     type comparator_muon_charge_corr_conf is record
---         OUT_REG : boolean;
---     end record comparator_muon_charge_corr_conf;
-
-    type combinatorial_conditions_conf is record
-        OUT_REG, TBPT_SEL, CHARGE_CORR_SEL, CHARGE_SEL, QUAL_SEL, ISO_SEL, PHI_SEL, ETA_SEL : boolean;
-        SLICE_4_L, SLICE_4_H, SLICE_3_L, SLICE_3_H, SLICE_2_L, SLICE_2_H, SLICE_1_L, SLICE_1_H, N_OBJ, N_REQ : natural;
-    end record combinatorial_conditions_conf;
-
-    type correlation_conditions_conf is record
-        OUT_REG, DETA_SEL, DPHI_SEL, DR_SEL, INV_MASS_SEL, TRANS_MASS_SEL, TBPT_SEL, CHARGE_CORR_SEL, 
-        CHARGE_1_SEL, QUAL_1_SEL, ISO_1_SEL, PHI_1_SEL, ETA_1_SEL,
-        CHARGE_2_SEL, QUAL_2_SEL, ISO_2_SEL, PHI_2_SEL, ETA_2_SEL : boolean;
-        SLICE_1_L, SLICE_1_H, SLICE_2_L, SLICE_2_H, N_OBJ_1, N_OBJ_2 : natural;
-    end record correlation_conditions_conf;
-
     type eg_record is record
         pt : std_logic_vector(EG_PT_HIGH downto EG_PT_LOW);
         eta : std_logic_vector(EG_ETA_HIGH downto EG_ETA_LOW);
