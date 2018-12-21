@@ -19,7 +19,6 @@ entity difference_eta is
     generic(
         N_OBJ_1 : positive;
         N_OBJ_2 : positive;
-        DIFF_WIDTH : positive;
         COSH_COS_WIDTH : positive;
         OBJ_CORR : obj_corr_type
     );
@@ -27,7 +26,7 @@ entity difference_eta is
         clk : in std_logic;
         eta_1 : in integer_array(0 to N_OBJ_1-1);
         eta_2 : in integer_array(0 to N_OBJ_2-1);
-        diff_eta_o : out std_logic_3dim_array(0 to N_OBJ_1-1, 0 to N_OBJ_2-1, DIFF_WIDTH-1 downto 0);
+        diff_eta_o : out std_logic_3dim_array(0 to N_OBJ_1-1, 0 to N_OBJ_2-1, DETA_DPHI_VECTOR_WIDTH-1 downto 0);
         diff_eta_integer_o : out integer_2dim_array(0 to N_OBJ_1-1, 0 to N_OBJ_2-1);
         cosh_deta_o : out std_logic_3dim_array(0 to N_OBJ_1-1, 0 to N_OBJ_2-1, COSH_COS_WIDTH-1 downto 0)
     );
@@ -57,7 +56,7 @@ begin
                 diff_eta_vector_i(i,j) <= CONV_STD_LOGIC_VECTOR(MU_MU_DIFF_ETA_LUT(diff_i(i,j)), DETA_DPHI_VECTOR_WIDTH_ALL);
                 cosh_deta_vector_i(i,j)(MUON_MUON_COSH_COS_VECTOR_WIDTH-1 downto 0) <= CONV_STD_LOGIC_VECTOR(MU_MU_COSH_DETA_LUT(diff_i(i,j)), MUON_MUON_COSH_COS_VECTOR_WIDTH);
             end generate muon_muon_i;
-            out_loop_diff: for k in 0 to DIFF_WIDTH-1 generate 
+            out_loop_diff: for k in 0 to DETA_DPHI_VECTOR_WIDTH-1 generate 
                 diff_eta_o(i,j,k) <= diff_eta_vector_i(i,j)(k); 
             end generate out_loop_diff;
 -- no output register for cosh_deta_o (used only in first stage, e.g. mass calculation)

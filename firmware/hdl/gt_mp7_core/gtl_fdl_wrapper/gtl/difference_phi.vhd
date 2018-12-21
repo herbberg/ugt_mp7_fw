@@ -19,7 +19,6 @@ entity difference_phi is
     generic(
         N_OBJ_1 : positive;
         N_OBJ_2 : positive;
-        DIFF_WIDTH : positive;
         PHI_HALF_RANGE : positive;
         COSH_COS_WIDTH : positive;
         OBJ_CORR : obj_corr_type
@@ -28,9 +27,9 @@ entity difference_phi is
         clk : in std_logic;
         phi_1 : in integer_array(0 to N_OBJ_1-1);
         phi_2 : in integer_array(0 to N_OBJ_2-1);
-        diff_phi_o : out std_logic_3dim_array(0 to N_OBJ_1-1, 0 to N_OBJ_2-1, 0 to DIFF_WIDTH-1);
+        diff_phi_o : out std_logic_3dim_array(0 to N_OBJ_1-1, 0 to N_OBJ_2-1, 0 to DETA_DPHI_VECTOR_WIDTH-1);
         diff_phi_integer_o : out integer_2dim_array(0 to N_OBJ_1-1, 0 to N_OBJ_2-1);
-        diff_phi_reg_o : out std_logic_3dim_array(0 to N_OBJ_1-1, 0 to N_OBJ_2-1, DIFF_WIDTH-1 downto 0);
+        diff_phi_reg_o : out std_logic_3dim_array(0 to N_OBJ_1-1, 0 to N_OBJ_2-1, DETA_DPHI_VECTOR_WIDTH-1 downto 0);
         cos_dphi_o : out std_logic_3dim_array(0 to N_OBJ_1-1, 0 to N_OBJ_2-1, 0 to COSH_COS_WIDTH-1)
     );
 end difference_phi;
@@ -40,7 +39,7 @@ architecture rtl of difference_phi is
     signal diff_temp : dim2_max_phi_range_array(0 to N_OBJ_1-1, 0 to N_OBJ_2-1);
     signal diff_i : dim2_max_phi_range_array(0 to N_OBJ_1-1, 0 to N_OBJ_2-1);
     signal diff_phi_vector_i : deta_dphi_vector_array(0 to N_OBJ_1-1, 0 to N_OBJ_2-1) := (others => (others => (others => '0')));
-    type diff_phi_i_array is array (0 to N_OBJ_1-1, 0 to N_OBJ_2-1, DIFF_WIDTH-1 downto 0) of std_logic_vector(0 downto 0);
+    type diff_phi_i_array is array (0 to N_OBJ_1-1, 0 to N_OBJ_2-1, DETA_DPHI_VECTOR_WIDTH-1 downto 0) of std_logic_vector(0 downto 0);
     signal diff_phi_i, diff_phi_reg : diff_phi_i_array := (others => (others => (others => "0")));
     signal cos_dphi_vector_i : cosh_cos_vector_array(0 to N_OBJ_1-1, 0 to N_OBJ_2-1) := (others => (others => (others => '0')));
     
@@ -62,7 +61,7 @@ begin
                 diff_phi_vector_i(i,j) <= CONV_STD_LOGIC_VECTOR(MU_MU_DIFF_PHI_LUT(diff_i(i,j)), DETA_DPHI_VECTOR_WIDTH_ALL);
                 cos_dphi_vector_i(i,j)(MUON_MUON_COSH_COS_VECTOR_WIDTH-1 downto 0) <= CONV_STD_LOGIC_VECTOR(MUON_MUON_COS_DPHI_LUT(diff_i(i,j)), MUON_MUON_COSH_COS_VECTOR_WIDTH);
             end generate muon_muon_i;
-            out_loop_diff: for k in 0 to DIFF_WIDTH-1 generate 
+            out_loop_diff: for k in 0 to DETA_DPHI_VECTOR_WIDTH-1 generate 
                 diff_phi_o(i,j,k) <= diff_phi_vector_i(i,j)(k); 
             end generate out_loop_diff;
             diff_phi_integer_o(i,j) <= CONV_INTEGER(diff_phi_vector_i(i,j));
