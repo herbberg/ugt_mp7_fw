@@ -170,9 +170,9 @@ constant TAU_PT_PRECISION : positive := 1;
 constant ETM_PT_PRECISION : positive := 1;
 constant ETMHF_PT_PRECISION : positive := 1;
 constant HTM_PT_PRECISION : positive := 1;
-constant ETM_PT_VECTOR_WIDTH: positive := log2c((2**(ETM_STRUCT.pt_h-ETM_STRUCT.pt_l+1)-1)*(10**ETM_PT_PRECISION));
-constant ETMHF_PT_VECTOR_WIDTH: positive := log2c((2**(ETMHF_STRUCT.pt_h-ETMHF_STRUCT.pt_l+1)-1)*(10**ETMHF_PT_PRECISION));
-constant HTM_PT_VECTOR_WIDTH: positive := log2c((2**(HTM_STRUCT.pt_h-HTM_STRUCT.pt_l+1)-1)*(10**HTM_PT_PRECISION));
+constant ETM_PT_VECTOR_WIDTH: positive := log2c((2**(ETM_PT_HIGH-ETM_PT_LOW+1)-1)*(10**ETM_PT_PRECISION));
+constant ETMHF_PT_VECTOR_WIDTH: positive := log2c((2**(ETMHF_PT_HIGH-ETMHF_PT_LOW+1)-1)*(10**ETMHF_PT_PRECISION));
+constant HTM_PT_VECTOR_WIDTH: positive := log2c((2**(HTM_PT_HIGH-HTM_PT_LOW+1)-1)*(10**HTM_PT_PRECISION));
 -- constant EG_PT_VECTOR_WIDTH: positive := 12; -- max. value 255.5 GeV => 2555 (255.5 * 10**CALO_INV_MASS_PT_PRECISION) => 0x9FB
 -- constant JET_PT_VECTOR_WIDTH: positive := 14; -- max. value 1023.5 GeV => 10235 (1023.5 * 10**CALO_INV_MASS_PT_PRECISION) => 0x27FB
 -- constant TAU_PT_VECTOR_WIDTH: positive := 12; -- max. value 255.5 GeV => 2555 (255.5 * 10**CALO_INV_MASS_PT_PRECISION) => 0x9FB
@@ -785,7 +785,7 @@ constant MU_ETMHF_DIFF_PHI_LUT : calo_muon_diff_phi_lut_array := CALO_MU_DIFF_PH
 -- type tau_pt_lut_array is array (0 to 2**(D_S_I_TAU_V2.et_high-D_S_I_TAU_V2.et_low+1)-1) of natural range 0 to 2555;
 -- HB 2017-01-20: updated for corrected scale
 -- type eg_pt_lut_array is array (0 to 2**(D_S_I_EG_V2.et_high-D_S_I_EG_V2.et_low+1)-1) of natural range 0 to 2558;
-type eg_pt_lut_array is array (0 to 2**EG_PT_WIDTH-1) of natural range 0 to 2558;
+type eg_pt_lut_array is array (0 to 2**(EG_PT_HIGH - EG_PT_LOW + 1)-1) of natural range 0 to 2558;
 -- type tau_pt_lut_array is array (0 to 2**(D_S_I_TAU_V2.et_high-D_S_I_TAU_V2.et_low+1)-1) of natural range 0 to 2558;
 
 -- HB 2017-01-20: updated for corrected scale
@@ -830,7 +830,7 @@ constant TAU_PT_LUT : eg_pt_lut_array := EG_PT_LUT;
 -- type jet_pt_lut_array is array (0 to 2**(D_S_I_JET_V2.et_high-D_S_I_JET_V2.et_low+1)-1) of natural range 0 to 10235;
 -- HB 2017-01-20: updated for corrected scale
 -- type jet_pt_lut_array is array (0 to 2**(D_S_I_JET_V2.et_high-D_S_I_JET_V2.et_low+1)-1) of natural range 0 to 10238;
-type jet_pt_lut_array is array (0 to 2**JET_PT_WIDTH-1) of natural range 0 to 10238;
+type jet_pt_lut_array is array (0 to 2**(JET_PT_HIGH - JET_PT_LOW + 1)-1) of natural range 0 to 10238;
 
 -- HB 2017-01-20: updated for corrected scale
 constant JET_PT_LUT : jet_pt_lut_array := (
@@ -965,7 +965,7 @@ constant JET_PT_LUT : jet_pt_lut_array := (
 10163, 10168, 10173, 10178, 10183, 10188, 10193, 10198, 10203, 10208, 10213, 10218, 10223, 10228, 10233, 10238
 );
 
-type etm_pt_lut_array is array (0 to 2**(ETM_STRUCT.pt_h-ETM_STRUCT.pt_l+1)-1) of natural range 0 to 20478;
+type etm_pt_lut_array is array (0 to 2**(ETM_PT_HIGH-ETM_PT_LOW+1)-1) of natural range 0 to 20478;
 -- type etm_pt_lut_array is array (0 to 2**(D_S_I_ETM_V2.et_high-D_S_I_ETM_V2.et_low+1)-1) of natural range 0 to 20478;
 
 constant ETM_PT_LUT : etm_pt_lut_array := (
@@ -1234,7 +1234,7 @@ constant HTM_PT_LUT : etm_pt_lut_array := ETM_PT_LUT;
 -- type muon_pt_lut_array is array (0 to 2**(D_S_I_MUON_V2.pt_high-D_S_I_MUON_V2.pt_low+1)-1) of natural range 0 to 2555;
 -- HB 2017-01-20: updated for corrected scale
 -- type muon_pt_lut_array is array (0 to 2**(D_S_I_MUON_V2.pt_high-D_S_I_MUON_V2.pt_low+1)-1) of natural range 0 to 2553;
-type muon_pt_lut_array is array (0 to 2**MUON_PT_WIDTH-1) of natural range 0 to 2553;
+type muon_pt_lut_array is array (0 to 2**(MUON_PT_HIGH - MUON_PT_LOW + 1)-1) of natural range 0 to 2553;
 
 -- HB 2017-01-20: updated for corrected scale
 constant MU_PT_LUT : muon_pt_lut_array := (

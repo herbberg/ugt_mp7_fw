@@ -14,11 +14,11 @@ entity threshold_comparator is
         N_OBJ : positive;
         DATA_WIDTH : positive;
         MODE : comp_mode := greater_equal;
-        THRESHOLD : std_logic_vector(MAX_COMP_DATA_WIDTH-1 downto 0) := (others => '0')
+        THRESHOLD : std_logic_vector(MAX_OBJ_PARAMETER_WIDTH-1 downto 0) := (others => '0')
     );
     port(
         clk : in std_logic;
-        data : in comp_in_data_array(0 to N_OBJ-1);
+        data : in obj_parameter_array(0 to N_OBJ-1);
         comp_o : out std_logic_vector(0 to N_OBJ-1) := (others => '0')
     );
 end threshold_comparator;

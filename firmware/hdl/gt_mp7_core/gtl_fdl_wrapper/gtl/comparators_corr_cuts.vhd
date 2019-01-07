@@ -15,8 +15,8 @@ entity comparators_corr_cuts is
         N_OBJ_2 : positive;
         DATA_WIDTH : positive;
         MODE : comp_mode;
-        MINI : std_logic_vector(MAX_COMP_CORR_CUTS_DATA_WIDTH-1 downto 0) := (others => '0');
-        MAXI : std_logic_vector(MAX_COMP_CORR_CUTS_DATA_WIDTH-1 downto 0) := (others => '0')
+        MIN_REQ : std_logic_vector(MAX_CORR_CUTS_WIDTH-1 downto 0) := (others => '0');
+        MAX_REQ : std_logic_vector(MAX_CORR_CUTS_WIDTH-1 downto 0) := (others => '0')
     );
     port(
         clk : in std_logic;
@@ -27,8 +27,8 @@ end comparators_corr_cuts;
 
 architecture rtl of comparators_corr_cuts is
 
-    constant MINI_I : std_logic_vector(DATA_WIDTH-1 downto 0) := MINI(DATA_WIDTH-1 downto 0);
-    constant MAXI_I : std_logic_vector(DATA_WIDTH-1 downto 0) := MAXI(DATA_WIDTH-1 downto 0);
+    constant MIN_I : std_logic_vector(DATA_WIDTH-1 downto 0) := MIN_REQ(DATA_WIDTH-1 downto 0);
+    constant MAX_I : std_logic_vector(DATA_WIDTH-1 downto 0) := MAX_REQ(DATA_WIDTH-1 downto 0);
     type data_vec_array is array(0 to N_OBJ_1-1, 0 to N_OBJ_2-1) of std_logic_vector(DATA_WIDTH-1 downto 0);
     signal data_vec, data_vec_i : data_vec_array;
     signal comp : std_logic_2dim_array(0 to N_OBJ_1-1, 0 to N_OBJ_2-1);
@@ -47,18 +47,18 @@ begin
                 generic map(DATA_WIDTH, IN_REG_COMP)  
                 port map(clk, data_vec(i,j), data_vec_i(i,j));
             if_ge: if MODE = greater_equal generate
-                comp(i,j) <= '1' when (data_vec_i(i,j) >= MINI_I) else '0';
+                comp(i,j) <= '1' when (data_vec_i(i,j) >= MIN_I) else '0';
             end generate if_ge;
             if_win_sign: if MODE = win_sign generate
                 comp_signed_i : entity work.comp_signed
-                    generic map(MINI_I, MAXI_I)  
+                    generic map(MIN_I, MAX_I)  
                     port map(data_vec_i(i,j), comp(i,j));
             end generate if_win_sign;
             if_win_unsign: if MODE = win_unsign generate
-                comp(i,j) <= '1' when ((data_vec_i(i,j) >= MINI_I) and (data_vec_i(i,j) <= MAXI_I)) else '0';
+                comp(i,j) <= '1' when ((data_vec_i(i,j) >= MIN_I) and (data_vec_i(i,j) <= MAX_I)) else '0';
             end generate if_win_unsign;
             if_eq: if MODE = equal generate
-                comp(i,j) <= '1' when (data_vec_i(i,j) = MINI_I) else '0';
+                comp(i,j) <= '1' when (data_vec_i(i,j) = MIN_I) else '0';
             end generate if_eq;
             comp_i(i,j)(0) <= comp(i,j);
             out_reg_i : entity work.reg_mux

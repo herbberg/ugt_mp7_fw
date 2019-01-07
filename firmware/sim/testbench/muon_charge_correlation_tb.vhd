@@ -21,7 +21,7 @@ architecture rtl of muon_charge_correlation_tb is
     signal lhc_clk: std_logic;
 
     signal in_1, in_2 : muon_charge_bits_array;
-    signal in_1_i, in_2_i : comp_in_data_array(0 to NR_MUON_OBJECTS-1) := (others => (others => '0'));
+    signal in_1_i, in_2_i : obj_parameter_array(0 to NR_MUON_OBJECTS-1) := (others => (others => '0'));
     signal cc_double: muon_cc_double_array;
     signal cc_triple: muon_cc_triple_array;
     signal cc_quad: muon_cc_quad_array;

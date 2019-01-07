@@ -63,9 +63,9 @@ constant MASKS_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"000000
     constant MAX_LUT_WIDTH : positive := 16; -- muon qual lut
     constant MAX_OBJ_BITS : positive := 64; -- muon
 
-    constant MAX_COMP_DATA_WIDTH_ALL : positive := 64;
-    constant MAX_COMP_DATA_WIDTH : positive := 12; -- max. input data width of comparators (esums pt = 12)
-    constant MAX_COMP_CORR_CUTS_DATA_WIDTH : positive := 52; -- max inv mass width (2*MAX_PT_WIDTH+MAX_COSH_COS_WIDTH = 51) - used 52 for hex notation !
+    constant MAX_OBJ_PARAMETER_WIDTH_ALL : positive := 64;
+    constant MAX_OBJ_PARAMETER_WIDTH : positive := 12; -- max. input data width of comparators (esums pt = 12)
+    constant MAX_CORR_CUTS_WIDTH : positive := 52; -- max inv mass width (2*MAX_PT_WIDTH+MAX_COSH_COS_WIDTH = 51) - used 52 for hex notation !
     constant MAX_COSH_COS_WIDTH : positive := 27; -- CALO_MUON_COSH_COS_VECTOR_WIDTH 
     constant MAX_PT_WIDTH : positive := 12; -- max. pt width of comparators (esums pt = 12)
     constant MAX_PT_VECTOR_WIDTH : positive := 15; -- esums - max. value 2047.5 GeV => 20475 (2047.5 * 10) => 0x4FFB
@@ -77,10 +77,9 @@ constant MASKS_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"000000
     
     constant EXT_COND_STAGES: natural := 2; -- pipeline stages for "External conditions" to get same pipeline to algos as conditions
     constant CENTRALITY_STAGES: natural := 2; -- pipeline stages for "Centrality" to get same pipeline to algos as conditions
+    
 -- *******************************************************************************************************
 -- MUON objects bits
---     constant NR_MUON_OBJECTS : positive := MUON_ARRAY_LENGTH; -- from lhc_data_pkg.vhd
-    constant MAX_MUON_BITS : positive := MUON_DATA_WIDTH; -- from lhc_data_pkg.vhd
 
     constant MUON_PHI_LOW : natural := 0;
     constant MUON_PHI_HIGH : natural := 9;
@@ -94,7 +93,7 @@ constant MASKS_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"000000
     constant MUON_ISO_HIGH : natural := 33;
     constant MUON_CHARGE_LOW : natural := 34;
     constant MUON_CHARGE_HIGH : natural := 35;
--- HB 2017-04-11: updated muon structure for "raw" ann "extrapolated" phi and eta bits (phi_high, phi_low, eta_high and eta_low => for "extrapolated").
+-- HB 2017-04-11: updated muon structure for "raw" and "extrapolated" phi and eta bits (phi_high, phi_low, eta_high and eta_low => for "extrapolated").
     constant MUON_IDX_BITS_LOW : natural := 36;
     constant MUON_IDX_BITS_HIGH : natural := 42;
     constant MUON_PHI_RAW_LOW : natural := 43;
@@ -104,13 +103,8 @@ constant MASKS_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"000000
 
     constant MUON_PT_VECTOR_WIDTH: positive := 12; -- max. value 255.5 GeV => 2555 (255.5 * 10**MUON_INV_MASS_PT_PRECISION) => 0x9FB
 
--- *******************************************************************************************************
+    -- *******************************************************************************************************
 -- CALO objects bits
---     constant NR_EG_OBJECTS : positive := EG_ARRAY_LENGTH; -- number eg objects, from lhc_data_pkg.vhd
---     constant NR_JET_OBJECTS : positive := JET_ARRAY_LENGTH; -- number jet objects, from lhc_data_pkg.vhd
---     constant NR_TAU_OBJECTS : positive := TAU_ARRAY_LENGTH; -- number tau objects, from lhc_data_pkg.vhd
-    constant MAX_CALO_OBJECTS : positive := max(EG_ARRAY_LENGTH, JET_ARRAY_LENGTH, TAU_ARRAY_LENGTH);
-    constant MAX_CALO_BITS : positive := max(EG_DATA_WIDTH, JET_DATA_WIDTH, TAU_DATA_WIDTH);
 
     constant EG_PT_LOW : natural := 0;
     constant EG_PT_HIGH : natural := 8;
@@ -120,6 +114,7 @@ constant MASKS_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"000000
     constant EG_PHI_HIGH : natural := 24;
     constant EG_ISO_LOW : natural := 25;
     constant EG_ISO_HIGH : natural := 26;
+    constant EG_PT_VECTOR_WIDTH: positive := 12; -- max. value 255.5 GeV => 2555 (255.5 * 10**CALO_INV_MASS_PT_PRECISION) => 0x9FB
 
     constant JET_PT_LOW : natural := 0;
     constant JET_PT_HIGH : natural := 10;
@@ -127,6 +122,7 @@ constant MASKS_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"000000
     constant JET_ETA_HIGH : natural := 18;
     constant JET_PHI_LOW : natural := 19;
     constant JET_PHI_HIGH : natural := 26;
+    constant JET_PT_VECTOR_WIDTH: positive := 14; -- max. value 1023.5 GeV => 10235 (1023.5 * 10**CALO_INV_MASS_PT_PRECISION) => 0x27FB
 
     constant TAU_PT_LOW : natural := 0;
     constant TAU_PT_HIGH : natural := 8;
@@ -136,9 +132,6 @@ constant MASKS_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"000000
     constant TAU_PHI_HIGH : natural := 24;
     constant TAU_ISO_LOW : natural := 25;
     constant TAU_ISO_HIGH : natural := 26;
-
-    constant EG_PT_VECTOR_WIDTH: positive := 12; -- max. value 255.5 GeV => 2555 (255.5 * 10**CALO_INV_MASS_PT_PRECISION) => 0x9FB
-    constant JET_PT_VECTOR_WIDTH: positive := 14; -- max. value 1023.5 GeV => 10235 (1023.5 * 10**CALO_INV_MASS_PT_PRECISION) => 0x27FB
     constant TAU_PT_VECTOR_WIDTH: positive := 12; -- max. value 255.5 GeV => 2555 (255.5 * 10**CALO_INV_MASS_PT_PRECISION) => 0x9FB
 
 -- *******************************************************************************************************
@@ -213,6 +206,8 @@ constant MASKS_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"000000
     constant CENT_UBITS_LOW : natural := 4;
     constant CENT_UBITS_HIGH: natural := 7;
 
+    constant NR_CENTRALITY_BITS : positive := CENT_UBITS_HIGH-CENT_LBITS_LOW+1;
+    
 -- *******************************************************************************************************
 -- Towercount bits
 -- HB 2016-09-16: inserted TOWERCOUNT
@@ -249,44 +244,7 @@ constant MASKS_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"000000
     constant MB_COUNT_HIGH : natural := 3;
 
 -- *******************************************************************************
--- Type declarations
-    type comp_in_data_array is array (natural range <>) of std_logic_vector(MAX_COMP_DATA_WIDTH-1 downto 0);    
-    type cosh_cos_vector_array is array (natural range <>, natural range <>) of std_logic_vector(MAX_COSH_COS_WIDTH-1 downto 0);    
-    type pt_array is array (natural range <>) of std_logic_vector((MAX_PT_WIDTH)-1 downto 0);
-    type mass_vector_array is array (natural range <>, natural range <>) of std_logic_vector((2*MAX_PT_WIDTH+MAX_COSH_COS_WIDTH)-1 downto 0);
-    
-    type std_logic_1dim_array is array (natural range <>) of std_logic;
-    type std_logic_2dim_array is array (natural range <>, natural range <>) of std_logic;
-    type std_logic_3dim_array is array (natural range <>, natural range <>, natural range <>) of std_logic;
-    type std_logic_4dim_array is array (natural range <>, natural range <>, natural range <>, natural range <>) of std_logic;
-    type integer_array is array (natural range <>) of integer;
-    type integer_2dim_array is array (natural range <>, natural range <>) of integer;
-    
-    type obj_type is (eg, jet, tau, muon, ett, etm, htt, htm, ettem, etmhf);
-    type obj_corr_type is (calo_calo, calo_esums, calo_muon, muon_muon, muon_esums);
-
-    type objects_array is array (natural range <>) of std_logic_vector(MAX_OBJ_BITS-1 downto 0);
-
-    type pt_vector_array is array (natural range <>) of std_logic_vector(MAX_PT_VECTOR_WIDTH-1 downto 0);
-
-    type comp_mode is (greater_equal,win_sign,win_unsign,equal,lut);
-
-    type slices_type is array (0 to 2*MAX_N_REQ-1) of natural;
-
-    type obj_struct is record
-        pt_l,pt_h,eta_l,eta_h,phi_l,phi_h,iso_l,
-        iso_h,qual_l,qual_h,charge_l,charge_h,
-        idx_bits_l, idx_bits_h, phi_raw_l, phi_raw_h, eta_raw_l, eta_raw_h : natural;
-    end record obj_struct;
-    
-    type esums_struct is record
-        pt_l,pt_h,phi_l,phi_h : natural;
-    end record esums_struct;
-    
-    type vec_struct is record
-        high, low : natural;
-    end record vec_struct;
-
+-- Record declarations
     type eg_record is record
         pt : std_logic_vector(EG_PT_HIGH downto EG_PT_LOW);
         eta : std_logic_vector(EG_ETA_HIGH downto EG_ETA_LOW);
@@ -324,12 +282,98 @@ constant MASKS_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"000000
     
     type muon_record_array is array (natural range <>) of muon_record;
 
--- ==== MUONs - begin ============================================================
-    type muon_objects_array is array (natural range <>) of std_logic_vector(MAX_MUON_BITS-1 downto 0);
+    type ett_record is record
+        pt : std_logic_vector(ETT_PT_HIGH downto ETT_PT_LOW);
+    end record ett_record;
+    
+    type etm_record is record
+        pt : std_logic_vector(ETM_PT_HIGH downto ETM_PT_LOW);
+        phi : std_logic_vector(ETM_PHI_HIGH downto ETM_PHI_LOW);
+    end record etm_record;
+    
+    type htt_record is record
+        pt : std_logic_vector(HTT_PT_HIGH downto HTT_PT_LOW);
+    end record htt_record;
+    
+    type htm_record is record
+        pt : std_logic_vector(HTM_PT_HIGH downto HTM_PT_LOW);
+        phi : std_logic_vector(HTM_PHI_HIGH downto HTM_PHI_LOW);
+    end record htm_record;
+    
+    type ettem_record is record
+        pt : std_logic_vector(ETTEM_PT_HIGH downto ETTEM_PT_LOW);
+    end record ettem_record;
+    
+    type etmhf_record is record
+        pt : std_logic_vector(ETMHF_PT_HIGH downto ETMHF_PT_LOW);
+        phi : std_logic_vector(ETMHF_PHI_HIGH downto ETMHF_PHI_LOW);
+    end record etmhf_record;
+    
+    type htmhf_record is record
+        pt : std_logic_vector(HTMHF_PT_HIGH downto HTMHF_PT_LOW);
+        phi : std_logic_vector(HTMHF_PHI_HIGH downto HTMHF_PHI_LOW);
+    end record htmhf_record;
+        
+    type mb_record is record
+        count : std_logic_vector(MB_COUNT_HIGH downto MB_COUNT_LOW);
+    end record mb_record;
+    
+    type towercount_record is record
+        count : std_logic_vector(TOWERCOUNT_COUNT_HIGH downto TOWERCOUNT_COUNT_LOW);
+    end record towercount_record;
+    
+    type asym_record is record
+        count : std_logic_vector(ASYM_HIGH downto ASYM_LOW);
+    end record asym_record;
+    
+    type gtl_data_record is record
+        muon_data : muon_record_array(0 to MUON_ARRAY_LENGTH-1);
+        eg_data : eg_record_array(0 to EG_ARRAY_LENGTH-1);
+        jet_data : jet_record_array(0 to JET_ARRAY_LENGTH-1);
+        tau_data : tau_record_array(0 to TAU_ARRAY_LENGTH-1);
+        ett_data : ett_record;
+        ht_data : htt_record;
+        etm_data : etm_record;
+        htm_data : htm_record;
+        mbt1hfp_data : mb_record;
+        mbt1hfm_data : mb_record;
+        mbt0hfp_data : mb_record;
+        mbt0hfm_data : mb_record;
+        ettem_data : ettem_record;
+        etmhf_data : etmhf_record;
+        htmhf_data : htmhf_record;
+        towercount_data : towercount_record;
+        asymet_data : asym_record;
+        asymht_data : asym_record;
+        asymethf_data : asym_record;
+        asymhthf_data : asym_record;
+        centrality_data : std_logic_vector(NR_CENTRALITY_BITS-1 downto 0);
+        external_conditions : std_logic_vector(EXTERNAL_CONDITIONS_DATA_WIDTH-1 downto 0);
+    end record gtl_data_record;
+    
+-- Type declarations
+    type obj_parameter_array is array (natural range <>) of std_logic_vector(MAX_OBJ_PARAMETER_WIDTH-1 downto 0);    
+    type cosh_cos_vector_array is array (natural range <>, natural range <>) of std_logic_vector(MAX_COSH_COS_WIDTH-1 downto 0);    
+    type pt_array is array (natural range <>) of std_logic_vector((MAX_PT_WIDTH)-1 downto 0);
+    type mass_vector_array is array (natural range <>, natural range <>) of std_logic_vector((2*MAX_PT_WIDTH+MAX_COSH_COS_WIDTH)-1 downto 0);
+    
+    type std_logic_1dim_array is array (natural range <>) of std_logic;
+    type std_logic_2dim_array is array (natural range <>, natural range <>) of std_logic;
+    type std_logic_3dim_array is array (natural range <>, natural range <>, natural range <>) of std_logic;
+    type std_logic_4dim_array is array (natural range <>, natural range <>, natural range <>, natural range <>) of std_logic;
+    type integer_array is array (natural range <>) of integer;
+    type integer_2dim_array is array (natural range <>, natural range <>) of integer;
+    
+    type obj_corr_type is (calo_calo, calo_esums, calo_muon, muon_muon, muon_esums);
 
-    constant MUON_STRUCT : obj_struct := (MUON_PT_LOW,MUON_PT_HIGH,MUON_ETA_LOW,MUON_ETA_HIGH,MUON_PHI_LOW,MUON_PHI_HIGH,MUON_ISO_LOW,MUON_ISO_HIGH,
-        MUON_QUAL_LOW,MUON_QUAL_HIGH,MUON_CHARGE_LOW,MUON_CHARGE_HIGH,0,0,0,0,0,0);
+    type pt_vector_array is array (natural range <>) of std_logic_vector(MAX_PT_VECTOR_WIDTH-1 downto 0);
 
+    type comp_mode is (greater_equal,win_sign,win_unsign,equal,lut);
+
+    type slices_type is array (0 to 2*MAX_N_REQ-1) of natural;
+
+-- *******************************************************************************************************
+-- MUON charge
     constant NR_MUON_CHARGE_BITS : positive := muon_record.charge'length;
     type muon_charge_bits_array is array (0 to MUON_ARRAY_LENGTH-1) of std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0);
     type muon_cc_double_array is array (0 to MUON_ARRAY_LENGTH-1, 0 to MUON_ARRAY_LENGTH-1) of std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0);
@@ -339,73 +383,4 @@ constant MASKS_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"000000
     constant CC_LS : std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0) := "01"; 
     constant CC_OS : std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0) := "10"; 
 
-    constant MUON_PT_WIDTH : natural := MUON_PT_HIGH - MUON_PT_LOW + 1;
-    constant MUON_QUAL_WIDTH : natural := MUON_QUAL_HIGH - MUON_QUAL_LOW + 1;
-
--- ==== CALOs - begin ============================================================
-    type calo_objects_array is array (natural range <>) of std_logic_vector(MAX_CALO_BITS-1 downto 0);
-    
-    constant EG_STRUCT : obj_struct := (EG_PT_LOW,EG_PT_HIGH,EG_ETA_LOW,EG_ETA_HIGH,EG_PHI_LOW,EG_PHI_HIGH,EG_ISO_LOW,EG_ISO_HIGH,0,0,0,0,0,0,0,0,0,0);
-    constant JET_STRUCT : obj_struct := (JET_PT_LOW,JET_PT_HIGH,JET_ETA_LOW,JET_ETA_HIGH,JET_PHI_LOW,JET_PHI_HIGH,0,0,0,0,0,0,0,0,0,0,0,0);
-    constant TAU_STRUCT : obj_struct := (TAU_PT_LOW,TAU_PT_HIGH,TAU_ETA_LOW,TAU_ETA_HIGH,TAU_PHI_LOW,TAU_PHI_HIGH,TAU_ISO_LOW,TAU_ISO_HIGH,0,0,0,0,0,0,0,0,0,0);
-
-    constant EG_PT_WIDTH : natural := EG_PT_HIGH - EG_PT_LOW + 1;
-    constant JET_PT_WIDTH : natural := JET_PT_HIGH - JET_PT_LOW + 1;
-    constant JET_ETA_WIDTH : natural := JET_ETA_HIGH - JET_ETA_LOW + 1;
-    constant TAU_PT_WIDTH : natural := TAU_PT_HIGH - TAU_PT_LOW + 1;
-
--- ==== ESUMs - begin ============================================================
-    constant ETT_STRUCT : esums_struct := (ETT_PT_LOW,ETT_PT_HIGH,0,0);
-    constant HTT_STRUCT : esums_struct := (HTT_PT_LOW,HTT_PT_HIGH,0,0);
-    constant ETM_STRUCT : esums_struct := (ETM_PT_LOW,ETM_PT_HIGH,ETM_PHI_LOW,ETM_PHI_HIGH);
-    constant HTM_STRUCT : esums_struct := (HTM_PT_LOW,HTM_PT_HIGH,HTM_PHI_LOW,HTM_PHI_HIGH);
-    constant ETTEM_STRUCT : esums_struct := (ETTEM_PT_LOW,ETTEM_PT_HIGH,0,0);
-    constant ETMHF_STRUCT : esums_struct := (ETMHF_PT_LOW,ETMHF_PT_HIGH,ETMHF_PHI_LOW,ETMHF_PHI_HIGH);
-    constant HTMHF_STRUCT : esums_struct := (HTMHF_PT_LOW,HTMHF_PT_HIGH,HTMHF_PHI_LOW,HTMHF_PHI_HIGH);
-
--- ==== ASYMs - begin ============================================================
-    constant ASYMET_STRUCT : vec_struct := (ASYM_HIGH,ASYM_LOW);
-    constant ASYMHT_STRUCT : vec_struct := (ASYM_HIGH,ASYM_LOW);
-    constant ASYMETHF_STRUCT : vec_struct := (ASYM_HIGH,ASYM_LOW);
-    constant ASYMHTHF_STRUCT : vec_struct := (ASYM_HIGH,ASYM_LOW);
-
--- ==== CENTs - begin ============================================================
-    constant NR_CENTRALITY_BITS : positive := CENT_UBITS_HIGH-CENT_LBITS_LOW+1;
-
--- ==== TOWERCOUNT - begin ============================================================
-    constant TOWERCOUNT_STRUCT : vec_struct := (TOWERCOUNT_COUNT_HIGH,TOWERCOUNT_COUNT_LOW);
-
--- ==== MINBIAS - begin ============================================================
-    constant MBT0HFP_STRUCT : vec_struct := (MB_COUNT_HIGH,MB_COUNT_LOW);
-    constant MBT0HFM_STRUCT : vec_struct := (MB_COUNT_HIGH,MB_COUNT_LOW);
-    constant MBT1HFP_STRUCT : vec_struct := (MB_COUNT_HIGH,MB_COUNT_LOW);
-    constant MBT1HFM_STRUCT : vec_struct := (MB_COUNT_HIGH,MB_COUNT_LOW);
-
--- *******************************************************************************************************
-
-    type gtl_data_record is record
-        muon_data : muon_objects_array(0 to MUON_ARRAY_LENGTH-1);
-        eg_data : calo_objects_array(0 to EG_ARRAY_LENGTH-1);
-        jet_data : calo_objects_array(0 to JET_ARRAY_LENGTH-1);
-        tau_data : calo_objects_array(0 to TAU_ARRAY_LENGTH-1);
-        ett_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
-        ht_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
-        etm_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
-        htm_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
-        mbt1hfp_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
-        mbt1hfm_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
-        mbt0hfp_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
-        mbt0hfm_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
-        ettem_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
-        etmhf_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
-        htmhf_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
-        towercount_data : std_logic_vector(MAX_TOWERCOUNT_BITS-1 downto 0);
-        asymet_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
-        asymht_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
-        asymethf_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
-        asymhthf_data : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
-        centrality_data : std_logic_vector(NR_CENTRALITY_BITS-1 downto 0);
-        external_conditions : std_logic_vector(EXTERNAL_CONDITIONS_DATA_WIDTH-1 downto 0);
-    end record gtl_data_record;
-    
 end package;

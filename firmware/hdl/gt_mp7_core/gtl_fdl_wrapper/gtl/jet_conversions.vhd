@@ -18,11 +18,9 @@ use work.lut_pkg.all;
 
 entity jet_conversions is
     port(
-        clk : in std_logic;
-        obj : in calo_objects_array(0 to JET_ARRAY_LENGTH-1);
-        pt : out comp_in_data_array(0 to JET_ARRAY_LENGTH-1) := (others => (others => '0'));
-        eta : out comp_in_data_array(0 to JET_ARRAY_LENGTH-1) := (others => (others => '0'));
-        phi : out comp_in_data_array(0 to JET_ARRAY_LENGTH-1) := (others => (others => '0'));
+        pt : in obj_parameter_array(0 to JET_ARRAY_LENGTH-1);
+        eta : in obj_parameter_array(0 to JET_ARRAY_LENGTH-1);
+        phi : in obj_parameter_array(0 to JET_ARRAY_LENGTH-1);
         pt_vector : out pt_vector_array(0 to JET_ARRAY_LENGTH-1) := (others => (others => '0'));
         cos_phi : out integer_array(0 to JET_ARRAY_LENGTH-1) := (others => 0);
         sin_phi : out integer_array(0 to JET_ARRAY_LENGTH-1) := (others => 0);
@@ -64,9 +62,9 @@ begin
 
     obj_loop: for i in 0 to JET_ARRAY_LENGTH-1 generate
 
-        pt_i(i)(jet_record.pt'high - jet_record.pt'low downto 0) <= obj(i)(jet_record.pt'high downto jet_record.pt'low); 
-        eta_i(i)(jet_record.eta'high - jet_record.eta'low downto 0) <= obj(i)(jet_record.eta'high downto jet_record.eta'low); 
-        phi_i(i)(jet_record.phi'high - jet_record.phi'low downto 0) <= obj(i)(jet_record.phi'high downto jet_record.phi'low); 
+        pt_i(i) <= pt(i)(jet_record.pt'high - jet_record.pt'low downto 0); 
+        eta_i(i) <= eta(i)(jet_record.eta'high - jet_record.eta'low downto 0); 
+        phi_i(i) <= phi(i)(jet_record.phi'high - jet_record.phi'low downto 0); 
         
         pt_vector_i(i)(JET_PT_VECTOR_WIDTH-1 downto 0) <= CONV_STD_LOGIC_VECTOR(JET_PT_LUT(CONV_INTEGER(pt_i(i))), JET_PT_VECTOR_WIDTH);
 
@@ -83,9 +81,6 @@ begin
         conv_mu_sin_phi_vec(i) <= CONV_STD_LOGIC_VECTOR(conv_mu_sin_phi_i(i), MUON_SIN_COS_VECTOR_WIDTH);
                 
 -- outputs
-        pt(i)(jet_record.pt'length-1 downto 0) <= obj(i)(jet_record.pt'high downto jet_record.pt'low);
-        eta(i)(jet_record.eta'length-1 downto 0) <= obj(i)(jet_record.eta'high downto jet_record.eta'low);
-        phi(i)(jet_record.phi'length-1 downto 0) <= obj(i)(jet_record.phi'high downto jet_record.phi'low);        
         pt_vector(i)(JET_PT_VECTOR_WIDTH-1 downto 0) <=  pt_vector_i(i)(JET_PT_VECTOR_WIDTH-1 downto 0);       
         cos_phi(i) <= CONV_INTEGER(cos_phi_vec(i));
         sin_phi(i) <= CONV_INTEGER(sin_phi_vec(i));

@@ -22,10 +22,26 @@ end gtl_module;
 
 architecture rtl of gtl_module is
     
-    signal muon_bx_p2, muon_bx_p1, muon_bx_0, muon_bx_m1, muon_bx_m2 : muon_objects_array(0 to MUON_ARRAY_LENGTH-1);
-    signal eg_bx_p2, eg_bx_p1, eg_bx_0, eg_bx_m1, eg_bx_m2 : calo_objects_array(0 to EG_ARRAY_LENGTH-1);
-    signal jet_bx_p2, jet_bx_p1, jet_bx_0, jet_bx_m1, jet_bx_m2 : calo_objects_array(0 to JET_ARRAY_LENGTH-1);
-    signal tau_bx_p2, tau_bx_p1, tau_bx_0, tau_bx_m1, tau_bx_m2 : calo_objects_array(0 to TAU_ARRAY_LENGTH-1);
+    signal pt_muon_bx_p2, eta_muon_bx_p2, phi_muon_bx_p2, iso_muon_bx_p2, qual_muon_bx_p2, charge_muon_bx_p2 : obj_parameter_array(0 to MUON_ARRAY_LENGTH-1); 
+    signal pt_muon_bx_p1, eta_muon_bx_p1, phi_muon_bx_p1, iso_muon_bx_p1, qual_muon_bx_p1, charge_muon_bx_p1 : obj_parameter_array(0 to MUON_ARRAY_LENGTH-1); 
+    signal pt_muon_bx_0, eta_muon_bx_0, phi_muon_bx_0, iso_muon_bx_0, qual_muon_bx_0, charge_muon_bx_0 : obj_parameter_array(0 to MUON_ARRAY_LENGTH-1); 
+    signal pt_muon_bx_m1, eta_muon_bx_m1, phi_muon_bx_m1, iso_muon_bx_m1, qual_muon_bx_m1, charge_muon_bx_m1 : obj_parameter_array(0 to MUON_ARRAY_LENGTH-1); 
+    signal pt_muon_bx_m2, eta_muon_bx_m2, phi_muon_bx_m2, iso_muon_bx_m2, qual_muon_bx_m2, charge_muon_bx_m2 : obj_parameter_array(0 to MUON_ARRAY_LENGTH-1);
+    signal pt_eg_bx_p2, eta_eg_bx_p2, phi_eg_bx_p2, iso_eg_bx_p2 : obj_parameter_array(0 to EG_ARRAY_LENGTH-1); 
+    signal pt_eg_bx_p1, eta_eg_bx_p1, phi_eg_bx_p1, iso_eg_bx_p1 : obj_parameter_array(0 to EG_ARRAY_LENGTH-1); 
+    signal pt_eg_bx_0, eta_eg_bx_0, phi_eg_bx_0, iso_eg_bx_0 : obj_parameter_array(0 to EG_ARRAY_LENGTH-1); 
+    signal pt_eg_bx_m1, eta_eg_bx_m1, phi_eg_bx_m1, iso_eg_bx_m1 : obj_parameter_array(0 to EG_ARRAY_LENGTH-1); 
+    signal pt_eg_bx_m2, eta_eg_bx_m2, phi_eg_bx_m2, iso_eg_bx_m2 : obj_parameter_array(0 to EG_ARRAY_LENGTH-1);
+    signal pt_jet_bx_p2, eta_jet_bx_p2, phi_jet_bx_p2 : obj_parameter_array(0 to JET_ARRAY_LENGTH-1);
+    signal pt_jet_bx_p1, eta_jet_bx_p1, phi_jet_bx_p1 : obj_parameter_array(0 to JET_ARRAY_LENGTH-1); 
+    signal pt_jet_bx_0, eta_jet_bx_0, phi_jet_bx_0 : obj_parameter_array(0 to JET_ARRAY_LENGTH-1); 
+    signal pt_jet_bx_m1, eta_jet_bx_m1, phi_jet_bx_m1 : obj_parameter_array(0 to JET_ARRAY_LENGTH-1); 
+    signal pt_jet_bx_m2, eta_jet_bx_m2, phi_jet_bx_m2 : obj_parameter_array(0 to JET_ARRAY_LENGTH-1);
+    signal pt_tau_bx_p2, eta_tau_bx_p2, phi_tau_bx_p2, iso_tau_bx_p2 : obj_parameter_array(0 to TAU_ARRAY_LENGTH-1); 
+    signal pt_tau_bx_p1, eta_tau_bx_p1, phi_tau_bx_p1, iso_tau_bx_p1 : obj_parameter_array(0 to TAU_ARRAY_LENGTH-1); 
+    signal pt_tau_bx_0, eta_tau_bx_0, phi_tau_bx_0, iso_tau_bx_0 : obj_parameter_array(0 to TAU_ARRAY_LENGTH-1); 
+    signal pt_tau_bx_m1, eta_tau_bx_m1, phi_tau_bx_m1, iso_tau_bx_m1 : obj_parameter_array(0 to TAU_ARRAY_LENGTH-1); 
+    signal pt_tau_bx_m2, eta_tau_bx_m2, phi_tau_bx_m2, iso_tau_bx_m2 : obj_parameter_array(0 to TAU_ARRAY_LENGTH-1);
     signal ett_bx_p2, ett_bx_p1, ett_bx_0, ett_bx_m1, ett_bx_m2 : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
     signal htt_bx_p2, htt_bx_p1, htt_bx_0, htt_bx_m1, htt_bx_m2 : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
     signal etm_bx_p2, etm_bx_p1, etm_bx_0, etm_bx_m1, etm_bx_m2 : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
@@ -57,10 +73,26 @@ bx_pipeline_i: entity work.bx_pipeline
     port map(
         lhc_clk,
         data, 
-        muon_bx_p2, muon_bx_p1, muon_bx_0, muon_bx_m1, muon_bx_m2,
-        eg_bx_p2, eg_bx_p1, eg_bx_0, eg_bx_m1, eg_bx_m2,
-        jet_bx_p2, jet_bx_p1, jet_bx_0, jet_bx_m1, jet_bx_m2,
-        tau_bx_p2, tau_bx_p1, tau_bx_0, tau_bx_m1, tau_bx_m2,
+        pt_muon_bx_p2, eta_muon_bx_p2, phi_muon_bx_p2, iso_muon_bx_p2, qual_muon_bx_p2, charge_muon_bx_p2, 
+        pt_muon_bx_p1, eta_muon_bx_p1, phi_muon_bx_p1, iso_muon_bx_p1, qual_muon_bx_p1, charge_muon_bx_p1, 
+        pt_muon_bx_0, eta_muon_bx_0, phi_muon_bx_0, iso_muon_bx_0, qual_muon_bx_0, charge_muon_bx_0, 
+        pt_muon_bx_m1, eta_muon_bx_m1, phi_muon_bx_m1, iso_muon_bx_m1, qual_muon_bx_m1, charge_muon_bx_m1, 
+        pt_muon_bx_m2, eta_muon_bx_m2, phi_muon_bx_m2, iso_muon_bx_m2, qual_muon_bx_m2, charge_muon_bx_m2,
+        pt_eg_bx_p2, eta_eg_bx_p2, phi_eg_bx_p2, iso_eg_bx_p2, 
+        pt_eg_bx_p1, eta_eg_bx_p1, phi_eg_bx_p1, iso_eg_bx_p1, 
+        pt_eg_bx_0, eta_eg_bx_0, phi_eg_bx_0, iso_eg_bx_0, 
+        pt_eg_bx_m1, eta_eg_bx_m1, phi_eg_bx_m1, iso_eg_bx_m1, 
+        pt_eg_bx_m2, eta_eg_bx_m2, phi_eg_bx_m2, iso_eg_bx_m2,
+        pt_jet_bx_p2, eta_jet_bx_p2, phi_jet_bx_p2, 
+        pt_jet_bx_p1, eta_jet_bx_p1, phi_jet_bx_p1, 
+        pt_jet_bx_0, eta_jet_bx_0, phi_jet_bx_0, 
+        pt_jet_bx_m1, eta_jet_bx_m1, phi_jet_bx_m1, 
+        pt_jet_bx_m2, eta_jet_bx_m2, phi_jet_bx_m2,
+        pt_tau_bx_p2, eta_tau_bx_p2, phi_tau_bx_p2, iso_tau_bx_p2, 
+        pt_tau_bx_p1, eta_tau_bx_p1, phi_tau_bx_p1, iso_tau_bx_p1, 
+        pt_tau_bx_0, eta_tau_bx_0, phi_tau_bx_0, iso_tau_bx_0, 
+        pt_tau_bx_m1, eta_tau_bx_m1, phi_tau_bx_m1, iso_tau_bx_m1, 
+        pt_tau_bx_m2, eta_tau_bx_m2, phi_tau_bx_m2, iso_tau_bx_m2,
         ett_bx_p2, ett_bx_p1, ett_bx_0, ett_bx_m1, ett_bx_m2,
         htt_bx_p2, htt_bx_p1, htt_bx_0, htt_bx_m1, htt_bx_m2,
         etm_bx_p2, etm_bx_p1, etm_bx_0, etm_bx_m1, etm_bx_m2,
