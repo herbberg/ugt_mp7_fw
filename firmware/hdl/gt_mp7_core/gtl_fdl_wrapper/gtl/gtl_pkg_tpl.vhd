@@ -64,7 +64,7 @@ constant MASKS_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"000000
     constant MAX_OBJ_BITS : positive := 64; -- muon
 
     constant MAX_OBJ_PARAMETER_WIDTH_ALL : positive := 64;
-    constant MAX_OBJ_PARAMETER_WIDTH : positive := 12; -- max. input data width of comparators (esums pt = 12)
+    constant MAX_OBJ_PARAMETER_WIDTH : positive := 16; -- used 16 for hex notation of requirements - max. parameter width of objects: towercount = 13
     constant MAX_CORR_CUTS_WIDTH : positive := 52; -- max inv mass width (2*MAX_PT_WIDTH+MAX_COSH_COS_WIDTH = 51) - used 52 for hex notation !
     constant MAX_COSH_COS_WIDTH : positive := 27; -- CALO_MUON_COSH_COS_VECTOR_WIDTH 
     constant MAX_PT_WIDTH : positive := 12; -- max. pt width of comparators (esums pt = 12)
@@ -75,6 +75,7 @@ constant MASKS_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"000000
     constant OUT_REG_COMP: boolean := true;
     constant OUT_REG_COND: boolean := false;
     
+    constant BX_PIPELINE_STAGES: natural := 5; -- pipeline stages for +/- 2bx
     constant EXT_COND_STAGES: natural := 2; -- pipeline stages for "External conditions" to get same pipeline to algos as conditions
     constant CENTRALITY_STAGES: natural := 2; -- pipeline stages for "Centrality" to get same pipeline to algos as conditions
     
@@ -246,84 +247,84 @@ constant MASKS_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"000000
 -- *******************************************************************************
 -- Record declarations
     type eg_record is record
-        pt : std_logic_vector(EG_PT_HIGH downto EG_PT_LOW);
-        eta : std_logic_vector(EG_ETA_HIGH downto EG_ETA_LOW);
-        phi : std_logic_vector(EG_PHI_HIGH downto EG_PHI_LOW);
-        iso : std_logic_vector(EG_ISO_HIGH downto EG_ISO_LOW);
+        pt : std_logic_vector(EG_PT_HIGH-EG_PT_LOW downto 0);
+        eta : std_logic_vector(EG_ETA_HIGH-EG_ETA_LOW downto 0);
+        phi : std_logic_vector(EG_PHI_HIGH-EG_PHI_LOW downto 0);
+        iso : std_logic_vector(EG_ISO_HIGH-EG_ISO_LOW downto 0);
     end record eg_record;
     
     type eg_record_array is array (natural range <>) of eg_record;
 
     type jet_record is record
-        pt : std_logic_vector(JET_PT_HIGH downto JET_PT_LOW);
-        eta : std_logic_vector(JET_ETA_HIGH downto JET_ETA_LOW);
-        phi : std_logic_vector(JET_PHI_HIGH downto JET_PHI_LOW);
+        pt : std_logic_vector(JET_PT_HIGH-JET_PT_LOW downto 0);
+        eta : std_logic_vector(JET_ETA_HIGH-JET_ETA_LOW downto 0);
+        phi : std_logic_vector(JET_PHI_HIGH-JET_PHI_LOW downto 0);
     end record jet_record;
     
     type jet_record_array is array (natural range <>) of jet_record;
 
     type tau_record is record
-        pt : std_logic_vector(TAU_PT_HIGH downto TAU_PT_LOW);
-        eta : std_logic_vector(TAU_ETA_HIGH downto TAU_ETA_LOW);
-        phi : std_logic_vector(TAU_PHI_HIGH downto TAU_PHI_LOW);
-        iso : std_logic_vector(TAU_ISO_HIGH downto TAU_ISO_LOW);
+        pt : std_logic_vector(TAU_PT_HIGH-TAU_PT_LOW downto 0);
+        eta : std_logic_vector(TAU_ETA_HIGH-TAU_ETA_LOW downto 0);
+        phi : std_logic_vector(TAU_PHI_HIGH-TAU_PHI_LOW downto 0);
+        iso : std_logic_vector(TAU_ISO_HIGH-TAU_ISO_LOW downto 0);
     end record tau_record;
     
     type tau_record_array is array (natural range <>) of tau_record;
 
     type muon_record is record
-        pt : std_logic_vector(MUON_PT_HIGH downto MUON_PT_LOW);
-        eta : std_logic_vector(MUON_ETA_HIGH downto MUON_ETA_LOW);
-        phi : std_logic_vector(MUON_PHI_HIGH downto MUON_PHI_LOW);
-        iso : std_logic_vector(MUON_ISO_HIGH downto MUON_ISO_LOW);
-        qual : std_logic_vector(MUON_QUAL_HIGH downto MUON_QUAL_LOW);
-        charge : std_logic_vector(MUON_CHARGE_HIGH downto MUON_CHARGE_LOW);
+        pt : std_logic_vector(MUON_PT_HIGH-MUON_PT_LOW downto 0);
+        eta : std_logic_vector(MUON_ETA_HIGH-MUON_ETA_LOW downto 0);
+        phi : std_logic_vector(MUON_PHI_HIGH-MUON_PHI_LOW downto 0);
+        iso : std_logic_vector(MUON_ISO_HIGH-MUON_ISO_LOW downto 0);
+        qual : std_logic_vector(MUON_QUAL_HIGH-MUON_QUAL_LOW downto 0);
+        charge : std_logic_vector(MUON_CHARGE_HIGH-MUON_CHARGE_LOW downto 0);
     end record muon_record;
     
     type muon_record_array is array (natural range <>) of muon_record;
 
     type ett_record is record
-        pt : std_logic_vector(ETT_PT_HIGH downto ETT_PT_LOW);
+        pt : std_logic_vector(ETT_PT_HIGH-ETT_PT_LOW downto 0);
     end record ett_record;
     
     type etm_record is record
-        pt : std_logic_vector(ETM_PT_HIGH downto ETM_PT_LOW);
-        phi : std_logic_vector(ETM_PHI_HIGH downto ETM_PHI_LOW);
+        pt : std_logic_vector(ETM_PT_HIGH-ETM_PT_LOW downto 0);
+        phi : std_logic_vector(ETM_PHI_HIGH-ETM_PHI_LOW downto 0);
     end record etm_record;
     
     type htt_record is record
-        pt : std_logic_vector(HTT_PT_HIGH downto HTT_PT_LOW);
+        pt : std_logic_vector(HTT_PT_HIGH-HTT_PT_LOW downto 0);
     end record htt_record;
     
     type htm_record is record
-        pt : std_logic_vector(HTM_PT_HIGH downto HTM_PT_LOW);
-        phi : std_logic_vector(HTM_PHI_HIGH downto HTM_PHI_LOW);
+        pt : std_logic_vector(HTM_PT_HIGH-HTM_PT_LOW downto 0);
+        phi : std_logic_vector(HTM_PHI_HIGH-HTM_PHI_LOW downto 0);
     end record htm_record;
     
     type ettem_record is record
-        pt : std_logic_vector(ETTEM_PT_HIGH downto ETTEM_PT_LOW);
+        pt : std_logic_vector(ETTEM_PT_HIGH-ETTEM_PT_LOW downto 0);
     end record ettem_record;
     
     type etmhf_record is record
-        pt : std_logic_vector(ETMHF_PT_HIGH downto ETMHF_PT_LOW);
-        phi : std_logic_vector(ETMHF_PHI_HIGH downto ETMHF_PHI_LOW);
+        pt : std_logic_vector(ETMHF_PT_HIGH-ETMHF_PT_LOW downto 0);
+        phi : std_logic_vector(ETMHF_PHI_HIGH-ETMHF_PHI_LOW downto 0);
     end record etmhf_record;
     
     type htmhf_record is record
-        pt : std_logic_vector(HTMHF_PT_HIGH downto HTMHF_PT_LOW);
-        phi : std_logic_vector(HTMHF_PHI_HIGH downto HTMHF_PHI_LOW);
+        pt : std_logic_vector(HTMHF_PT_HIGH-HTMHF_PT_LOW downto 0);
+        phi : std_logic_vector(HTMHF_PHI_HIGH-HTMHF_PHI_LOW downto 0);
     end record htmhf_record;
         
     type mb_record is record
-        count : std_logic_vector(MB_COUNT_HIGH downto MB_COUNT_LOW);
+        count : std_logic_vector(MB_COUNT_HIGH-MB_COUNT_LOW downto 0);
     end record mb_record;
     
     type towercount_record is record
-        count : std_logic_vector(TOWERCOUNT_COUNT_HIGH downto TOWERCOUNT_COUNT_LOW);
+        count : std_logic_vector(TOWERCOUNT_COUNT_HIGH-TOWERCOUNT_COUNT_LOW downto 0);
     end record towercount_record;
     
     type asym_record is record
-        count : std_logic_vector(ASYM_HIGH downto ASYM_LOW);
+        count : std_logic_vector(ASYM_HIGH-ASYM_LOW downto 0);
     end record asym_record;
     
     type gtl_data_record is record
@@ -352,7 +353,15 @@ constant MASKS_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"000000
     end record gtl_data_record;
     
 -- Type declarations
-    type obj_parameter_array is array (natural range <>) of std_logic_vector(MAX_OBJ_PARAMETER_WIDTH-1 downto 0);    
+    constant MAX_CALO_ARRAY_LENGTH: positive := max(EG_ARRAY_LENGTH, JET_ARRAY_LENGTH, TAU_ARRAY_LENGTH);
+    constant MAX_OBJ_ARRAY_LENGTH: positive := max(MAX_CALO_ARRAY_LENGTH, MUON_ARRAY_LENGTH);
+    
+    type obj_parameter_array is array (0 to MAX_OBJ_ARRAY_LENGTH-1) of std_logic_vector(MAX_OBJ_PARAMETER_WIDTH-1 downto 0);    
+    type array_obj_parameter_array is array (0 to BX_PIPELINE_STAGES-1) of obj_parameter_array;    
+
+    type centrality_array is array (0 to BX_PIPELINE_STAGES-1) of std_logic_vector(NR_CENTRALITY_BITS-1 downto 0);    
+    type ext_cond_array is array (0 to BX_PIPELINE_STAGES-1) of std_logic_vector(EXTERNAL_CONDITIONS_DATA_WIDTH-1 downto 0);    
+    
     type cosh_cos_vector_array is array (natural range <>, natural range <>) of std_logic_vector(MAX_COSH_COS_WIDTH-1 downto 0);    
     type pt_array is array (natural range <>) of std_logic_vector((MAX_PT_WIDTH)-1 downto 0);
     type mass_vector_array is array (natural range <>, natural range <>) of std_logic_vector((2*MAX_PT_WIDTH+MAX_COSH_COS_WIDTH)-1 downto 0);

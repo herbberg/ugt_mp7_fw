@@ -18,9 +18,9 @@ use work.lut_pkg.all;
 
 entity eg_conversions is
     port(
-        pt : in obj_parameter_array(0 to EG_ARRAY_LENGTH-1);
-        eta : in obj_parameter_array(0 to EG_ARRAY_LENGTH-1);
-        phi : in obj_parameter_array(0 to EG_ARRAY_LENGTH-1);
+        pt : in obj_parameter_array;
+        eta : in obj_parameter_array;
+        phi : in obj_parameter_array;
         pt_vector : out pt_vector_array(0 to EG_ARRAY_LENGTH-1) := (others => (others => '0'));
         cos_phi : out integer_array(0 to EG_ARRAY_LENGTH-1) := (others => 0);
         sin_phi : out integer_array(0 to EG_ARRAY_LENGTH-1) := (others => 0);

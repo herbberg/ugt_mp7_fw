@@ -12,13 +12,12 @@ use work.lhc_data_pkg.all;
 use work.gtl_pkg.all;
 
 entity muon_charge_correlations is
---     generic(
---         OUT_REG : boolean
---     );
     port(
         clk : in std_logic;
-        in_1: in obj_parameter_array(0 to MUON_ARRAY_LENGTH-1);
-        in_2: in obj_parameter_array(0 to MUON_ARRAY_LENGTH-1);
+        in_1: in obj_parameter_array;
+        in_2: in obj_parameter_array;
+--         in_1: in obj_parameter_array(0 to MUON_ARRAY_LENGTH-1);
+--         in_2: in obj_parameter_array(0 to MUON_ARRAY_LENGTH-1);
         cc_double: out muon_cc_double_array;
         cc_triple: out muon_cc_triple_array;
         cc_quad: out muon_cc_quad_array

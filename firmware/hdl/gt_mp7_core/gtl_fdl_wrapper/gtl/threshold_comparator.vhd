@@ -18,7 +18,8 @@ entity threshold_comparator is
     );
     port(
         clk : in std_logic;
-        data : in obj_parameter_array(0 to N_OBJ-1);
+        data : in obj_parameter_array;
+--         data : in obj_parameter_array(0 to N_OBJ-1);
         comp_o : out std_logic_vector(0 to N_OBJ-1) := (others => '0')
     );
 end threshold_comparator;

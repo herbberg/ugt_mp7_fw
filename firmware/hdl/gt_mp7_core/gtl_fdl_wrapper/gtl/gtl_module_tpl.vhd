@@ -22,46 +22,19 @@ end gtl_module;
 
 architecture rtl of gtl_module is
     
-    signal pt_muon_bx_p2, eta_muon_bx_p2, phi_muon_bx_p2, iso_muon_bx_p2, qual_muon_bx_p2, charge_muon_bx_p2 : obj_parameter_array(0 to MUON_ARRAY_LENGTH-1); 
-    signal pt_muon_bx_p1, eta_muon_bx_p1, phi_muon_bx_p1, iso_muon_bx_p1, qual_muon_bx_p1, charge_muon_bx_p1 : obj_parameter_array(0 to MUON_ARRAY_LENGTH-1); 
-    signal pt_muon_bx_0, eta_muon_bx_0, phi_muon_bx_0, iso_muon_bx_0, qual_muon_bx_0, charge_muon_bx_0 : obj_parameter_array(0 to MUON_ARRAY_LENGTH-1); 
-    signal pt_muon_bx_m1, eta_muon_bx_m1, phi_muon_bx_m1, iso_muon_bx_m1, qual_muon_bx_m1, charge_muon_bx_m1 : obj_parameter_array(0 to MUON_ARRAY_LENGTH-1); 
-    signal pt_muon_bx_m2, eta_muon_bx_m2, phi_muon_bx_m2, iso_muon_bx_m2, qual_muon_bx_m2, charge_muon_bx_m2 : obj_parameter_array(0 to MUON_ARRAY_LENGTH-1);
-    signal pt_eg_bx_p2, eta_eg_bx_p2, phi_eg_bx_p2, iso_eg_bx_p2 : obj_parameter_array(0 to EG_ARRAY_LENGTH-1); 
-    signal pt_eg_bx_p1, eta_eg_bx_p1, phi_eg_bx_p1, iso_eg_bx_p1 : obj_parameter_array(0 to EG_ARRAY_LENGTH-1); 
-    signal pt_eg_bx_0, eta_eg_bx_0, phi_eg_bx_0, iso_eg_bx_0 : obj_parameter_array(0 to EG_ARRAY_LENGTH-1); 
-    signal pt_eg_bx_m1, eta_eg_bx_m1, phi_eg_bx_m1, iso_eg_bx_m1 : obj_parameter_array(0 to EG_ARRAY_LENGTH-1); 
-    signal pt_eg_bx_m2, eta_eg_bx_m2, phi_eg_bx_m2, iso_eg_bx_m2 : obj_parameter_array(0 to EG_ARRAY_LENGTH-1);
-    signal pt_jet_bx_p2, eta_jet_bx_p2, phi_jet_bx_p2 : obj_parameter_array(0 to JET_ARRAY_LENGTH-1);
-    signal pt_jet_bx_p1, eta_jet_bx_p1, phi_jet_bx_p1 : obj_parameter_array(0 to JET_ARRAY_LENGTH-1); 
-    signal pt_jet_bx_0, eta_jet_bx_0, phi_jet_bx_0 : obj_parameter_array(0 to JET_ARRAY_LENGTH-1); 
-    signal pt_jet_bx_m1, eta_jet_bx_m1, phi_jet_bx_m1 : obj_parameter_array(0 to JET_ARRAY_LENGTH-1); 
-    signal pt_jet_bx_m2, eta_jet_bx_m2, phi_jet_bx_m2 : obj_parameter_array(0 to JET_ARRAY_LENGTH-1);
-    signal pt_tau_bx_p2, eta_tau_bx_p2, phi_tau_bx_p2, iso_tau_bx_p2 : obj_parameter_array(0 to TAU_ARRAY_LENGTH-1); 
-    signal pt_tau_bx_p1, eta_tau_bx_p1, phi_tau_bx_p1, iso_tau_bx_p1 : obj_parameter_array(0 to TAU_ARRAY_LENGTH-1); 
-    signal pt_tau_bx_0, eta_tau_bx_0, phi_tau_bx_0, iso_tau_bx_0 : obj_parameter_array(0 to TAU_ARRAY_LENGTH-1); 
-    signal pt_tau_bx_m1, eta_tau_bx_m1, phi_tau_bx_m1, iso_tau_bx_m1 : obj_parameter_array(0 to TAU_ARRAY_LENGTH-1); 
-    signal pt_tau_bx_m2, eta_tau_bx_m2, phi_tau_bx_m2, iso_tau_bx_m2 : obj_parameter_array(0 to TAU_ARRAY_LENGTH-1);
-    signal ett_bx_p2, ett_bx_p1, ett_bx_0, ett_bx_m1, ett_bx_m2 : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
-    signal htt_bx_p2, htt_bx_p1, htt_bx_0, htt_bx_m1, htt_bx_m2 : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
-    signal etm_bx_p2, etm_bx_p1, etm_bx_0, etm_bx_m1, etm_bx_m2 : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
-    signal htm_bx_p2, htm_bx_p1, htm_bx_0, htm_bx_m1, htm_bx_m2 : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
-    signal mbt1hfp_bx_p2, mbt1hfp_bx_p1, mbt1hfp_bx_0, mbt1hfp_bx_m1, mbt1hfp_bx_m2 : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
-    signal mbt1hfm_bx_p2, mbt1hfm_bx_p1, mbt1hfm_bx_0, mbt1hfm_bx_m1, mbt1hfm_bx_m2 : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
-    signal mbt0hfp_bx_p2, mbt0hfp_bx_p1, mbt0hfp_bx_0, mbt0hfp_bx_m1, mbt0hfp_bx_m2 : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
-    signal mbt0hfm_bx_p2, mbt0hfm_bx_p1, mbt0hfm_bx_0, mbt0hfm_bx_m1, mbt0hfm_bx_m2 : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
-    signal ettem_bx_p2, ettem_bx_p1, ettem_bx_0, ettem_bx_m1, ettem_bx_m2 : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
-    signal etmhf_bx_p2, etmhf_bx_p1, etmhf_bx_0, etmhf_bx_m1, etmhf_bx_m2 : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
-    signal htmhf_bx_p2, htmhf_bx_p1, htmhf_bx_0, htmhf_bx_m1, htmhf_bx_m2 : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
-    signal towercount_bx_p2, towercount_bx_p1, towercount_bx_0, towercount_bx_m1, towercount_bx_m2 : std_logic_vector(MAX_TOWERCOUNT_BITS-1 downto 0);
-    signal asymet_bx_p2, asymet_bx_p1, asymet_bx_0, asymet_bx_m1, asymet_bx_m2 : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
-    signal asymht_bx_p2, asymht_bx_p1, asymht_bx_0, asymht_bx_m1, asymht_bx_m2 : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
-    signal asymethf_bx_p2, asymethf_bx_p1, asymethf_bx_0, asymethf_bx_m1, asymethf_bx_m2 : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
-    signal asymhthf_bx_p2, asymhthf_bx_p1, asymhthf_bx_0, asymhthf_bx_m1, asymhthf_bx_m2 : std_logic_vector(MAX_ESUMS_BITS-1 downto 0);
-    signal centrality_bx_p2_int, centrality_bx_p1_int, centrality_bx_0_int, centrality_bx_m1_int, centrality_bx_m2_int : std_logic_vector(NR_CENTRALITY_BITS-1 downto 0);
-    signal centrality_bx_p2, centrality_bx_p1, centrality_bx_0, centrality_bx_m1, centrality_bx_m2 : std_logic_vector(NR_CENTRALITY_BITS-1 downto 0);
-    signal ext_cond_bx_p2_int, ext_cond_bx_p1_int, ext_cond_bx_0_int, ext_cond_bx_m1_int, ext_cond_bx_m2_int : std_logic_vector(EXTERNAL_CONDITIONS_DATA_WIDTH-1 downto 0);
-    signal ext_cond_bx_p2, ext_cond_bx_p1, ext_cond_bx_0, ext_cond_bx_m1, ext_cond_bx_m2 : std_logic_vector(EXTERNAL_CONDITIONS_DATA_WIDTH-1 downto 0);
+    signal pt_muon_bx, eta_muon_bx, phi_muon_bx, iso_muon_bx, qual_muon_bx, charge_muon_bx : array_obj_parameter_array; 
+    signal pt_eg_bx, eta_eg_bx, phi_eg_bx, iso_eg_bx : array_obj_parameter_array; 
+    signal pt_jet_bx, eta_jet_bx, phi_jet_bx : array_obj_parameter_array;
+    signal pt_tau_bx, eta_tau_bx, phi_tau_bx, iso_tau_bx : array_obj_parameter_array; 
+    signal pt_ett_bx, pt_etm_bx, phi_etm_bx : array_obj_parameter_array; 
+    signal pt_htt_bx, pt_htm_bx, phi_htm_bx : array_obj_parameter_array; 
+    signal pt_ettem_bx, pt_etmhf_bx, phi_etmhf_bx : array_obj_parameter_array; 
+    signal pt_htmhf_bx, phi_htmhf_bx : array_obj_parameter_array; 
+    signal count_towercount : array_obj_parameter_array;
+    signal count_mbt1hfp, count_mbt1hfm, count_mbt0hfp, count_mbt0hfm : array_obj_parameter_array; 
+    signal count_asymet, count_asymht, count_asymethf, count_asymhthf : array_obj_parameter_array; 
+    signal centrality_int, centrality : centrality_array;
+    signal ext_cond_int, ext_cond : ext_cond_array;
 
     signal algo : std_logic_vector(NR_ALGOS-1 downto 0) := (others => '0');
 
@@ -69,70 +42,25 @@ architecture rtl of gtl_module is
 
 begin
 
+-- Additional delay for centrality and ext_cond (no comparators and conditions) in "bx_pipeline"
+
 bx_pipeline_i: entity work.bx_pipeline
     port map(
         lhc_clk,
         data, 
-        pt_muon_bx_p2, eta_muon_bx_p2, phi_muon_bx_p2, iso_muon_bx_p2, qual_muon_bx_p2, charge_muon_bx_p2, 
-        pt_muon_bx_p1, eta_muon_bx_p1, phi_muon_bx_p1, iso_muon_bx_p1, qual_muon_bx_p1, charge_muon_bx_p1, 
-        pt_muon_bx_0, eta_muon_bx_0, phi_muon_bx_0, iso_muon_bx_0, qual_muon_bx_0, charge_muon_bx_0, 
-        pt_muon_bx_m1, eta_muon_bx_m1, phi_muon_bx_m1, iso_muon_bx_m1, qual_muon_bx_m1, charge_muon_bx_m1, 
-        pt_muon_bx_m2, eta_muon_bx_m2, phi_muon_bx_m2, iso_muon_bx_m2, qual_muon_bx_m2, charge_muon_bx_m2,
-        pt_eg_bx_p2, eta_eg_bx_p2, phi_eg_bx_p2, iso_eg_bx_p2, 
-        pt_eg_bx_p1, eta_eg_bx_p1, phi_eg_bx_p1, iso_eg_bx_p1, 
-        pt_eg_bx_0, eta_eg_bx_0, phi_eg_bx_0, iso_eg_bx_0, 
-        pt_eg_bx_m1, eta_eg_bx_m1, phi_eg_bx_m1, iso_eg_bx_m1, 
-        pt_eg_bx_m2, eta_eg_bx_m2, phi_eg_bx_m2, iso_eg_bx_m2,
-        pt_jet_bx_p2, eta_jet_bx_p2, phi_jet_bx_p2, 
-        pt_jet_bx_p1, eta_jet_bx_p1, phi_jet_bx_p1, 
-        pt_jet_bx_0, eta_jet_bx_0, phi_jet_bx_0, 
-        pt_jet_bx_m1, eta_jet_bx_m1, phi_jet_bx_m1, 
-        pt_jet_bx_m2, eta_jet_bx_m2, phi_jet_bx_m2,
-        pt_tau_bx_p2, eta_tau_bx_p2, phi_tau_bx_p2, iso_tau_bx_p2, 
-        pt_tau_bx_p1, eta_tau_bx_p1, phi_tau_bx_p1, iso_tau_bx_p1, 
-        pt_tau_bx_0, eta_tau_bx_0, phi_tau_bx_0, iso_tau_bx_0, 
-        pt_tau_bx_m1, eta_tau_bx_m1, phi_tau_bx_m1, iso_tau_bx_m1, 
-        pt_tau_bx_m2, eta_tau_bx_m2, phi_tau_bx_m2, iso_tau_bx_m2,
-        ett_bx_p2, ett_bx_p1, ett_bx_0, ett_bx_m1, ett_bx_m2,
-        htt_bx_p2, htt_bx_p1, htt_bx_0, htt_bx_m1, htt_bx_m2,
-        etm_bx_p2, etm_bx_p1, etm_bx_0, etm_bx_m1, etm_bx_m2,
-        htm_bx_p2, htm_bx_p1, htm_bx_0, htm_bx_m1, htm_bx_m2,
-        mbt1hfp_bx_p2, mbt1hfp_bx_p1, mbt1hfp_bx_0, mbt1hfp_bx_m1, mbt1hfp_bx_m2,
-        mbt1hfm_bx_p2, mbt1hfm_bx_p1, mbt1hfm_bx_0, mbt1hfm_bx_m1, mbt1hfm_bx_m2,
-        mbt0hfp_bx_p2, mbt0hfp_bx_p1, mbt0hfp_bx_0, mbt0hfp_bx_m1, mbt0hfp_bx_m2,
-        mbt0hfm_bx_p2, mbt0hfm_bx_p1, mbt0hfm_bx_0, mbt0hfm_bx_m1, mbt0hfm_bx_m2,
-        ettem_bx_p2, ettem_bx_p1, ettem_bx_0, ettem_bx_m1, ettem_bx_m2,
-        etmhf_bx_p2, etmhf_bx_p1, etmhf_bx_0, etmhf_bx_m1, etmhf_bx_m2,
-        htmhf_bx_p2, htmhf_bx_p1, htmhf_bx_0, htmhf_bx_m1, htmhf_bx_m2,
-        towercount_bx_p2, towercount_bx_p1, towercount_bx_0, towercount_bx_m1, towercount_bx_m2,
-        asymet_bx_p2, asymet_bx_p1, asymet_bx_0, asymet_bx_m1, asymet_bx_m2,
-        asymht_bx_p2, asymht_bx_p1, asymht_bx_0, asymht_bx_m1, asymht_bx_m2,
-        asymethf_bx_p2, asymethf_bx_p1, asymethf_bx_0, asymethf_bx_m1, asymethf_bx_m2,
-        asymhthf_bx_p2, asymhthf_bx_p1, asymhthf_bx_0, asymhthf_bx_m1, asymhthf_bx_m2,
-        centrality_bx_p2_int, centrality_bx_p1_int, centrality_bx_0_int, centrality_bx_m1_int, centrality_bx_m2_int,
-        ext_cond_bx_p2_int, ext_cond_bx_p1_int, ext_cond_bx_0_int, ext_cond_bx_m1_int, ext_cond_bx_m2_int
-    );
-
-ext_cond_pipe_i: entity work.delay_pipeline
-    generic map(
-        DATA_WIDTH => EXTERNAL_CONDITIONS_DATA_WIDTH,
-        STAGES => EXT_COND_STAGES
-    )
-    port map(
-        lhc_clk,
-        ext_cond_bx_p2_int, ext_cond_bx_p1_int, ext_cond_bx_0_int, ext_cond_bx_m1_int, ext_cond_bx_m2_int,
-        ext_cond_bx_p2, ext_cond_bx_p1, ext_cond_bx_0, ext_cond_bx_m1, ext_cond_bx_m2
-    );
-
-centrality_pipe_i: entity work.delay_pipeline
-    generic map(
-        DATA_WIDTH => NR_CENTRALITY_BITS,
-        STAGES => CENTRALITY_STAGES
-    )
-    port map(
-        lhc_clk,
-        centrality_bx_p2_int, centrality_bx_p1_int, centrality_bx_0_int, centrality_bx_m1_int, centrality_bx_m2_int,
-        centrality_bx_p2, centrality_bx_p1, centrality_bx_0, centrality_bx_m1, centrality_bx_m2
+        pt_muon_bx, eta_muon_bx, phi_muon_bx, iso_muon_bx, qual_muon_bx, charge_muon_bx, 
+        pt_eg_bx, eta_eg_bx, phi_eg_bx, iso_eg_bx, 
+        pt_jet_bx, eta_jet_bx, phi_jet_bx, 
+        pt_tau_bx, eta_tau_bx, phi_tau_bx, iso_tau_bx, 
+        pt_ett_bx, pt_etm_bx, phi_etm_bx, 
+        pt_htt_bx, pt_htm_bx, phi_htm_bx, 
+        pt_ettem_bx, pt_etmhf_bx, phi_etmhf_bx, 
+        pt_htmhf_bx, phi_htmhf_bx, 
+        count_towercount,
+        count_mbt1hfp, count_mbt1hfm, count_mbt0hfp, count_mbt0hfm, 
+        count_asymet, count_asymht, count_asymethf, count_asymhthf, 
+        centrality,
+        ext_cond
     );
 
 {{gtl_module_instances}}
