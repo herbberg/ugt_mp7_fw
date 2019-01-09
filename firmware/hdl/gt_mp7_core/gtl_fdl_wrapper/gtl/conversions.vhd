@@ -53,21 +53,21 @@ begin
     obj_loop: for i in 0 to N_OBJ-1 generate
         calo_i: if ((OBJ_T = eg) or (OBJ_T = jet) or (OBJ_T = tau)) generate
             eg_i: if (OBJ_T = eg) generate
-                pt_i(i)(eg_record.pt'high - eg_record.pt'low downto 0) <= pt(i)(eg_record.pt'high - eg_record.pt'low downto 0); 
-                eta_i(i)(eg_record.eta'high - eg_record.eta'low downto 0) <= eta(i)(eg_record.eta'high - eg_record.eta'low downto 0); 
-                phi_i(i)(eg_record.phi'high - eg_record.phi'low downto 0) <= phi(i)(eg_record.phi'high - eg_record.phi'low downto 0); 
+                pt_i(i)(EG_PT_HIGH-EG_PT_LOW downto 0) <= pt(i)(EG_PT_HIGH-EG_PT_LOW downto 0); 
+                eta_i(i)(EG_ETA_HIGH-EG_ETA_LOW downto 0) <= eta(i)(EG_ETA_HIGH-EG_ETA_LOW downto 0); 
+                phi_i(i)(EG_PHI_HIGH-EG_PHI_LOW downto 0) <= phi(i)(EG_PHI_HIGH-EG_PHI_LOW downto 0); 
                 pt_vector(i)(EG_PT_VECTOR_WIDTH-1 downto 0) <= CONV_STD_LOGIC_VECTOR(EG_PT_LUT(CONV_INTEGER(pt_i(i))), EG_PT_VECTOR_WIDTH);
             end generate eg_i;
             jet_i: if (OBJ_T = jet) generate
-                pt_i(i)(jet_record.pt'high - jet_record.pt'low downto 0) <= pt(i)(jet_record.pt'high - jet_record.pt'low downto 0); 
-                eta_i(i)(jet_record.eta'high - jet_record.eta'low downto 0) <= eta(i)(jet_record.eta'high - jet_record.eta'low downto 0); 
-                phi_i(i)(jet_record.phi'high - jet_record.phi'low downto 0) <= phi(i)(jet_record.phi'high - jet_record.phi'low downto 0); 
+                pt_i(i)(JET_PT_HIGH-JET_PT_LOW downto 0) <= pt(i)(JET_PT_HIGH-JET_PT_LOW downto 0); 
+                eta_i(i)(JET_ETA_HIGH-JET_ETA_LOW downto 0) <= eta(i)(JET_ETA_HIGH-JET_ETA_LOW downto 0); 
+                phi_i(i)(JET_PHI_HIGH-JET_PHI_LOW downto 0) <= phi(i)(JET_PHI_HIGH-JET_PHI_LOW downto 0); 
                 pt_vector(i)(JET_PT_VECTOR_WIDTH-1 downto 0) <= CONV_STD_LOGIC_VECTOR(JET_PT_LUT(CONV_INTEGER(pt_i(i))), JET_PT_VECTOR_WIDTH);
             end generate jet_i;
             tau_i: if (OBJ_T = tau) generate
-                pt_i(i)(tau_record.pt'high - tau_record.pt'low downto 0) <= pt(i)(tau_record.pt'high - tau_record.pt'low downto 0); 
-                eta_i(i)(tau_record.eta'high - tau_record.eta'low downto 0) <= eta(i)(tau_record.eta'high - tau_record.eta'low downto 0); 
-                phi_i(i)(tau_record.phi'high - tau_record.phi'low downto 0) <= phi(i)(tau_record.phi'high - tau_record.phi'low downto 0); 
+                pt_i(i)(TAU_PT_HIGH-TAU_PT_LOW downto 0) <= pt(i)(TAU_PT_HIGH-TAU_PT_LOW downto 0); 
+                eta_i(i)(TAU_ETA_HIGH-TAU_ETA_LOW downto 0) <= eta(i)(TAU_ETA_HIGH-TAU_ETA_LOW downto 0); 
+                phi_i(i)(TAU_PHI_HIGH-TAU_PHI_LOW downto 0) <= phi(i)(TAU_PHI_HIGH-TAU_PHI_LOW downto 0); 
                 pt_vector(i)(TAU_PT_VECTOR_WIDTH-1 downto 0) <= CONV_STD_LOGIC_VECTOR(TAU_PT_LUT(CONV_INTEGER(pt_i(i))), TAU_PT_VECTOR_WIDTH);
             end generate tau_i;       
             cos_phi(i) <= CALO_COS_PHI_LUT(CONV_INTEGER(phi_i(i)));
@@ -79,9 +79,9 @@ begin
             conv_2_muon_phi_integer(i) <= conv_2_muon_phi_integer_i(i);
         end generate calo_i;
         muon_i: if (OBJ_T = muon) generate
-            pt_i(i)(muon_record.pt'high - muon_record.pt'low downto 0) <= pt(i)(muon_record.pt'high - muon_record.pt'low downto 0); 
-            eta_i(i)(muon_record.eta'high - muon_record.eta'low downto 0) <= eta(i)(muon_record.eta'high - muon_record.eta'low downto 0); 
-            phi_i(i)(muon_record.phi'high - muon_record.phi'low downto 0) <= phi(i)(muon_record.phi'high - muon_record.phi'low downto 0); 
+                pt_i(i)(MUON_PT_HIGH-MUON_PT_LOW downto 0) <= pt(i)(MUON_PT_HIGH-MUON_PT_LOW downto 0); 
+                eta_i(i)(MUON_ETA_HIGH-MUON_ETA_LOW downto 0) <= eta(i)(MUON_ETA_HIGH-MUON_ETA_LOW downto 0); 
+                phi_i(i)(MUON_PHI_HIGH-MUON_PHI_LOW downto 0) <= phi(i)(MUON_PHI_HIGH-MUON_PHI_LOW downto 0); 
             pt_vector(i)(MUON_PT_VECTOR_WIDTH-1 downto 0) <= CONV_STD_LOGIC_VECTOR(MUON_PT_LUT(CONV_INTEGER(pt_i(i))), MUON_PT_VECTOR_WIDTH);
             cos_phi(i) <= MUON_COS_PHI_LUT(CONV_INTEGER(phi_i(i)));
             sin_phi(i) <= MUON_SIN_PHI_LUT(CONV_INTEGER(phi_i(i)));

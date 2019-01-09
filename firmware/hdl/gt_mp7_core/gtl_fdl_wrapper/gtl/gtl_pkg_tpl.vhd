@@ -33,13 +33,13 @@ package gtl_pkg is
 
 -- *******************************************************************************
 -- Definitions for GTL v2.x.y
+-- Global constants
 
     constant MAX_N_REQ : positive := 4; -- max. number of requirements for combinatorial conditions
     constant MAX_N_OBJ : positive := 12; -- max. number of objects
     constant MAX_LUT_WIDTH : positive := 16; -- muon qual lut
     constant MAX_OBJ_BITS : positive := 64; -- muon
 
-    constant MAX_OBJ_PARAMETER_WIDTH_ALL : positive := 64;
     constant MAX_OBJ_PARAMETER_WIDTH : positive := 16; -- used 16 for hex notation of requirements - max. parameter width of objects: towercount = 13
     constant MAX_CORR_CUTS_WIDTH : positive := 52; -- max inv mass width (2*MAX_PT_WIDTH+MAX_COSH_COS_WIDTH = 51) - used 52 for hex notation !
     constant MAX_COSH_COS_WIDTH : positive := 27; -- CALO_MUON_COSH_COS_VECTOR_WIDTH 
@@ -79,7 +79,6 @@ package gtl_pkg is
     constant MUON_PHI_RAW_HIGH : natural := 52;
     constant MUON_ETA_RAW_LOW : natural := 53;
     constant MUON_ETA_RAW_HIGH : natural := 61;
-
     constant MUON_PT_VECTOR_WIDTH: positive := 12; -- max. value 255.5 GeV => 2555 (255.5 * 10**MUON_INV_MASS_PT_PRECISION) => 0x9FB
 
     -- *******************************************************************************************************
@@ -311,7 +310,7 @@ package gtl_pkg is
         jet_data : jet_record_array(0 to JET_ARRAY_LENGTH-1);
         tau_data : tau_record_array(0 to TAU_ARRAY_LENGTH-1);
         ett_data : ett_record;
-        ht_data : htt_record;
+        htt_data : htt_record;
         etm_data : etm_record;
         htm_data : htm_record;
         mbt1hfp_data : mb_record;
@@ -331,6 +330,8 @@ package gtl_pkg is
     end record gtl_data_record;
     
 -- Type declarations
+    type array_gtl_data_record is array (0 to BX_PIPELINE_STAGES-1) of gtl_data_record;    
+ 
     constant MAX_CALO_ARRAY_LENGTH: positive := max(EG_ARRAY_LENGTH, JET_ARRAY_LENGTH, TAU_ARRAY_LENGTH);
     constant MAX_OBJ_ARRAY_LENGTH: positive := max(MAX_CALO_ARRAY_LENGTH, MUON_ARRAY_LENGTH);
     
@@ -363,7 +364,7 @@ package gtl_pkg is
 
 -- *******************************************************************************************************
 -- MUON charge
-    constant NR_MUON_CHARGE_BITS : positive := muon_record.charge'length;
+    constant NR_MUON_CHARGE_BITS : positive := MUON_CHARGE_HIGH-MUON_CHARGE_LOW+1;
     type muon_charge_bits_array is array (0 to MUON_ARRAY_LENGTH-1) of std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0);
     type muon_cc_double_array is array (0 to MUON_ARRAY_LENGTH-1, 0 to MUON_ARRAY_LENGTH-1) of std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0);
     type muon_cc_triple_array is array (0 to MUON_ARRAY_LENGTH-1, 0 to MUON_ARRAY_LENGTH-1, 0 to MUON_ARRAY_LENGTH-1) of std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0);

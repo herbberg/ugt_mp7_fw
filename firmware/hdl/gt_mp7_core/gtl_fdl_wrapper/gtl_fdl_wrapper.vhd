@@ -111,7 +111,7 @@ begin
 -- HF- thresh 1 => MBT1HFM
 
     data.ett_data.pt <= lhc_data.ett(ETT_PT_HIGH downto ETT_PT_LOW);
-    data.ht_data.pt <= lhc_data.ht(HTT_PT_HIGH downto HTT_PT_LOW);
+    data.htt_data.pt <= lhc_data.ht(HTT_PT_HIGH downto HTT_PT_LOW);
     data.etm_data.pt <= lhc_data.etm(ETM_PT_HIGH downto ETM_PT_LOW);
     data.etm_data.phi <= lhc_data.etm(ETM_PHI_HIGH downto ETM_PHI_LOW);
     data.htm_data.pt <= lhc_data.htm(HTM_PT_HIGH downto HTM_PT_LOW);
