@@ -67,7 +67,9 @@ constant MASKS_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"000000
     constant MAX_OBJ_PARAMETER_WIDTH : positive := 16; -- used 16 for hex notation of requirements - max. parameter width of objects: towercount = 13
     constant MAX_CORR_CUTS_WIDTH : positive := 52; -- max inv mass width (2*MAX_PT_WIDTH+MAX_COSH_COS_WIDTH = 51) - used 52 for hex notation !
     constant MAX_COSH_COS_WIDTH : positive := 27; -- CALO_MUON_COSH_COS_VECTOR_WIDTH 
-    constant MAX_PT_WIDTH : positive := 12; -- max. pt width of comparators (esums pt = 12)
+    constant MAX_PT_WIDTH : positive := 12; -- max. pt width (esums pt = 12)
+    constant MAX_ETA_WIDTH : positive := 12; -- max. eta width(muon eta = 9)
+    constant MAX_PHI_WIDTH : positive := 12; -- max. phi width (muon phi = 10)
     constant MAX_PT_VECTOR_WIDTH : positive := 15; -- esums - max. value 2047.5 GeV => 20475 (2047.5 * 10) => 0x4FFB
 
     constant OUT_REG_CALC: boolean := false;
@@ -373,6 +375,7 @@ constant MASKS_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"000000
     type integer_array is array (natural range <>) of integer;
     type integer_2dim_array is array (natural range <>, natural range <>) of integer;
     
+    type obj_type is (muon, eg, jet, tau, ett, etm, htt, htm, ettem, etmhf, htmhf, towercount, mbt1hfp, mbt1hfm, mbt0hfp, mbt0hfm, asymet, asymht, asymethf, asymhthf);
     type obj_corr_type is (calo_calo, calo_esums, calo_muon, muon_muon, muon_esums);
 
     type pt_vector_array is array (natural range <>) of std_logic_vector(MAX_PT_VECTOR_WIDTH-1 downto 0);

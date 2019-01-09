@@ -30,10 +30,11 @@ src gt_mp7_core/gtl_fdl_wrapper/fdl/algo_slice.vhd
 #
 src gt_mp7_core/gtl_fdl_wrapper/gtl/bx_pipeline.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/comp_signed.vhd
-src gt_mp7_core/gtl_fdl_wrapper/gtl/eg_conversions.vhd
-src gt_mp7_core/gtl_fdl_wrapper/gtl/jet_conversions.vhd
-src gt_mp7_core/gtl_fdl_wrapper/gtl/tau_conversions.vhd
-src gt_mp7_core/gtl_fdl_wrapper/gtl/muon_conversions.vhd
+src gt_mp7_core/gtl_fdl_wrapper/gtl/conversions.vhd
+#src gt_mp7_core/gtl_fdl_wrapper/gtl/eg_conversions.vhd
+#src gt_mp7_core/gtl_fdl_wrapper/gtl/jet_conversions.vhd
+#src gt_mp7_core/gtl_fdl_wrapper/gtl/tau_conversions.vhd
+#src gt_mp7_core/gtl_fdl_wrapper/gtl/muon_conversions.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/lut_comparator.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/range_comparator.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/threshold_comparator.vhd
