@@ -20,7 +20,6 @@ entity range_comparator is
     port(
         clk : in std_logic;
         data : in obj_parameter_array;
---         data : in obj_parameter_array(0 to N_OBJ-1);
         comp_o : out std_logic_vector(0 to N_OBJ-1) := (others => '0')
     );
 end range_comparator;
@@ -39,12 +38,12 @@ begin
         in_reg_i : entity work.reg_mux
             generic map(DATA_WIDTH, IN_REG_COMP)  
             port map(clk, data(i)(DATA_WIDTH-1 downto 0), data_i(i));
-        if_win_sign: if MODE = win_sign generate
+        if_win_sign: if MODE = sign generate
             comp_signed_i : entity work.comp_signed
                 generic map(MIN_I, MAX_I)  
                 port map(data_i(i), comp(i));
         end generate if_win_sign;
-        if_win_unsign: if MODE = win_unsign generate
+        if_win_unsign: if MODE = unsign generate
             comp(i) <= '1' when (data_i(i) >= MIN_I(DATA_WIDTH-1 downto 0)) and (data_i(i) <= MAX_I(DATA_WIDTH-1 downto 0)) else '0';
         end generate if_win_unsign;
     end generate l1;

@@ -23,18 +23,18 @@ entity delta_r is
     );
     port(
         clk : in std_logic;
-        diff_eta : in integer_2dim_array(0 to N_OBJ_1-1, 0 to N_OBJ_2-1);
-        diff_phi : in integer_2dim_array(0 to N_OBJ_1-1, 0 to N_OBJ_2-1);
+        diff_eta : in deta_dphi_vector_array(0 to N_OBJ_1-1, 0 to N_OBJ_2-1);
+        diff_phi : in deta_dphi_vector_array(0 to N_OBJ_1-1, 0 to N_OBJ_2-1);
         dr_squared_o : out std_logic_3dim_array(0 to N_OBJ_1-1, 0 to N_OBJ_2-1, (2*DETA_DPHI_VECTOR_WIDTH)-1 downto 0)
     );
 end delta_r;
 
 architecture rtl of delta_r is
 
-    signal diff_eta_squared : integer_2dim_array(0 to N_OBJ_1-1, 0 to N_OBJ_2-1);
-    signal diff_phi_squared : integer_2dim_array(0 to N_OBJ_1-1, 0 to N_OBJ_2-1);
-    type diff_sq_i_array is array (N_OBJ_1-1 downto 0, N_OBJ_2-1 downto 0) of std_logic_vector((2*DETA_DPHI_VECTOR_WIDTH)-1 downto 0);
-    signal dr_squared : diff_sq_i_array := (others => (others => (others => '0')));
+    type diff_sq_i_array is array (0 to N_OBJ_1-1, 0 to N_OBJ_2-1) of std_logic_vector((2*DETA_DPHI_VECTOR_WIDTH)-1 downto 0);
+    signal diff_eta_squared : diff_sq_i_array;
+    signal diff_phi_squared : diff_sq_i_array;
+    signal dr_squared : diff_sq_i_array;
     
 -- HB 2017-09-21: used "attribute use_dsp" instead of "use_dsp48" for "dr_squared" - see warning below
 -- MP7 builds, synth_1, runme.log => WARNING: [Synth 8-5974] attribute "use_dsp48" has been deprecated, please use "use_dsp" instead
@@ -50,7 +50,7 @@ begin
 -- HB 2015-11-26: calculation of ΔR**2 with formular ΔR**2 = (eta1-eta2)**2+(phi1-phi2)**2
             diff_eta_squared(i,j) <= diff_eta(i,j)*diff_eta(i,j);
             diff_phi_squared(i,j) <= diff_phi(i,j)*diff_phi(i,j);
-            dr_squared(i,j) <= CONV_STD_LOGIC_VECTOR((diff_eta_squared(i,j)+diff_phi_squared(i,j)), 2*DETA_DPHI_VECTOR_WIDTH);
+            dr_squared(i,j) <= diff_eta_squared(i,j)+diff_phi_squared(i,j);
             l_3: for l in 0 to (2*DETA_DPHI_VECTOR_WIDTH)-1 generate
                 dr_squared_o(i,j,l) <= dr_squared(i,j)(l);
             end generate l_3;

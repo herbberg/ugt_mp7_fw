@@ -49,12 +49,12 @@ begin
             if_ge: if MODE = greater_equal generate
                 comp(i,j) <= '1' when (data_vec_i(i,j) >= MIN_I) else '0';
             end generate if_ge;
-            if_win_sign: if MODE = win_sign generate
+            if_win_sign: if MODE = sign generate
                 comp_signed_i : entity work.comp_signed
                     generic map(MIN_I, MAX_I)  
                     port map(data_vec_i(i,j), comp(i,j));
             end generate if_win_sign;
-            if_win_unsign: if MODE = win_unsign generate
+            if_win_unsign: if MODE = unsign generate
                 comp(i,j) <= '1' when ((data_vec_i(i,j) >= MIN_I) and (data_vec_i(i,j) <= MAX_I)) else '0';
             end generate if_win_unsign;
             if_eq: if MODE = equal generate

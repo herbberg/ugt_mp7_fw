@@ -20,40 +20,16 @@ package gtl_pkg is
 -- HB 2014-09-09: GTL and FDL firmware major, minor and revision versions moved to gt_mp7_core_pkg.vhd (GTL_FW_MAJOR_VERSION, etc.)
 --                for creating a tag name by a script independent from L1Menu.
 -- GTL firmware (fix part) version
-constant GTL_FW_VERSION : std_logic_vector(31 downto 0) := X"00" &
+    constant GTL_FW_VERSION : std_logic_vector(31 downto 0) := X"00" &
            std_logic_vector(to_unsigned(GTL_FW_MAJOR_VERSION, 8)) &
            std_logic_vector(to_unsigned(GTL_FW_MINOR_VERSION, 8)) &
            std_logic_vector(to_unsigned(GTL_FW_REV_VERSION, 8));
 
 -- FDL firmware version
-constant FDL_FW_VERSION : std_logic_vector(31 downto 0) := X"00" &
+    constant FDL_FW_VERSION : std_logic_vector(31 downto 0) := X"00" &
            std_logic_vector(to_unsigned(FDL_FW_MAJOR_VERSION, 8)) &
            std_logic_vector(to_unsigned(FDL_FW_MINOR_VERSION, 8)) &
            std_logic_vector(to_unsigned(FDL_FW_REV_VERSION, 8));
-
--- ==== FDL definitions - begin ============================================================
--- Definitions for prescalers (for FDL !)
-constant PRESCALER_COUNTER_WIDTH : integer := 24;
-
--- HB HB 2016-03-02: type definition for "global" index use.
-type prescale_factor_global_array is array (MAX_NR_ALGOS-1 downto 0) of std_logic_vector(31 downto 0);
-
-type prescale_factor_array is array (NR_ALGOS-1 downto 0) of std_logic_vector(31 downto 0); -- same width as PCIe data
--- constant PRESCALE_FACTOR_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := ({AssignmentPrescaleFactors} others => X"00000001"); -- written by TME
-constant PRESCALE_FACTOR_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"00000001"); -- written by TME
-
--- Definitions for rate counters
-constant RATE_COUNTER_WIDTH : integer := 32;
-
--- HB HB 2016-03-02: type definition for "global" index use.
-type rate_counter_global_array is array (MAX_NR_ALGOS-1 downto 0) of std_logic_vector(RATE_COUNTER_WIDTH-1 downto 0);
-
-type rate_counter_array is array (NR_ALGOS-1 downto 0) of std_logic_vector(RATE_COUNTER_WIDTH-1 downto 0);
-
--- HB 2014-02-28: changed vector length of init values for finor- and veto-maks, because of min. 32 bits for register
--- constant MASKS_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := ({AssignmentFinorVetoMasks} others => X"00000001"); --Finor and veto masks registers (bit 0 = finor, bit 1 = veto)
-constant MASKS_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"00000001"); --Finor and veto masks registers (bit 0 = finor, bit 1 = veto)
--- ==== FDL definitions - end ============================================================
 
 -- *******************************************************************************
 -- Definitions for GTL v2.x.y
@@ -364,7 +340,8 @@ constant MASKS_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"000000
     type centrality_array is array (0 to BX_PIPELINE_STAGES-1) of std_logic_vector(NR_CENTRALITY_BITS-1 downto 0);    
     type ext_cond_array is array (0 to BX_PIPELINE_STAGES-1) of std_logic_vector(EXTERNAL_CONDITIONS_DATA_WIDTH-1 downto 0);    
     
-    type cosh_cos_vector_array is array (natural range <>, natural range <>) of std_logic_vector(MAX_COSH_COS_WIDTH-1 downto 0);    
+    type cosh_cos_vector_array is array (natural range <>, natural range <>) of std_logic_vector(MAX_COSH_COS_WIDTH-1 downto 0); 
+    
     type pt_array is array (natural range <>) of std_logic_vector((MAX_PT_WIDTH)-1 downto 0);
     type mass_vector_array is array (natural range <>, natural range <>) of std_logic_vector((2*MAX_PT_WIDTH+MAX_COSH_COS_WIDTH)-1 downto 0);
     
@@ -380,7 +357,7 @@ constant MASKS_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"000000
 
     type pt_vector_array is array (natural range <>) of std_logic_vector(MAX_PT_VECTOR_WIDTH-1 downto 0);
 
-    type comp_mode is (greater_equal,win_sign,win_unsign,equal,lut);
+    type comp_mode is (greater_equal,equal,sign,unsign);
 
     type slices_type is array (0 to 2*MAX_N_REQ-1) of natural;
 
@@ -394,5 +371,27 @@ constant MASKS_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"000000
     constant CC_NOT_VALID : std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0) := "00"; 
     constant CC_LS : std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0) := "01"; 
     constant CC_OS : std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0) := "10"; 
+
+-- ==== FDL definitions - begin ============================================================
+-- Definitions for prescalers (for FDL !)
+    constant PRESCALER_COUNTER_WIDTH : integer := 24;
+
+-- HB HB 2016-03-02: type definition for "global" index use.
+    type prescale_factor_global_array is array (MAX_NR_ALGOS-1 downto 0) of std_logic_vector(31 downto 0);
+
+    type prescale_factor_array is array (NR_ALGOS-1 downto 0) of std_logic_vector(31 downto 0); -- same width as PCIe data
+    constant PRESCALE_FACTOR_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"00000001"); -- written by TME
+
+-- Definitions for rate counters
+    constant RATE_COUNTER_WIDTH : integer := 32;
+
+-- HB HB 2016-03-02: type definition for "global" index use.
+    type rate_counter_global_array is array (MAX_NR_ALGOS-1 downto 0) of std_logic_vector(RATE_COUNTER_WIDTH-1 downto 0);
+
+    type rate_counter_array is array (NR_ALGOS-1 downto 0) of std_logic_vector(RATE_COUNTER_WIDTH-1 downto 0);
+
+-- HB 2014-02-28: changed vector length of init values for finor- and veto-maks, because of min. 32 bits for register
+    constant MASKS_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"00000001"); --Finor and veto masks registers (bit 0 = finor, bit 1 = veto)
+-- ==== FDL definitions - end ============================================================
 
 end package;
