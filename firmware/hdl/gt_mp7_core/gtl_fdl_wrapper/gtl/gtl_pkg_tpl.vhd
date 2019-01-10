@@ -33,6 +33,26 @@ package gtl_pkg is
 
 -- *******************************************************************************
 -- Definitions for GTL v2.x.y
+-- Scales constants
+
+    constant PI : real :=  3.15; -- TM used this value for PI
+
+    constant CALO_ETA_STEP : real := 0.087/2.0; -- values from scales
+    constant MUON_ETA_STEP : real := 0.087/8.0; -- values from scales
+
+    constant CALO_PHI_BINS : positive := 144; -- values from scales
+    constant MUON_PHI_BINS : positive := 576; -- values from scales
+    constant CALO_PHI_HALF_RANGE_BINS : positive := CALO_PHI_BINS/2; -- 144/2, because of phi bin width = 2*PI/144
+    constant MUON_PHI_HALF_RANGE_BINS : positive := MUON_PHI_BINS/2; -- 576/2, because of phi bin width = 2*PI/576
+
+    constant PHI_MIN : real := 0.0; -- phi min.: 0.0
+    constant PHI_MAX : real := 2.0*PI; -- phi max.: 2*PI
+
+    constant ETA_MIN : real := -5.0; -- eta min.: -5.0
+    constant ETA_MAX : real := 5.0; -- eta max.: +5.0
+    constant ETA_RANGE_REAL : real := 10.0; -- eta range max.: -5.0 to +5.0
+
+-- *******************************************************************************
 -- Global constants
 
     constant MAX_N_REQ : positive := 4; -- max. number of requirements for combinatorial conditions
@@ -40,8 +60,10 @@ package gtl_pkg is
     constant MAX_LUT_WIDTH : positive := 16; -- muon qual lut
     constant MAX_OBJ_BITS : positive := 64; -- muon
 
-    constant MAX_CALO_ARRAY_LENGTH: positive := max(EG_ARRAY_LENGTH, JET_ARRAY_LENGTH, TAU_ARRAY_LENGTH);
-    constant MAX_OBJ_ARRAY_LENGTH: positive := max(MAX_CALO_ARRAY_LENGTH, MUON_ARRAY_LENGTH); -- actual value = 12 (calos)
+    constant MAX_CALO_OBJECTS: positive := max(N_EG_OBJECTS, N_JET_OBJECTS, N_TAU_OBJECTS);
+    constant MAX_N_OBJECTS: positive := max(MAX_CALO_OBJECTS, N_MUON_OBJECTS); -- actual value = 12 (calos)
+--     constant MAX_CALO_ARRAY_LENGTH: positive := max(EG_ARRAY_LENGTH, JET_ARRAY_LENGTH, TAU_ARRAY_LENGTH);
+--     constant MAX_OBJ_ARRAY_LENGTH: positive := max(MAX_CALO_ARRAY_LENGTH, MUON_ARRAY_LENGTH); -- actual value = 12 (calos)
     constant MAX_OBJ_PARAMETER_WIDTH : positive := 16; -- used 16 for hex notation of requirements - max. parameter width of objects: towercount = 13
     constant MAX_CORR_CUTS_WIDTH : positive := 52; -- max inv mass width (2*MAX_PT_WIDTH+MAX_COSH_COS_WIDTH = 51) - used 52 for hex notation !
     constant MAX_COSH_COS_WIDTH : positive := 27; -- CALO_MUON_COSH_COS_VECTOR_WIDTH 
@@ -113,6 +135,9 @@ package gtl_pkg is
     constant TAU_ISO_LOW : natural := 25;
     constant TAU_ISO_HIGH : natural := 26;
     constant TAU_PT_VECTOR_WIDTH: positive := 12; -- max. value 255.5 GeV => 2555 (255.5 * 10**TAU_PT_PRECISION) => 0x9FB
+
+    constant MAX_CALO_ETA_BITS : positive := max((EG_ETA_HIGH-EG_ETA_LOW+1), (JET_ETA_HIGH-JET_ETA_LOW+1), (TAU_ETA_HIGH-TAU_ETA_LOW+1));
+    constant MAX_CALO_PHI_BITS : positive := max((EG_PHI_HIGH-EG_PHI_LOW+1), (JET_PHI_HIGH-JET_PHI_LOW+1), (TAU_PHI_HIGH-TAU_PHI_LOW+1));
 
 -- *******************************************************************************************************
 -- Esums objects parameter definition
@@ -228,6 +253,19 @@ package gtl_pkg is
     constant NR_CENTRALITY_BITS : positive := CENT_UBITS_HIGH-CENT_LBITS_LOW+1;
     
 -- *******************************************************************************
+-- Constants for correlation cuts
+
+    constant DETA_DPHI_PRECISION: positive := 3;
+    constant DETA_DPHI_VECTOR_WIDTH: positive := log2c(max(integer(ETA_RANGE_REAL*(real(10**DETA_DPHI_PRECISION))),integer(PHI_MAX*(real(10**DETA_DPHI_PRECISION)))));
+
+    constant CALO_CALO_COSH_COS_VECTOR_WIDTH: positive := 24; -- max. value cosh_deta-cos_dphi => [10597282-(-1000)]=10598282 => 0xA1B78A
+    constant CALO_MUON_COSH_COS_VECTOR_WIDTH: positive := 27; -- max. value cosh_deta-cos_dphi => [109487199-(-10000)]=109497199 => 0x686CB6F
+    constant MUON_MUON_COSH_COS_VECTOR_WIDTH: positive := 20; -- max. value cosh_deta-cos_dphi => [667303-(-10000)]=677303 => 0xA55B7
+
+    constant CALO_SIN_COS_VECTOR_WIDTH: positive := 11; -- log2c(1000-(-1000));
+    constant MUON_SIN_COS_VECTOR_WIDTH: positive := 15; -- log2c(10000-(-10000));
+
+-- *******************************************************************************
 -- Record declarations
     type eg_record is record
         pt : std_logic_vector(EG_PT_HIGH-EG_PT_LOW downto 0);
@@ -311,31 +349,31 @@ package gtl_pkg is
     end record asym_record;
     
     type gtl_data_record is record
-        muon_data : muon_record_array(0 to MUON_ARRAY_LENGTH-1);
-        eg_data : eg_record_array(0 to EG_ARRAY_LENGTH-1);
-        jet_data : jet_record_array(0 to JET_ARRAY_LENGTH-1);
-        tau_data : tau_record_array(0 to TAU_ARRAY_LENGTH-1);
-        ett_data : ett_record;
-        htt_data : htt_record;
-        etm_data : etm_record;
-        htm_data : htm_record;
-        mbt1hfp_data : mb_record;
-        mbt1hfm_data : mb_record;
-        mbt0hfp_data : mb_record;
-        mbt0hfm_data : mb_record;
-        ettem_data : ettem_record;
-        etmhf_data : etmhf_record;
-        htmhf_data : htmhf_record;
-        towercount_data : towercount_record;
-        asymet_data : asym_record;
-        asymht_data : asym_record;
-        asymethf_data : asym_record;
-        asymhthf_data : asym_record;
-        centrality_data : std_logic_vector(NR_CENTRALITY_BITS-1 downto 0);
+        muon : muon_record_array(0 to N_MUON_OBJECTS-1);
+        eg : eg_record_array(0 to N_EG_OBJECTS-1);
+        jet : jet_record_array(0 to N_JET_OBJECTS-1);
+        tau : tau_record_array(0 to N_TAU_OBJECTS-1);
+        ett : ett_record;
+        htt : htt_record;
+        etm : etm_record;
+        htm : htm_record;
+        mbt1hfp : mb_record;
+        mbt1hfm : mb_record;
+        mbt0hfp : mb_record;
+        mbt0hfm : mb_record;
+        ettem : ettem_record;
+        etmhf : etmhf_record;
+        htmhf : htmhf_record;
+        towercount : towercount_record;
+        asymet : asym_record;
+        asymht : asym_record;
+        asymethf : asym_record;
+        asymhthf : asym_record;
+        centrality : std_logic_vector(NR_CENTRALITY_BITS-1 downto 0);
         external_conditions : std_logic_vector(EXTERNAL_CONDITIONS_DATA_WIDTH-1 downto 0);
     end record gtl_data_record;
     
-    type obj_parameter_array is array (0 to MAX_OBJ_ARRAY_LENGTH-1) of std_logic_vector(MAX_OBJ_PARAMETER_WIDTH-1 downto 0);    
+    type obj_parameter_array is array (0 to MAX_N_OBJECTS-1) of std_logic_vector(MAX_OBJ_PARAMETER_WIDTH-1 downto 0);    
     
     type obj_bx_record is record
         pt : obj_parameter_array;
@@ -347,22 +385,37 @@ package gtl_pkg is
         count : obj_parameter_array;
     end record obj_bx_record;
     
+-- *******************************************************************************
 -- Type declarations
+-- bx pipeline
     type array_obj_bx_record is array (0 to BX_PIPELINE_STAGES-1) of obj_bx_record; -- used for outputs of bx_pipeline module  
     type centrality_array is array (0 to BX_PIPELINE_STAGES-1) of std_logic_vector(NR_CENTRALITY_BITS-1 downto 0); -- used for centrality outputs of bx_pipeline module    
     type ext_cond_array is array (0 to BX_PIPELINE_STAGES-1) of std_logic_vector(EXTERNAL_CONDITIONS_DATA_WIDTH-1 downto 0); -- used for ext_cond outputs of bx_pipeline module    
     
+-- correlation cuts
     type pt_array is array (natural range <>) of std_logic_vector((MAX_PT_WIDTH)-1 downto 0);
     type pt_vector_array is array (natural range <>) of std_logic_vector(MAX_PT_VECTOR_WIDTH-1 downto 0);
     type cosh_cos_vector_array is array (natural range <>, natural range <>) of std_logic_vector(MAX_COSH_COS_WIDTH-1 downto 0); 
     type mass_vector_array is array (natural range <>, natural range <>) of std_logic_vector((2*MAX_PT_WIDTH+MAX_COSH_COS_WIDTH)-1 downto 0);
+    type deta_dphi_vector_array is array (natural range <>, natural range <>) of std_logic_vector(DETA_DPHI_VECTOR_WIDTH-1 downto 0);
+    type calo_cosh_cos_vector_array is array (natural range <>, natural range <>) of std_logic_vector(CALO_CALO_COSH_COS_VECTOR_WIDTH-1 downto 0);
+    type calo_muon_cosh_cos_vector_array is array (natural range <>, natural range <>) of std_logic_vector(CALO_MUON_COSH_COS_VECTOR_WIDTH-1 downto 0);
+    type muon_cosh_cos_vector_array is array (natural range <>, natural range <>) of std_logic_vector(MUON_MUON_COSH_COS_VECTOR_WIDTH-1 downto 0);
+    type calo_sin_cos_vector_array is array (natural range <>) of std_logic_vector(CALO_SIN_COS_VECTOR_WIDTH-1 downto 0);
+    type muon_sin_cos_vector_array is array (natural range <>) of std_logic_vector(MUON_SIN_COS_VECTOR_WIDTH-1 downto 0);
     
-    type obj_type is (muon, eg, jet, tau, ett, etm, htt, htm, ettem, etmhf, htmhf, towercount, mbt1hfp, mbt1hfm, mbt0hfp, mbt0hfm, asymet, asymht, asymethf, asymhthf);
-    type obj_corr_type is (calo_calo, calo_esums, calo_muon, muon_muon, muon_esums);
+-- enums
+    type obj_type is (muon,eg,jet,tau,ett,etm,htt,htm,ettem,etmhf,htmhf,towercount,mbt1hfp,mbt1hfm,mbt0hfp,mbt0hfm,asymet,asymht,asymethf,asymhthf);
+    type obj_corr_type is (calo_calo,calo_esums,calo_muon,muon_muon,muon_esums);
     type comp_mode is (greater_equal,equal,sign,unsign);
 
-    type slices_type is array (0 to 2*MAX_N_REQ-1) of natural;
+-- slices
+    constant SL_L : natural := 0;
+    constant SL_H : natural := 1;
+    type slices_type is array (SL_L to SL_H) of natural; -- index 0 contains lower slice value, index 1 contains upper slice value
+    type slices_type_array is array (1 to MAX_N_REQ) of slices_type;
 
+-- more dimensional
     type std_logic_1dim_array is array (natural range <>) of std_logic;
     type std_logic_2dim_array is array (natural range <>, natural range <>) of std_logic;
     type std_logic_3dim_array is array (natural range <>, natural range <>, natural range <>) of std_logic;
@@ -373,10 +426,10 @@ package gtl_pkg is
 -- *******************************************************************************************************
 -- MUON charge
     constant NR_MUON_CHARGE_BITS : positive := MUON_CHARGE_HIGH-MUON_CHARGE_LOW+1;
-    type muon_charge_bits_array is array (0 to MUON_ARRAY_LENGTH-1) of std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0);
-    type muon_cc_double_array is array (0 to MUON_ARRAY_LENGTH-1, 0 to MUON_ARRAY_LENGTH-1) of std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0);
-    type muon_cc_triple_array is array (0 to MUON_ARRAY_LENGTH-1, 0 to MUON_ARRAY_LENGTH-1, 0 to MUON_ARRAY_LENGTH-1) of std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0);
-    type muon_cc_quad_array is array (0 to MUON_ARRAY_LENGTH-1, 0 to MUON_ARRAY_LENGTH-1, 0 to MUON_ARRAY_LENGTH-1, 0 to MUON_ARRAY_LENGTH-1) of std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0);
+    type muon_charge_bits_array is array (0 to N_MUON_OBJECTS-1) of std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0);
+    type muon_cc_double_array is array (0 to N_MUON_OBJECTS-1, 0 to N_MUON_OBJECTS-1) of std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0);
+    type muon_cc_triple_array is array (0 to N_MUON_OBJECTS-1, 0 to N_MUON_OBJECTS-1, 0 to N_MUON_OBJECTS-1) of std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0);
+    type muon_cc_quad_array is array (0 to N_MUON_OBJECTS-1, 0 to N_MUON_OBJECTS-1, 0 to N_MUON_OBJECTS-1, 0 to N_MUON_OBJECTS-1) of std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0);
     constant CC_NOT_VALID : std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0) := "00"; 
     constant CC_LS : std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0) := "01"; 
     constant CC_OS : std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0) := "10"; 
@@ -399,4 +452,21 @@ package gtl_pkg is
     type rate_counter_global_array is array (MAX_NR_ALGOS-1 downto 0) of std_logic_vector(RATE_COUNTER_WIDTH-1 downto 0);
     type rate_counter_array is array (NR_ALGOS-1 downto 0) of std_logic_vector(RATE_COUNTER_WIDTH-1 downto 0);
 
+-- *******************************************************************************************************
+    function bx(i : integer) return natural;
+    
 end package;
+
+package body gtl_pkg is
+
+-- Function to convert bx values from utm (e.g.: +2 to -2) to array index of bx data (e.g.: 0 to 4)
+    function bx(i : integer) return natural is
+        variable conv_val : natural := 0;
+        variable bx_conv : natural := 0;
+    begin
+        conv_val := (BX_PIPELINE_STAGES/2)-(i*2);
+        bx_conv := i+conv_val;        
+        return bx_conv;
+    end function;
+
+end package body gtl_pkg;

@@ -13,7 +13,7 @@ entity combinatorial_conditions is
     generic(
         N_OBJ : positive;
         N_REQ : positive;
-        SLICES : slices_type;
+        SLICES : slices_type_array;
         TBPT_SEL : boolean;
         CHARGE_CORR_SEL : boolean
     );
@@ -33,10 +33,10 @@ end combinatorial_conditions;
 
 architecture rtl of combinatorial_conditions is
 
-    constant N_SLICE_1 : positive := SLICES(1) - SLICES(0) + 1;
-    constant N_SLICE_2 : positive := SLICES(3) - SLICES(2) + 1;
-    constant N_SLICE_3 : positive := SLICES(5) - SLICES(4) + 1;
-    constant N_SLICE_4 : positive := SLICES(7) - SLICES(6) + 1;
+    constant N_SLICE_1 : positive := SLICES(1)(1) - SLICES(1)(0) + 1;
+    constant N_SLICE_2 : positive := SLICES(2)(1) - SLICES(2)(0) + 1;
+    constant N_SLICE_3 : positive := SLICES(3)(1) - SLICES(3)(0) + 1;
+    constant N_SLICE_4 : positive := SLICES(4)(1) - SLICES(4)(0) + 1;
     
     type req_obj_array is array (1 to N_REQ) of std_logic_1dim_array(0 to N_OBJ-1);    
     signal pt_i, eta_w1_i, eta_w2_i, eta_w3_i, eta_w4_i, eta_w5_i, phi_w1_i,phi_w2_i, iso_i, qual_i, charge_i, cond_and_i : req_obj_array;
@@ -63,22 +63,22 @@ begin
         index := 0;
         and_vec := (others => '0');
         tmp := '0';
-        for i in SLICES(0) to SLICES(1) loop
+        for i in SLICES(1)(0) to SLICES(1)(1) loop
             if N_REQ = 1 then
                 index := index + 1;
                 and_vec(index) := in_1(i);
             end if;
-            for j in SLICES(2) to SLICES(3) loop
+            for j in SLICES(2)(0) to SLICES(2)(1) loop
                 if N_REQ = 2 and (j/=i) then
                     index := index + 1;
                     and_vec(index) := in_1(i) and in_2(j) and cc_double_i(i,j) and tbpt_i(i,j);
                 end if;
-                for k in SLICES(4) to SLICES(5) loop
+                for k in SLICES(3)(0) to SLICES(3)(1) loop
                     if N_REQ = 3 and (j/=i and k/=i and k/=j) then
                         index := index + 1;
                         and_vec(index) := in_1(i) and in_2(j) and in_3(k) and cc_triple_i(i,j,k);
                     end if;
-                    for l in SLICES(6) to SLICES(7) loop
+                    for l in SLICES(4)(0) to SLICES(4)(1) loop
                         if N_REQ = 4 and (j/=i and k/=i and k/=j and l/=i and l/=j and l/=k) then
                             index := index + 1;
                             and_vec(index) := in_1(i) and in_2(j) and in_3(k) and in_4(l) and cc_quad_i(i,j,k,l);

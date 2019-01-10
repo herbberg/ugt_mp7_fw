@@ -39,61 +39,61 @@ begin
     end process;
     
     bx_l: for i in 0 to BX_PIPELINE_STAGES-1 generate
-        muon_l: for j in 0 to MUON_ARRAY_LENGTH-1 generate
-            muon_bx(i).pt(j)(data_tmp(i).muon_data(j).pt'length-1 downto 0) <= data_tmp(i).muon_data(j).pt;
-            muon_bx(i).eta(j)(data_tmp(i).muon_data(j).eta'length-1 downto 0) <= data_tmp(i).muon_data(j).eta;
-            muon_bx(i).phi(j)(data_tmp(i).muon_data(j).phi'length-1 downto 0) <= data_tmp(i).muon_data(j).phi;
-            muon_bx(i).iso(j)(data_tmp(i).muon_data(j).iso'length-1 downto 0) <= data_tmp(i).muon_data(j).iso;
-            muon_bx(i).qual(j)(data_tmp(i).muon_data(j).qual'length-1 downto 0) <= data_tmp(i).muon_data(j).qual;
-            muon_bx(i).charge(j)(data_tmp(i).muon_data(j).charge'length-1 downto 0) <= data_tmp(i).muon_data(j).charge;
+        muon_l: for j in 0 to N_MUON_OBJECTS-1 generate
+            muon_bx(i).pt(j)(data_tmp(i).muon(j).pt'length-1 downto 0) <= data_tmp(i).muon(j).pt;
+            muon_bx(i).eta(j)(data_tmp(i).muon(j).eta'length-1 downto 0) <= data_tmp(i).muon(j).eta;
+            muon_bx(i).phi(j)(data_tmp(i).muon(j).phi'length-1 downto 0) <= data_tmp(i).muon(j).phi;
+            muon_bx(i).iso(j)(data_tmp(i).muon(j).iso'length-1 downto 0) <= data_tmp(i).muon(j).iso;
+            muon_bx(i).qual(j)(data_tmp(i).muon(j).qual'length-1 downto 0) <= data_tmp(i).muon(j).qual;
+            muon_bx(i).charge(j)(data_tmp(i).muon(j).charge'length-1 downto 0) <= data_tmp(i).muon(j).charge;
         end generate muon_l;
-        eg_l: for j in 0 to EG_ARRAY_LENGTH-1 generate            
-            eg_bx(i).pt(j)(data_tmp(i).eg_data(j).pt'length-1 downto 0) <= data_tmp(i).eg_data(j).pt;
-            eg_bx(i).eta(j)(data_tmp(i).eg_data(j).eta'length-1 downto 0) <= data_tmp(i).eg_data(j).eta;
-            eg_bx(i).phi(j)(data_tmp(i).eg_data(j).phi'length-1 downto 0) <= data_tmp(i).eg_data(j).phi;
-            eg_bx(i).iso(j)(data_tmp(i).eg_data(j).iso'length-1 downto 0) <= data_tmp(i).eg_data(j).iso;
+        eg_l: for j in 0 to N_EG_OBJECTS-1 generate            
+            eg_bx(i).pt(j)(data_tmp(i).eg(j).pt'length-1 downto 0) <= data_tmp(i).eg(j).pt;
+            eg_bx(i).eta(j)(data_tmp(i).eg(j).eta'length-1 downto 0) <= data_tmp(i).eg(j).eta;
+            eg_bx(i).phi(j)(data_tmp(i).eg(j).phi'length-1 downto 0) <= data_tmp(i).eg(j).phi;
+            eg_bx(i).iso(j)(data_tmp(i).eg(j).iso'length-1 downto 0) <= data_tmp(i).eg(j).iso;
         end generate eg_l;
-        jet_l: for j in 0 to JET_ARRAY_LENGTH-1 generate
-            jet_bx(i).pt(j)(data_tmp(i).jet_data(j).pt'length-1 downto 0) <= data_tmp(i).jet_data(j).pt;
-            jet_bx(i).eta(j)(data_tmp(i).jet_data(j).eta'length-1 downto 0) <= data_tmp(i).jet_data(j).eta;
-            jet_bx(i).phi(j)(data_tmp(i).jet_data(j).phi'length-1 downto 0) <= data_tmp(i).jet_data(j).phi;
+        jet_l: for j in 0 to N_JET_OBJECTS-1 generate
+            jet_bx(i).pt(j)(data_tmp(i).jet(j).pt'length-1 downto 0) <= data_tmp(i).jet(j).pt;
+            jet_bx(i).eta(j)(data_tmp(i).jet(j).eta'length-1 downto 0) <= data_tmp(i).jet(j).eta;
+            jet_bx(i).phi(j)(data_tmp(i).jet(j).phi'length-1 downto 0) <= data_tmp(i).jet(j).phi;
         end generate jet_l;
-        tau_l: for j in 0 to TAU_ARRAY_LENGTH-1 generate
-            tau_bx(i).pt(j)(data_tmp(i).tau_data(j).pt'length-1 downto 0) <= data_tmp(i).tau_data(j).pt;
-            tau_bx(i).eta(j)(data_tmp(i).tau_data(j).eta'length-1 downto 0) <= data_tmp(i).tau_data(j).eta;
-            tau_bx(i).phi(j)(data_tmp(i).tau_data(j).phi'length-1 downto 0) <= data_tmp(i).tau_data(j).phi;
-            tau_bx(i).iso(j)(data_tmp(i).tau_data(j).iso'length-1 downto 0) <= data_tmp(i).tau_data(j).iso;
+        tau_l: for j in 0 to N_TAU_OBJECTS-1 generate
+            tau_bx(i).pt(j)(data_tmp(i).tau(j).pt'length-1 downto 0) <= data_tmp(i).tau(j).pt;
+            tau_bx(i).eta(j)(data_tmp(i).tau(j).eta'length-1 downto 0) <= data_tmp(i).tau(j).eta;
+            tau_bx(i).phi(j)(data_tmp(i).tau(j).phi'length-1 downto 0) <= data_tmp(i).tau(j).phi;
+            tau_bx(i).iso(j)(data_tmp(i).tau(j).iso'length-1 downto 0) <= data_tmp(i).tau(j).iso;
         end generate tau_l;
         
-        ett_bx(i).pt(0)(data_tmp(i).ett_data.pt'length-1 downto 0) <= data_tmp(i).ett_data.pt;
+        ett_bx(i).pt(0)(data_tmp(i).ett.pt'length-1 downto 0) <= data_tmp(i).ett.pt;
         
-        ettem_bx(i).pt(0)(data_tmp(i).ettem_data.pt'length-1 downto 0) <= data_tmp(i).ettem_data.pt;
+        ettem_bx(i).pt(0)(data_tmp(i).ettem.pt'length-1 downto 0) <= data_tmp(i).ettem.pt;
         
-        etm_bx(i).pt(0)(data_tmp(i).etm_data.pt'length-1 downto 0) <= data_tmp(i).etm_data.pt;
-        etm_bx(i).phi(0)(data_tmp(i).etm_data.phi'length-1 downto 0) <= data_tmp(i).etm_data.phi;
+        etm_bx(i).pt(0)(data_tmp(i).etm.pt'length-1 downto 0) <= data_tmp(i).etm.pt;
+        etm_bx(i).phi(0)(data_tmp(i).etm.phi'length-1 downto 0) <= data_tmp(i).etm.phi;
         
-        htt_bx(i).pt(0)(data_tmp(i).htt_data.pt'length-1 downto 0) <= data_tmp(i).htt_data.pt;
+        htt_bx(i).pt(0)(data_tmp(i).htt.pt'length-1 downto 0) <= data_tmp(i).htt.pt;
         
-        htm_bx(i).pt(0)(data_tmp(i).htm_data.pt'length-1 downto 0) <= data_tmp(i).htm_data.pt;
-        htm_bx(i).phi(0)(data_tmp(i).htm_data.phi'length-1 downto 0) <= data_tmp(i).htm_data.phi;
+        htm_bx(i).pt(0)(data_tmp(i).htm.pt'length-1 downto 0) <= data_tmp(i).htm.pt;
+        htm_bx(i).phi(0)(data_tmp(i).htm.phi'length-1 downto 0) <= data_tmp(i).htm.phi;
         
-        etmhf_bx(i).pt(0)(data_tmp(i).etmhf_data.pt'length-1 downto 0) <= data_tmp(i).etmhf_data.pt;
-        etmhf_bx(i).phi(0)(data_tmp(i).etmhf_data.phi'length-1 downto 0) <= data_tmp(i).etmhf_data.phi;
+        etmhf_bx(i).pt(0)(data_tmp(i).etmhf.pt'length-1 downto 0) <= data_tmp(i).etmhf.pt;
+        etmhf_bx(i).phi(0)(data_tmp(i).etmhf.phi'length-1 downto 0) <= data_tmp(i).etmhf.phi;
         
-        htmhf_bx(i).pt(0)(data_tmp(i).htmhf_data.pt'length-1 downto 0) <= data_tmp(i).htmhf_data.pt;
-        htmhf_bx(i).phi(0)(data_tmp(i).htmhf_data.phi'length-1 downto 0) <= data_tmp(i).htmhf_data.phi;
+        htmhf_bx(i).pt(0)(data_tmp(i).htmhf.pt'length-1 downto 0) <= data_tmp(i).htmhf.pt;
+        htmhf_bx(i).phi(0)(data_tmp(i).htmhf.phi'length-1 downto 0) <= data_tmp(i).htmhf.phi;
         
-        towercount_bx(i).count(0)(data_tmp(i).towercount_data.count'length-1 downto 0) <= data_tmp(i).towercount_data.count;
+        towercount_bx(i).count(0)(data_tmp(i).towercount.count'length-1 downto 0) <= data_tmp(i).towercount.count;
         
-        mbt1hfp_bx(i).count(0)(data_tmp(i).mbt1hfp_data.count'length-1 downto 0) <= data_tmp(i).mbt1hfp_data.count;
-        mbt1hfm_bx(i).count(0)(data_tmp(i).mbt1hfm_data.count'length-1 downto 0) <= data_tmp(i).mbt1hfm_data.count;
-        mbt0hfp_bx(i).count(0)(data_tmp(i).mbt0hfp_data.count'length-1 downto 0) <= data_tmp(i).mbt0hfp_data.count;
-        mbt0hfm_bx(i).count(0)(data_tmp(i).mbt0hfm_data.count'length-1 downto 0) <= data_tmp(i).mbt0hfm_data.count;
+        mbt1hfp_bx(i).count(0)(data_tmp(i).mbt1hfp.count'length-1 downto 0) <= data_tmp(i).mbt1hfp.count;
+        mbt1hfm_bx(i).count(0)(data_tmp(i).mbt1hfm.count'length-1 downto 0) <= data_tmp(i).mbt1hfm.count;
+        mbt0hfp_bx(i).count(0)(data_tmp(i).mbt0hfp.count'length-1 downto 0) <= data_tmp(i).mbt0hfp.count;
+        mbt0hfm_bx(i).count(0)(data_tmp(i).mbt0hfm.count'length-1 downto 0) <= data_tmp(i).mbt0hfm.count;
         
-        asymet_bx(i).count(0)(data_tmp(i).asymet_data.count'length-1 downto 0) <= data_tmp(i).asymet_data.count;
-        asymht_bx(i).count(0)(data_tmp(i).asymht_data.count'length-1 downto 0) <= data_tmp(i).asymht_data.count;
-        asymethf_bx(i).count(0)(data_tmp(i).asymethf_data.count'length-1 downto 0) <= data_tmp(i).asymethf_data.count;
-        asymhthf_bx(i).count(0)(data_tmp(i).asymhthf_data.count'length-1 downto 0) <= data_tmp(i).asymhthf_data.count;
+        asymet_bx(i).count(0)(data_tmp(i).asymet.count'length-1 downto 0) <= data_tmp(i).asymet.count;
+        asymht_bx(i).count(0)(data_tmp(i).asymht.count'length-1 downto 0) <= data_tmp(i).asymht.count;
+        asymethf_bx(i).count(0)(data_tmp(i).asymethf.count'length-1 downto 0) <= data_tmp(i).asymethf.count;
+        asymhthf_bx(i).count(0)(data_tmp(i).asymhthf.count'length-1 downto 0) <= data_tmp(i).asymhthf.count;
         
 -- Additional delay for centrality and ext_cond (no comparators and conditions)
 
@@ -103,7 +103,7 @@ begin
                 STAGES => CENTRALITY_STAGES
             )
             port map(
-                clk, data_tmp(i).centrality_data, centrality(i)
+                clk, data_tmp(i).centrality, centrality(i)
             );
             
         ext_cond_pipe_i: entity work.delay_pipeline

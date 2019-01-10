@@ -16,8 +16,6 @@ entity muon_charge_correlations is
         clk : in std_logic;
         in_1: in obj_parameter_array;
         in_2: in obj_parameter_array;
---         in_1: in obj_parameter_array(0 to MUON_ARRAY_LENGTH-1);
---         in_2: in obj_parameter_array(0 to MUON_ARRAY_LENGTH-1);
         cc_double: out muon_cc_double_array;
         cc_triple: out muon_cc_triple_array;
         cc_quad: out muon_cc_quad_array
@@ -42,8 +40,8 @@ begin
     charge_corr_p: process(in_1, in_2)
         variable charge_bits_obj_1, charge_bits_obj_2 : muon_charge_bits_array;
     begin
-        for i in MUON_ARRAY_LENGTH-1 downto 0 loop
-            for j in MUON_ARRAY_LENGTH-1 downto 0 loop
+        for i in N_MUON_OBJECTS-1 downto 0 loop
+            for j in N_MUON_OBJECTS-1 downto 0 loop
                 charge_bits_obj_1(i) := in_1(i)(NR_MUON_CHARGE_BITS-1 downto 0);
                 charge_bits_obj_2(i) := in_2(i)(NR_MUON_CHARGE_BITS-1 downto 0);
                 if (charge_bits_obj_1(i)(1)='1' and charge_bits_obj_2(j)(1)='1') then
@@ -57,7 +55,7 @@ begin
                 else
                     cc_double(i,j) <= CC_NOT_VALID;                                            
                 end if;
-                for k in MUON_ARRAY_LENGTH-1 downto 0 loop
+                for k in N_MUON_OBJECTS-1 downto 0 loop
                     if charge_bits_obj_1(i)(1)='1' and charge_bits_obj_1(j)(1)='1' and charge_bits_obj_1(k)(1)='1' then
                         if charge_bits_obj_1(i)(0)='1' and charge_bits_obj_1(j)(0)='1' and charge_bits_obj_1(k)(0)='1' then
                             cc_triple(i,j,k) <= CC_LS;
@@ -69,7 +67,7 @@ begin
                     else
                         cc_triple(i,j,k) <= CC_NOT_VALID;                                            
                     end if;
-                    for l in MUON_ARRAY_LENGTH-1 downto 0 loop
+                    for l in N_MUON_OBJECTS-1 downto 0 loop
                         if charge_bits_obj_1(i)(1)='1' and charge_bits_obj_1(j)(1)='1' and charge_bits_obj_1(k)(1)='1' and charge_bits_obj_1(l)(1)='1' then
                             if charge_bits_obj_1(i)(0)='1' and charge_bits_obj_1(j)(0)='1' and charge_bits_obj_1(k)(0)='1' and charge_bits_obj_1(l)(0)='1' then
                                 cc_quad(i,j,k,l) <= CC_LS;

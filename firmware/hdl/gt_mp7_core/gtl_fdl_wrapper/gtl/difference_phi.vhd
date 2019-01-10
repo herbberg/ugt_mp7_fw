@@ -44,15 +44,15 @@ begin
             diff_temp(i,j) <= abs(phi_1(i) - phi_2(j));
             diff_i(i,j) <= diff_temp(i,j) when (diff_temp(i,j) < PHI_HALF_RANGE) else (PHI_HALF_RANGE*2-diff_temp(i,j));
             calo_calo_i: if ((OBJ_CORR = calo_calo) or (OBJ_CORR = calo_esums)) generate
-                diff_phi_o(i,j) <= CONV_STD_LOGIC_VECTOR(CALO_CALO_DIFF_PHI_LUT(diff_i(i,j)), DETA_DPHI_VECTOR_WIDTH_ALL);
+                diff_phi_o(i,j) <= CONV_STD_LOGIC_VECTOR(CALO_CALO_DIFF_PHI_LUT(diff_i(i,j)), DETA_DPHI_VECTOR_WIDTH);
                 cos_dphi_o(i,j)(CALO_CALO_COSH_COS_VECTOR_WIDTH-1 downto 0) <= CONV_STD_LOGIC_VECTOR(CALO_CALO_COS_DPHI_LUT(diff_i(i,j)), CALO_CALO_COSH_COS_VECTOR_WIDTH);
             end generate calo_calo_i;
             calo_muon_i: if ((OBJ_CORR = calo_muon) or (OBJ_CORR = muon_esums)) generate
-                diff_phi_o(i,j) <= CONV_STD_LOGIC_VECTOR(CALO_MU_DIFF_PHI_LUT(diff_i(i,j)), DETA_DPHI_VECTOR_WIDTH_ALL);
+                diff_phi_o(i,j) <= CONV_STD_LOGIC_VECTOR(CALO_MU_DIFF_PHI_LUT(diff_i(i,j)), DETA_DPHI_VECTOR_WIDTH);
                 cos_dphi_o(i,j)(CALO_MUON_COSH_COS_VECTOR_WIDTH-1 downto 0) <= CONV_STD_LOGIC_VECTOR(CALO_MUON_COS_DPHI_LUT(diff_i(i,j)), CALO_MUON_COSH_COS_VECTOR_WIDTH);
             end generate calo_muon_i;
             muon_muon_i: if (OBJ_CORR = muon_muon) generate
-                diff_phi_o(i,j) <= CONV_STD_LOGIC_VECTOR(MU_MU_DIFF_PHI_LUT(diff_i(i,j)), DETA_DPHI_VECTOR_WIDTH_ALL);
+                diff_phi_o(i,j) <= CONV_STD_LOGIC_VECTOR(MU_MU_DIFF_PHI_LUT(diff_i(i,j)), DETA_DPHI_VECTOR_WIDTH);
                 cos_dphi_o(i,j)(MUON_MUON_COSH_COS_VECTOR_WIDTH-1 downto 0) <= CONV_STD_LOGIC_VECTOR(MUON_MUON_COS_DPHI_LUT(diff_i(i,j)), MUON_MUON_COSH_COS_VECTOR_WIDTH);
             end generate muon_muon_i;
         end generate loop_2;

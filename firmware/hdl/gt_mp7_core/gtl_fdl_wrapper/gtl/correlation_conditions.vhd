@@ -13,7 +13,7 @@ entity correlation_conditions is
     generic(
         N_OBJ_1 : positive;
         N_OBJ_2 : positive;
-        SLICES : slices_type;
+        SLICES : slices_type_array;
         DETA_SEL : boolean;
         DPHI_SEL : boolean;
         DR_SEL : boolean;
@@ -39,8 +39,8 @@ end correlation_conditions;
 
 architecture rtl of correlation_conditions is
 
-    constant N_SLICE_1 : positive := SLICES(1) - SLICES(0) + 1;
-    constant N_SLICE_2 : positive := SLICES(3) - SLICES(2) + 1;
+    constant N_SLICE_1 : positive := SLICES(1)(1) - SLICES(1)(0) + 1;
+    constant N_SLICE_2 : positive := SLICES(2)(1) - SLICES(2)(0) + 1;
     constant DEF_VAL_2DIM : std_logic_2dim_array(0 to N_OBJ_1-1, 0 to N_OBJ_2-1) := (others => (others => '1'));
     signal deta_i : std_logic_2dim_array(0 to N_OBJ_1-1, 0 to N_OBJ_2-1);
     signal dphi_i : std_logic_2dim_array(0 to N_OBJ_1-1, 0 to N_OBJ_2-1);
@@ -69,8 +69,8 @@ begin
         index := 0;
         and_vec := (others => '0');
         tmp := '0';
-        for i in SLICES(0) to SLICES(1) loop
-            for j in SLICES(2) to SLICES(3) loop
+        for i in SLICES(1)(0) to SLICES(1)(1) loop
+            for j in SLICES(2)(0) to SLICES(2)(1) loop
                 index := index + 1;
                 and_vec(index) := in_1(i) and in_2(j) and deta_i(i,j) and dphi_i(i,j) and dr_i(i,j) and 
                     inv_mass_i(i,j) and trans_mass_i(i,j) and tbpt_i(i,j) and cc_double_i(i,j);

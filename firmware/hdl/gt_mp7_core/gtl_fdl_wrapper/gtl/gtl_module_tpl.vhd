@@ -22,13 +22,13 @@ end gtl_module;
 
 architecture rtl of gtl_module is
     
-    signal muon_bx, eg_bx, jet_bx, tau_bx : array_obj_bx_record; 
-    signal ett_bx, etm_bx, htt_bx, htm_bx, ettem_bx, etmhf_bx, htmhf_bx : array_obj_bx_record; 
-    signal towercount_bx : array_obj_bx_record;
-    signal mbt1hfp_bx, mbt1hfm_bx, mbt0hfp_bx, mbt0hfm_bx : array_obj_bx_record; 
-    signal asymet_bx, asymht_bx, asymethf_bx, asymhthf_bx : array_obj_bx_record; 
-    signal centrality : centrality_array;
-    signal ext_cond : ext_cond_array;
+    signal muon_arr, eg_arr, jet_arr, tau_arr : array_obj_bx_record; 
+    signal ett_arr, etm_arr, htt_arr, htm_arr, ettem_arr, etmhf_arr, htmhf_arr : array_obj_bx_record; 
+    signal towercount_arr : array_obj_bx_record;
+    signal mbt1hfp_arr, mbt1hfm_arr, mbt0hfp_arr, mbt0hfm_arr : array_obj_bx_record; 
+    signal asymet_arr, asymht_arr, asymethf_arr, asymhthf_arr : array_obj_bx_record; 
+    signal centrality_arr : centrality_array;
+    signal ext_cond_arr : ext_cond_array;
 
     signal algo : std_logic_vector(NR_ALGOS-1 downto 0) := (others => '0');
 
@@ -42,13 +42,13 @@ bx_pipeline_i: entity work.bx_pipeline
     port map(
         lhc_clk,
         data,
-        muon_bx, eg_bx, jet_bx, tau_bx, 
-        ett_bx, etm_bx, htt_bx, htm_bx, ettem_bx, etmhf_bx, htmhf_bx, 
-        towercount_bx,
-        mbt1hfp_bx, mbt1hfm_bx, mbt0hfp_bx, mbt0hfm_bx, 
-        asymet_bx, asymht_bx, asymethf_bx, asymhthf_bx, 
-        centrality,
-        ext_cond
+        muon_arr, eg_arr, jet_arr, tau_arr, 
+        ett_arr, etm_arr, htt_arr, htm_arr, ettem_arr, etmhf_arr, htmhf_arr, 
+        towercount_arr,
+        mbt1hfp_arr, mbt1hfm_arr, mbt0hfp_arr, mbt0hfm_arr, 
+        asymet_arr, asymht_arr, asymethf_arr, asymhthf_arr, 
+        centrality_arr,
+        ext_cond_arr
     );
 
 {{gtl_module_instances}}

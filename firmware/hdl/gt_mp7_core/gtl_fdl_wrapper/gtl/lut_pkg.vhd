@@ -17,31 +17,6 @@ use work.gtl_pkg.all;
 
 package lut_pkg is
 
--- deta, dphi and dr parameters
-
--- constant PI : real :=  3.14159;
-constant PI : real :=  3.15; -- TM used this value for PI
-
-constant CALO_ETA_STEP : real := 0.087/2.0; -- values from scales
-constant MUON_ETA_STEP : real := 0.087/8.0; -- values from scales
-
-constant CALO_PHI_BINS : positive := 144; -- values from scales
-constant MUON_PHI_BINS : positive := 576; -- values from scales
-constant CALO_PHI_HALF_RANGE_BINS : positive := CALO_PHI_BINS/2; -- 144/2, because of phi bin width = 2*PI/144
-constant MUON_PHI_HALF_RANGE_BINS : positive := MUON_PHI_BINS/2; -- 576/2, because of phi bin width = 2*PI/576
-
-constant PHI_MIN : real := 0.0; -- phi min.: 0.0
-constant PHI_MAX : real := 2.0*PI; -- phi max.: 2*PI
-
-constant ETA_MIN : real := -5.0; -- eta min.: -5.0
-constant ETA_MAX : real := 5.0; -- eta max.: +5.0
-constant ETA_RANGE_REAL : real := 10.0; -- eta range max.: -5.0 to +5.0
-
-constant MAX_CALO_ETA_BITS : positive := max((EG_ETA_HIGH-EG_ETA_LOW+1), (JET_ETA_HIGH-JET_ETA_LOW+1), (TAU_ETA_HIGH-TAU_ETA_LOW+1));
-constant MAX_CALO_PHI_BITS : positive := max((EG_PHI_HIGH-EG_PHI_LOW+1), (JET_PHI_HIGH-JET_PHI_LOW+1), (TAU_PHI_HIGH-TAU_PHI_LOW+1));
-constant MAX_MUON_PHI_BITS : positive := MUON_PHI_HIGH-MUON_PHI_LOW+1;
-
-constant DETA_DPHI_PRECISION_ALL: positive := 3;
 -- constant EG_EG_DETA_PRECISION: positive := 3;
 -- constant EG_JET_DETA_PRECISION: positive := 3;
 -- constant EG_TAU_DETA_PRECISION: positive := 3;
@@ -110,15 +85,11 @@ constant DETA_DPHI_PRECISION_ALL: positive := 3;
 -- constant MAX_DETA_DPHI_TEMP_2: positive := max(JET_JET_DETA_DPHI_PRECISION, JET_TAU_DETA_DPHI_PRECISION, TAU_TAU_DETA_DPHI_PRECISION);
 -- constant MAX_DETA_DPHI_TEMP_3: positive := max(EG_MUON_DETA_DPHI_PRECISION, JET_MUON_DETA_DPHI_PRECISION, TAU_MUON_DETA_DPHI_PRECISION);
 -- constant MAX_DETA_DPHI_TEMP_4: positive := max(MUON_MUON_DETA_DPHI_PRECISION, MAX_DETA_DPHI_TEMP_1, MAX_DETA_DPHI_TEMP_2);
--- constant DETA_DPHI_PRECISION_ALL: positive := max(MAX_DETA_DPHI_TEMP_3, MAX_DETA_DPHI_TEMP_4);
-
-constant DETA_DPHI_VECTOR_WIDTH: positive := log2c(max(integer(ETA_RANGE_REAL*(real(10**DETA_DPHI_PRECISION_ALL))),integer(PHI_MAX*(real(10**DETA_DPHI_PRECISION_ALL))))); constant DETA_DPHI_VECTOR_WIDTH_ALL: positive := log2c(max(integer(ETA_RANGE_REAL*(real(10**DETA_DPHI_PRECISION_ALL))),integer(PHI_MAX*(real(10**DETA_DPHI_PRECISION_ALL))))); -- length of DETA/DPHI vector for Delta-R calculation
-type deta_dphi_vector_array is array (natural range <>, natural range <>) of std_logic_vector(DETA_DPHI_VECTOR_WIDTH_ALL-1 downto 0);
 
 -- subtypes for ranges of limits
 subtype diff_eta_range_real is real range 0.0 to ETA_RANGE_REAL;
 subtype diff_phi_range_real is real range 0.0 to PHI_MAX/2.0;
-subtype dr_squared_range_real is real range 0.0 to ((ETA_RANGE_REAL*(real(10**DETA_DPHI_PRECISION_ALL)))**2+(PI*(real(10**DETA_DPHI_PRECISION_ALL))**2));
+subtype dr_squared_range_real is real range 0.0 to ((ETA_RANGE_REAL*(real(10**DETA_DPHI_PRECISION)))**2+(PI*(real(10**DETA_DPHI_PRECISION))**2));
 
 -- mass parameters
 
@@ -196,7 +167,6 @@ constant EG_HTM_COSH_COS_PRECISION : positive := 3;
 constant JET_HTM_COSH_COS_PRECISION : positive := 3;
 constant TAU_HTM_COSH_COS_PRECISION : positive := 3;
 
-constant CALO_COSH_COS_VECTOR_WIDTH: positive := 24; -- max. value cosh_deta-cos_dphi => [10597282-(-1000)]=10598282 => 0xA1B78A
 -- constant EG_EG_COSH_COS_VECTOR_WIDTH: positive := log2c(10597282-(-1000)); -- [10597282-(-1000)]=10598282 => 0xA1B78A
 -- constant EG_JET_COSH_COS_VECTOR_WIDTH: positive := log2c(10597282-(-1000));
 -- constant EG_TAU_COSH_COS_VECTOR_WIDTH: positive := log2c(10597282-(-1000));
@@ -217,8 +187,6 @@ constant CALO_COSH_COS_VECTOR_WIDTH: positive := 24; -- max. value cosh_deta-cos
 -- constant TAU_HTM_COSH_COS_VECTOR_WIDTH: positive := log2c(10597282-(-1000));
 -- -- HB 2017-01-19: fix value for CALO_COSH_COS_VECTOR_WIDTH
 -- constant CALO_COSH_COS_VECTOR_WIDTH: positive := log2c(10597282-(-1000));
-type calo_cosh_cos_vector_array is array (natural range <>, natural range <>) of std_logic_vector(CALO_COSH_COS_VECTOR_WIDTH-1 downto 0);
-constant CALO_CALO_COSH_COS_VECTOR_WIDTH: positive := CALO_COSH_COS_VECTOR_WIDTH;
 
 -- HB 2016-12-13: Calos -> type definition for twobody-pt calculation
 constant EG_ETM_PT_PRECISION : positive := 1;
@@ -258,8 +226,6 @@ constant JET_TAU_SIN_COS_PRECISION : positive := 3;
 constant TAU_EG_SIN_COS_PRECISION : positive := 3;
 constant TAU_JET_SIN_COS_PRECISION : positive := 3;
 constant TAU_TAU_SIN_COS_PRECISION : positive := 3;
-constant CALO_SIN_COS_VECTOR_WIDTH: positive := log2c(1000-(-1000));
-type calo_sin_cos_vector_array is array (natural range <>) of std_logic_vector(CALO_SIN_COS_VECTOR_WIDTH-1 downto 0);
 
 -- muon-muon-correlation
 constant MUON_PT_PRECISION : positive := 1; -- 1 digit after decimal point
@@ -272,15 +238,6 @@ constant MU_ETM_COSH_COS_PRECISION : positive := MUON_ETM_COSH_COS_PRECISION;
 constant MU_ETMHF_COSH_COS_PRECISION : positive := MUON_ETMHF_COSH_COS_PRECISION;
 constant MU_HTM_COSH_COS_PRECISION : positive := MUON_HTM_COSH_COS_PRECISION;
 
--- constant MUON_PT_VECTOR_WIDTH: positive := log2c((2**(D_S_I_MUON_V2.pt_high-D_S_I_MUON_V2.pt_low+1)-1)*(10**MUON_PT_PRECISION)); -- max. value 255.5 GeV => 2555 => 0x9FB
--- constant MUON_PT_VECTOR_WIDTH: positive := 12; -- max. value 255.5 GeV => 2555 (255.5 * 10**MUON_INV_MASS_PT_PRECISION) => 0x9FB
-constant MU_PT_VECTOR_WIDTH: positive := MUON_PT_VECTOR_WIDTH; -- dummy for VHDL-Producer output (correlation conditions)
-
-constant MUON_MUON_COSH_COS_VECTOR_WIDTH: positive := log2c(677303); -- max. value cosh_deta-cos_dphi => [667303-(-10000)]=677303 => 0xA55B7 - highest value in LUT
-constant MU_MU_COSH_COS_VECTOR_WIDTH: positive := MUON_MUON_COSH_COS_VECTOR_WIDTH; -- max. value cosh_deta-cos_dphi => [667303-(-10000)]=677303 => 0xA55B7 - highest value in LUT
--- constant MUON_MUON_COSH_COS_VECTOR_WIDTH: positive := 20; -- max. value cosh_deta-cos_dphi => [667303-(-10000)]=677303 => 0xA55B7
-type muon_cosh_cos_vector_array is array (natural range <>, natural range <>) of std_logic_vector(MUON_MUON_COSH_COS_VECTOR_WIDTH-1 downto 0);
-
 -- calo-muon-correlation
 -- constant CALO_MUON_INV_MASS_PT_PRECISION : positive := 1; -- 1 digit after decimal point
 -- constant CALO_MUON_INV_MASS_COSH_COS_PRECISION : positive := 4; -- 4 digits after decimal point (after roundimg to the 5th digit)
@@ -291,7 +248,6 @@ constant EG_MU_COSH_COS_PRECISION : positive := EG_MUON_COSH_COS_PRECISION;
 constant JET_MU_COSH_COS_PRECISION : positive := JET_MUON_COSH_COS_PRECISION;
 constant TAU_MU_COSH_COS_PRECISION : positive := TAU_MUON_COSH_COS_PRECISION;
 
--- constant CALO_MUON_COSH_COS_VECTOR_WIDTH: positive := log2c(109497199); -- = 27 -> max. value cosh_deta-cos_dphi => [109487199-(-10000)]=109497199 => 0x686CB6F
 constant EG_MUON_COSH_COS_VECTOR_WIDTH: positive := log2c(109487199-(-10000));
 constant JET_MUON_COSH_COS_VECTOR_WIDTH: positive := log2c(109487199-(-10000));
 constant TAU_MUON_COSH_COS_VECTOR_WIDTH: positive := log2c(109487199-(-10000));
@@ -304,10 +260,6 @@ constant TAU_MU_COSH_COS_VECTOR_WIDTH: positive := TAU_MUON_COSH_COS_VECTOR_WIDT
 constant MU_ETM_COSH_COS_VECTOR_WIDTH: positive := MUON_ETM_COSH_COS_VECTOR_WIDTH;
 constant MU_ETMHF_COSH_COS_VECTOR_WIDTH: positive := MUON_ETMHF_COSH_COS_VECTOR_WIDTH;
 constant MU_HTM_COSH_COS_VECTOR_WIDTH: positive := MUON_HTM_COSH_COS_VECTOR_WIDTH;
--- constant CALO_MUON_COSH_COS_VECTOR_WIDTH: positive := max(EG_MUON_COSH_COS_VECTOR_WIDTH, JET_MUON_COSH_COS_VECTOR_WIDTH, TAU_MUON_COSH_COS_VECTOR_WIDTH);
--- HB 2017-01-19: fix value for CALO_MUON_COSH_COS_VECTOR_WIDTH
-constant CALO_MUON_COSH_COS_VECTOR_WIDTH: positive := log2c(109487199-(-10000));
-type calo_muon_cosh_cos_vector_array is array (natural range <>, natural range <>) of std_logic_vector(CALO_MUON_COSH_COS_VECTOR_WIDTH-1 downto 0);
 
 -- HB 2017-03-29: Muon -> type definition for twobody-pt calculation in mass_cuts.vhd
 constant MU_ETM_PT_PRECISION : positive := 1;
@@ -325,9 +277,6 @@ constant EG_MU_SIN_COS_PRECISION : positive := 4;
 constant JET_MU_SIN_COS_PRECISION : positive := 4;
 constant TAU_MU_SIN_COS_PRECISION : positive := 4;
 constant MU_MU_SIN_COS_PRECISION : positive := 4;
--- constant MUON_SIN_COS_VECTOR_WIDTH: positive := log2c(1000-(-1000));
-constant MUON_SIN_COS_VECTOR_WIDTH: positive := log2c(10000-(-10000));
-type muon_sin_cos_vector_array is array (natural range <>) of std_logic_vector(MUON_SIN_COS_VECTOR_WIDTH-1 downto 0);
 
 -- subtypes used in sub_eta_integer_obj_vs_obj.vhd and sub_phi_integer_obj_vs_obj
 subtype max_eta_range_integer is integer range 0 to integer(ETA_RANGE_REAL/MUON_ETA_STEP)-1; -- 10.0/0.010875 = 919.54 => rounded(919.54) = 920 - number of bins with muon bin width for full (calo) eta range
@@ -1624,7 +1573,7 @@ constant HTM_SIN_PHI_LUT : calo_sin_cos_phi_lut_array := CALO_SIN_PHI_LUT;
 
 -- HB 2017-03-29: LUTs for cosine(phi) and sine(phi) for twobody-pt calculation of muon objects and converted phi values for correlations with muon.
 -- Center of phi bins for calculation of cosine and sine with 4 digits after decimal point
-type muon_sin_cos_phi_lut_array is array (0 to 2**MAX_MUON_PHI_BITS-1) of integer range -10000 to 10000;
+type muon_sin_cos_phi_lut_array is array (0 to 2**(MUON_PHI_HIGH-MUON_PHI_LOW+1)-1) of integer range -10000 to 10000;
 
 constant MUON_COS_PHI_LUT : muon_sin_cos_phi_lut_array := (
 10000, 9999, 9996, 9993, 9988, 9982, 9975, 9967, 9957, 9946, 9934, 9921, 9907, 9892, 9875, 9857,
