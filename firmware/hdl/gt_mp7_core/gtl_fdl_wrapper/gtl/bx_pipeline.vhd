@@ -11,48 +11,26 @@ entity bx_pipeline is
     port(
         clk : in std_logic;
         data : in gtl_data_record;
-        pt_muon : out array_obj_parameter_array := (others => (others => (others => '0')));
-        eta_muon : out array_obj_parameter_array := (others => (others => (others => '0')));
-        phi_muon : out array_obj_parameter_array := (others => (others => (others => '0')));
-        iso_muon : out array_obj_parameter_array := (others => (others => (others => '0')));
-        qual_muon : out array_obj_parameter_array := (others => (others => (others => '0')));
-        charge_muon : out array_obj_parameter_array := (others => (others => (others => '0')));
-        pt_eg : out array_obj_parameter_array := (others => (others => (others => '0')));
-        eta_eg : out array_obj_parameter_array := (others => (others => (others => '0')));
-        phi_eg : out array_obj_parameter_array := (others => (others => (others => '0')));
-        iso_eg : out array_obj_parameter_array := (others => (others => (others => '0')));
-        pt_jet : out array_obj_parameter_array := (others => (others => (others => '0')));
-        eta_jet : out array_obj_parameter_array := (others => (others => (others => '0')));
-        phi_jet : out array_obj_parameter_array := (others => (others => (others => '0')));
-        pt_tau : out array_obj_parameter_array := (others => (others => (others => '0')));
-        eta_tau : out array_obj_parameter_array := (others => (others => (others => '0')));
-        phi_tau : out array_obj_parameter_array := (others => (others => (others => '0')));
-        iso_tau : out array_obj_parameter_array := (others => (others => (others => '0')));
-
-        pt_ett : out array_obj_parameter_array := (others => (others => (others => '0')));
-        pt_etm : out array_obj_parameter_array := (others => (others => (others => '0')));
-        phi_etm : out array_obj_parameter_array := (others => (others => (others => '0')));
-        pt_htt : out array_obj_parameter_array := (others => (others => (others => '0')));
-        pt_htm : out array_obj_parameter_array := (others => (others => (others => '0')));
-        phi_htm : out array_obj_parameter_array := (others => (others => (others => '0')));
-        pt_ettem : out array_obj_parameter_array := (others => (others => (others => '0')));
-        pt_etmhf : out array_obj_parameter_array := (others => (others => (others => '0')));
-        phi_etmhf : out array_obj_parameter_array := (others => (others => (others => '0')));
-        pt_htmhf : out array_obj_parameter_array := (others => (others => (others => '0')));
-        phi_htmhf : out array_obj_parameter_array := (others => (others => (others => '0')));
-
-        count_towercount : out array_obj_parameter_array := (others => (others => (others => '0')));
-        
-        count_mbt1hfp : out array_obj_parameter_array := (others => (others => (others => '0')));
-        count_mbt1hfm : out array_obj_parameter_array := (others => (others => (others => '0')));
-        count_mbt0hfp : out array_obj_parameter_array := (others => (others => (others => '0')));
-        count_mbt0hfm : out array_obj_parameter_array := (others => (others => (others => '0')));
-        
-        count_asymet : out array_obj_parameter_array := (others => (others => (others => '0')));
-        count_asymht : out array_obj_parameter_array := (others => (others => (others => '0')));
-        count_asymethf : out array_obj_parameter_array := (others => (others => (others => '0')));
-        count_asymhthf : out array_obj_parameter_array := (others => (others => (others => '0')));
-
+        muon_bx : out array_obj_bx_record := (others => (others => (others => (others => '0'))));
+        eg_bx : out array_obj_bx_record := (others => (others => (others => (others => '0'))));
+        jet_bx : out array_obj_bx_record := (others => (others => (others => (others => '0'))));
+        tau_bx : out array_obj_bx_record := (others => (others => (others => (others => '0'))));
+        ett_bx : out array_obj_bx_record := (others => (others => (others => (others => '0'))));
+        etm_bx : out array_obj_bx_record := (others => (others => (others => (others => '0'))));
+        htt_bx : out array_obj_bx_record := (others => (others => (others => (others => '0'))));
+        htm_bx : out array_obj_bx_record := (others => (others => (others => (others => '0'))));
+        ettem_bx : out array_obj_bx_record := (others => (others => (others => (others => '0'))));
+        etmhf_bx : out array_obj_bx_record := (others => (others => (others => (others => '0'))));
+        htmhf_bx : out array_obj_bx_record := (others => (others => (others => (others => '0'))));
+        towercount_bx : out array_obj_bx_record := (others => (others => (others => (others => '0'))));
+        mbt1hfp_bx : out array_obj_bx_record := (others => (others => (others => (others => '0'))));
+        mbt1hfm_bx : out array_obj_bx_record := (others => (others => (others => (others => '0'))));
+        mbt0hfp_bx : out array_obj_bx_record := (others => (others => (others => (others => '0'))));
+        mbt0hfm_bx : out array_obj_bx_record := (others => (others => (others => (others => '0'))));
+        asymet_bx : out array_obj_bx_record := (others => (others => (others => (others => '0'))));
+        asymht_bx : out array_obj_bx_record := (others => (others => (others => (others => '0'))));
+        asymethf_bx : out array_obj_bx_record := (others => (others => (others => (others => '0'))));
+        asymhthf_bx : out array_obj_bx_record := (others => (others => (others => (others => '0'))));
         centrality : out centrality_array := (others => (others => '0'));
         ext_cond : out ext_cond_array := (others => (others => '0'))
     );
@@ -76,60 +54,60 @@ begin
     
     bx_l: for i in 0 to BX_PIPELINE_STAGES-1 generate
         muon_l: for j in 0 to MUON_ARRAY_LENGTH-1 generate
-            pt_muon(i)(j)(data_tmp(i).muon_data(j).pt'length-1 downto 0) <= data_tmp(i).muon_data(j).pt;
-            eta_muon(i)(j)(data_tmp(i).muon_data(j).eta'length-1 downto 0) <= data_tmp(i).muon_data(j).eta;
-            phi_muon(i)(j)(data_tmp(i).muon_data(j).phi'length-1 downto 0) <= data_tmp(i).muon_data(j).phi;
-            iso_muon(i)(j)(data_tmp(i).muon_data(j).iso'length-1 downto 0) <= data_tmp(i).muon_data(j).iso;
-            qual_muon(i)(j)(data_tmp(i).muon_data(j).qual'length-1 downto 0) <= data_tmp(i).muon_data(j).qual;
-            charge_muon(i)(j)(data_tmp(i).muon_data(j).charge'length-1 downto 0) <= data_tmp(i).muon_data(j).charge;
+            muon_bx(i).pt(j)(data_tmp(i).muon_data(j).pt'length-1 downto 0) <= data_tmp(i).muon_data(j).pt;
+            muon_bx(i).eta(j)(data_tmp(i).muon_data(j).eta'length-1 downto 0) <= data_tmp(i).muon_data(j).eta;
+            muon_bx(i).phi(j)(data_tmp(i).muon_data(j).phi'length-1 downto 0) <= data_tmp(i).muon_data(j).phi;
+            muon_bx(i).iso(j)(data_tmp(i).muon_data(j).iso'length-1 downto 0) <= data_tmp(i).muon_data(j).iso;
+            muon_bx(i).qual(j)(data_tmp(i).muon_data(j).qual'length-1 downto 0) <= data_tmp(i).muon_data(j).qual;
+            muon_bx(i).charge(j)(data_tmp(i).muon_data(j).charge'length-1 downto 0) <= data_tmp(i).muon_data(j).charge;
         end generate muon_l;
-        eg_l: for j in 0 to EG_ARRAY_LENGTH-1 generate
-            pt_eg(i)(j)(data_tmp(i).eg_data(j).pt'length-1 downto 0) <= data_tmp(i).eg_data(j).pt;
-            eta_eg(i)(j)(data_tmp(i).eg_data(j).eta'length-1 downto 0) <= data_tmp(i).eg_data(j).eta;
-            phi_eg(i)(j)(data_tmp(i).eg_data(j).phi'length-1 downto 0) <= data_tmp(i).eg_data(j).phi;
-            iso_eg(i)(j)(data_tmp(i).eg_data(j).iso'length-1 downto 0) <= data_tmp(i).eg_data(j).iso;
+        eg_l: for j in 0 to EG_ARRAY_LENGTH-1 generate            
+            eg_bx(i).pt(j)(data_tmp(i).eg_data(j).pt'length-1 downto 0) <= data_tmp(i).eg_data(j).pt;
+            eg_bx(i).eta(j)(data_tmp(i).eg_data(j).eta'length-1 downto 0) <= data_tmp(i).eg_data(j).eta;
+            eg_bx(i).phi(j)(data_tmp(i).eg_data(j).phi'length-1 downto 0) <= data_tmp(i).eg_data(j).phi;
+            eg_bx(i).iso(j)(data_tmp(i).eg_data(j).iso'length-1 downto 0) <= data_tmp(i).eg_data(j).iso;
         end generate eg_l;
         jet_l: for j in 0 to JET_ARRAY_LENGTH-1 generate
-            pt_jet(i)(j)(data_tmp(i).jet_data(j).pt'length-1 downto 0) <= data_tmp(i).jet_data(j).pt;
-            eta_jet(i)(j)(data_tmp(i).jet_data(j).eta'length-1 downto 0) <= data_tmp(i).jet_data(j).eta;
-            phi_jet(i)(j)(data_tmp(i).jet_data(j).phi'length-1 downto 0) <= data_tmp(i).jet_data(j).phi;
+            jet_bx(i).pt(j)(data_tmp(i).jet_data(j).pt'length-1 downto 0) <= data_tmp(i).jet_data(j).pt;
+            jet_bx(i).eta(j)(data_tmp(i).jet_data(j).eta'length-1 downto 0) <= data_tmp(i).jet_data(j).eta;
+            jet_bx(i).phi(j)(data_tmp(i).jet_data(j).phi'length-1 downto 0) <= data_tmp(i).jet_data(j).phi;
         end generate jet_l;
         tau_l: for j in 0 to TAU_ARRAY_LENGTH-1 generate
-            pt_tau(i)(j)(data_tmp(i).tau_data(j).pt'length-1 downto 0) <= data_tmp(i).tau_data(j).pt;
-            eta_tau(i)(j)(data_tmp(i).tau_data(j).eta'length-1 downto 0) <= data_tmp(i).tau_data(j).eta;
-            phi_tau(i)(j)(data_tmp(i).tau_data(j).phi'length-1 downto 0) <= data_tmp(i).tau_data(j).phi;
-            iso_tau(i)(j)(data_tmp(i).tau_data(j).iso'length-1 downto 0) <= data_tmp(i).tau_data(j).iso;
+            tau_bx(i).pt(j)(data_tmp(i).tau_data(j).pt'length-1 downto 0) <= data_tmp(i).tau_data(j).pt;
+            tau_bx(i).eta(j)(data_tmp(i).tau_data(j).eta'length-1 downto 0) <= data_tmp(i).tau_data(j).eta;
+            tau_bx(i).phi(j)(data_tmp(i).tau_data(j).phi'length-1 downto 0) <= data_tmp(i).tau_data(j).phi;
+            tau_bx(i).iso(j)(data_tmp(i).tau_data(j).iso'length-1 downto 0) <= data_tmp(i).tau_data(j).iso;
         end generate tau_l;
         
-        pt_ett(i)(0)(data_tmp(i).ett_data.pt'length-1 downto 0) <= data_tmp(i).ett_data.pt;
+        ett_bx(i).pt(0)(data_tmp(i).ett_data.pt'length-1 downto 0) <= data_tmp(i).ett_data.pt;
         
-        pt_ettem(i)(0)(data_tmp(i).ettem_data.pt'length-1 downto 0) <= data_tmp(i).ettem_data.pt;
+        ettem_bx(i).pt(0)(data_tmp(i).ettem_data.pt'length-1 downto 0) <= data_tmp(i).ettem_data.pt;
         
-        pt_etm(i)(0)(data_tmp(i).etm_data.pt'length-1 downto 0) <= data_tmp(i).etm_data.pt;
-        phi_etm(i)(0)(data_tmp(i).etm_data.phi'length-1 downto 0) <= data_tmp(i).etm_data.phi;
+        etm_bx(i).pt(0)(data_tmp(i).etm_data.pt'length-1 downto 0) <= data_tmp(i).etm_data.pt;
+        etm_bx(i).phi(0)(data_tmp(i).etm_data.phi'length-1 downto 0) <= data_tmp(i).etm_data.phi;
         
-        pt_htt(i)(0)(data_tmp(i).htt_data.pt'length-1 downto 0) <= data_tmp(i).htt_data.pt;
+        htt_bx(i).pt(0)(data_tmp(i).htt_data.pt'length-1 downto 0) <= data_tmp(i).htt_data.pt;
         
-        pt_htm(i)(0)(data_tmp(i).htm_data.pt'length-1 downto 0) <= data_tmp(i).htm_data.pt;
-        phi_htm(i)(0)(data_tmp(i).htm_data.phi'length-1 downto 0) <= data_tmp(i).htm_data.phi;
+        htm_bx(i).pt(0)(data_tmp(i).htm_data.pt'length-1 downto 0) <= data_tmp(i).htm_data.pt;
+        htm_bx(i).phi(0)(data_tmp(i).htm_data.phi'length-1 downto 0) <= data_tmp(i).htm_data.phi;
         
-        pt_etmhf(i)(0)(data_tmp(i).etmhf_data.pt'length-1 downto 0) <= data_tmp(i).etmhf_data.pt;
-        phi_etmhf(i)(0)(data_tmp(i).etmhf_data.phi'length-1 downto 0) <= data_tmp(i).etmhf_data.phi;
+        etmhf_bx(i).pt(0)(data_tmp(i).etmhf_data.pt'length-1 downto 0) <= data_tmp(i).etmhf_data.pt;
+        etmhf_bx(i).phi(0)(data_tmp(i).etmhf_data.phi'length-1 downto 0) <= data_tmp(i).etmhf_data.phi;
         
-        pt_htmhf(i)(0)(data_tmp(i).htmhf_data.pt'length-1 downto 0) <= data_tmp(i).htmhf_data.pt;
-        phi_htmhf(i)(0)(data_tmp(i).htmhf_data.phi'length-1 downto 0) <= data_tmp(i).htmhf_data.phi;
+        htmhf_bx(i).pt(0)(data_tmp(i).htmhf_data.pt'length-1 downto 0) <= data_tmp(i).htmhf_data.pt;
+        htmhf_bx(i).phi(0)(data_tmp(i).htmhf_data.phi'length-1 downto 0) <= data_tmp(i).htmhf_data.phi;
         
-        count_towercount(i)(0)(data_tmp(i).towercount_data.count'length-1 downto 0) <= data_tmp(i).towercount_data.count;
+        towercount_bx(i).count(0)(data_tmp(i).towercount_data.count'length-1 downto 0) <= data_tmp(i).towercount_data.count;
         
-        count_mbt1hfp(i)(0)(data_tmp(i).mbt1hfp_data.count'length-1 downto 0) <= data_tmp(i).mbt1hfp_data.count;
-        count_mbt1hfm(i)(0)(data_tmp(i).mbt1hfm_data.count'length-1 downto 0) <= data_tmp(i).mbt1hfm_data.count;
-        count_mbt0hfp(i)(0)(data_tmp(i).mbt0hfp_data.count'length-1 downto 0) <= data_tmp(i).mbt0hfp_data.count;
-        count_mbt0hfm(i)(0)(data_tmp(i).mbt0hfm_data.count'length-1 downto 0) <= data_tmp(i).mbt0hfm_data.count;
+        mbt1hfp_bx(i).count(0)(data_tmp(i).mbt1hfp_data.count'length-1 downto 0) <= data_tmp(i).mbt1hfp_data.count;
+        mbt1hfm_bx(i).count(0)(data_tmp(i).mbt1hfm_data.count'length-1 downto 0) <= data_tmp(i).mbt1hfm_data.count;
+        mbt0hfp_bx(i).count(0)(data_tmp(i).mbt0hfp_data.count'length-1 downto 0) <= data_tmp(i).mbt0hfp_data.count;
+        mbt0hfm_bx(i).count(0)(data_tmp(i).mbt0hfm_data.count'length-1 downto 0) <= data_tmp(i).mbt0hfm_data.count;
         
-        count_asymet(i)(0)(data_tmp(i).asymet_data.count'length-1 downto 0) <= data_tmp(i).asymet_data.count;
-        count_asymht(i)(0)(data_tmp(i).asymht_data.count'length-1 downto 0) <= data_tmp(i).asymht_data.count;
-        count_asymethf(i)(0)(data_tmp(i).asymethf_data.count'length-1 downto 0) <= data_tmp(i).asymethf_data.count;
-        count_asymhthf(i)(0)(data_tmp(i).asymhthf_data.count'length-1 downto 0) <= data_tmp(i).asymhthf_data.count;
+        asymet_bx(i).count(0)(data_tmp(i).asymet_data.count'length-1 downto 0) <= data_tmp(i).asymet_data.count;
+        asymht_bx(i).count(0)(data_tmp(i).asymht_data.count'length-1 downto 0) <= data_tmp(i).asymht_data.count;
+        asymethf_bx(i).count(0)(data_tmp(i).asymethf_data.count'length-1 downto 0) <= data_tmp(i).asymethf_data.count;
+        asymhthf_bx(i).count(0)(data_tmp(i).asymhthf_data.count'length-1 downto 0) <= data_tmp(i).asymhthf_data.count;
         
 -- Additional delay for centrality and ext_cond (no comparators and conditions)
 

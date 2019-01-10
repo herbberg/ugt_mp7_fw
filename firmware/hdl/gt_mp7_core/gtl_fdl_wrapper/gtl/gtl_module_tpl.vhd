@@ -22,19 +22,13 @@ end gtl_module;
 
 architecture rtl of gtl_module is
     
-    signal pt_muon_bx, eta_muon_bx, phi_muon_bx, iso_muon_bx, qual_muon_bx, charge_muon_bx : array_obj_parameter_array; 
-    signal pt_eg_bx, eta_eg_bx, phi_eg_bx, iso_eg_bx : array_obj_parameter_array; 
-    signal pt_jet_bx, eta_jet_bx, phi_jet_bx : array_obj_parameter_array;
-    signal pt_tau_bx, eta_tau_bx, phi_tau_bx, iso_tau_bx : array_obj_parameter_array; 
-    signal pt_ett_bx, pt_etm_bx, phi_etm_bx : array_obj_parameter_array; 
-    signal pt_htt_bx, pt_htm_bx, phi_htm_bx : array_obj_parameter_array; 
-    signal pt_ettem_bx, pt_etmhf_bx, phi_etmhf_bx : array_obj_parameter_array; 
-    signal pt_htmhf_bx, phi_htmhf_bx : array_obj_parameter_array; 
-    signal count_towercount : array_obj_parameter_array;
-    signal count_mbt1hfp, count_mbt1hfm, count_mbt0hfp, count_mbt0hfm : array_obj_parameter_array; 
-    signal count_asymet, count_asymht, count_asymethf, count_asymhthf : array_obj_parameter_array; 
-    signal centrality_int, centrality : centrality_array;
-    signal ext_cond_int, ext_cond : ext_cond_array;
+    signal muon_bx, eg_bx, jet_bx, tau_bx : array_obj_bx_record; 
+    signal ett_bx, etm_bx, htt_bx, htm_bx, ettem_bx, etmhf_bx, htmhf_bx : array_obj_bx_record; 
+    signal towercount_bx : array_obj_bx_record;
+    signal mbt1hfp_bx, mbt1hfm_bx, mbt0hfp_bx, mbt0hfm_bx : array_obj_bx_record; 
+    signal asymet_bx, asymht_bx, asymethf_bx, asymhthf_bx : array_obj_bx_record; 
+    signal centrality : centrality_array;
+    signal ext_cond : ext_cond_array;
 
     signal algo : std_logic_vector(NR_ALGOS-1 downto 0) := (others => '0');
 
@@ -42,23 +36,17 @@ architecture rtl of gtl_module is
 
 begin
 
--- Additional delay for centrality and ext_cond (no comparators and conditions) in "bx_pipeline"
+-- Additional delay for centrality and ext_cond (no comparators register) in "bx_pipeline"
 
 bx_pipeline_i: entity work.bx_pipeline
     port map(
         lhc_clk,
-        data, 
-        pt_muon_bx, eta_muon_bx, phi_muon_bx, iso_muon_bx, qual_muon_bx, charge_muon_bx, 
-        pt_eg_bx, eta_eg_bx, phi_eg_bx, iso_eg_bx, 
-        pt_jet_bx, eta_jet_bx, phi_jet_bx, 
-        pt_tau_bx, eta_tau_bx, phi_tau_bx, iso_tau_bx, 
-        pt_ett_bx, pt_etm_bx, phi_etm_bx, 
-        pt_htt_bx, pt_htm_bx, phi_htm_bx, 
-        pt_ettem_bx, pt_etmhf_bx, phi_etmhf_bx, 
-        pt_htmhf_bx, phi_htmhf_bx, 
-        count_towercount,
-        count_mbt1hfp, count_mbt1hfm, count_mbt0hfp, count_mbt0hfm, 
-        count_asymet, count_asymht, count_asymethf, count_asymhthf, 
+        data,
+        muon_bx, eg_bx, jet_bx, tau_bx, 
+        ett_bx, etm_bx, htt_bx, htm_bx, ettem_bx, etmhf_bx, htmhf_bx, 
+        towercount_bx,
+        mbt1hfp_bx, mbt1hfm_bx, mbt0hfp_bx, mbt0hfm_bx, 
+        asymet_bx, asymht_bx, asymethf_bx, asymhthf_bx, 
         centrality,
         ext_cond
     );

@@ -40,6 +40,8 @@ package gtl_pkg is
     constant MAX_LUT_WIDTH : positive := 16; -- muon qual lut
     constant MAX_OBJ_BITS : positive := 64; -- muon
 
+    constant MAX_CALO_ARRAY_LENGTH: positive := max(EG_ARRAY_LENGTH, JET_ARRAY_LENGTH, TAU_ARRAY_LENGTH);
+    constant MAX_OBJ_ARRAY_LENGTH: positive := max(MAX_CALO_ARRAY_LENGTH, MUON_ARRAY_LENGTH);
     constant MAX_OBJ_PARAMETER_WIDTH : positive := 16; -- used 16 for hex notation of requirements - max. parameter width of objects: towercount = 13
     constant MAX_CORR_CUTS_WIDTH : positive := 52; -- max inv mass width (2*MAX_PT_WIDTH+MAX_COSH_COS_WIDTH = 51) - used 52 for hex notation !
     constant MAX_COSH_COS_WIDTH : positive := 27; -- CALO_MUON_COSH_COS_VECTOR_WIDTH 
@@ -329,23 +331,35 @@ package gtl_pkg is
         external_conditions : std_logic_vector(EXTERNAL_CONDITIONS_DATA_WIDTH-1 downto 0);
     end record gtl_data_record;
     
--- Type declarations
-    type array_gtl_data_record is array (0 to BX_PIPELINE_STAGES-1) of gtl_data_record;    
- 
-    constant MAX_CALO_ARRAY_LENGTH: positive := max(EG_ARRAY_LENGTH, JET_ARRAY_LENGTH, TAU_ARRAY_LENGTH);
-    constant MAX_OBJ_ARRAY_LENGTH: positive := max(MAX_CALO_ARRAY_LENGTH, MUON_ARRAY_LENGTH);
-    
     type obj_parameter_array is array (0 to MAX_OBJ_ARRAY_LENGTH-1) of std_logic_vector(MAX_OBJ_PARAMETER_WIDTH-1 downto 0);    
-    type array_obj_parameter_array is array (0 to BX_PIPELINE_STAGES-1) of obj_parameter_array;    
-
+    
+    type obj_bx_record is record
+        pt : obj_parameter_array;
+        eta : obj_parameter_array;
+        phi : obj_parameter_array;
+        iso : obj_parameter_array;
+        qual : obj_parameter_array;
+        charge : obj_parameter_array;
+        count : obj_parameter_array;
+    end record obj_bx_record;
+    
+-- Type declarations
+    type array_gtl_data_record is array (0 to BX_PIPELINE_STAGES-1) of gtl_data_record;         
+    type array_obj_bx_record is array (0 to BX_PIPELINE_STAGES-1) of obj_bx_record;   
     type centrality_array is array (0 to BX_PIPELINE_STAGES-1) of std_logic_vector(NR_CENTRALITY_BITS-1 downto 0);    
     type ext_cond_array is array (0 to BX_PIPELINE_STAGES-1) of std_logic_vector(EXTERNAL_CONDITIONS_DATA_WIDTH-1 downto 0);    
     
-    type cosh_cos_vector_array is array (natural range <>, natural range <>) of std_logic_vector(MAX_COSH_COS_WIDTH-1 downto 0); 
-    
     type pt_array is array (natural range <>) of std_logic_vector((MAX_PT_WIDTH)-1 downto 0);
+    type pt_vector_array is array (natural range <>) of std_logic_vector(MAX_PT_VECTOR_WIDTH-1 downto 0);
+    type cosh_cos_vector_array is array (natural range <>, natural range <>) of std_logic_vector(MAX_COSH_COS_WIDTH-1 downto 0); 
     type mass_vector_array is array (natural range <>, natural range <>) of std_logic_vector((2*MAX_PT_WIDTH+MAX_COSH_COS_WIDTH)-1 downto 0);
     
+    type obj_type is (muon, eg, jet, tau, ett, etm, htt, htm, ettem, etmhf, htmhf, towercount, mbt1hfp, mbt1hfm, mbt0hfp, mbt0hfm, asymet, asymht, asymethf, asymhthf);
+    type obj_corr_type is (calo_calo, calo_esums, calo_muon, muon_muon, muon_esums);
+    type comp_mode is (greater_equal,equal,sign,unsign);
+
+    type slices_type is array (0 to 2*MAX_N_REQ-1) of natural;
+
     type std_logic_1dim_array is array (natural range <>) of std_logic;
     type std_logic_2dim_array is array (natural range <>, natural range <>) of std_logic;
     type std_logic_3dim_array is array (natural range <>, natural range <>, natural range <>) of std_logic;
@@ -353,15 +367,6 @@ package gtl_pkg is
     type integer_array is array (natural range <>) of integer;
     type integer_2dim_array is array (natural range <>, natural range <>) of integer;
     
-    type obj_type is (muon, eg, jet, tau, ett, etm, htt, htm, ettem, etmhf, htmhf, towercount, mbt1hfp, mbt1hfm, mbt0hfp, mbt0hfm, asymet, asymht, asymethf, asymhthf);
-    type obj_corr_type is (calo_calo, calo_esums, calo_muon, muon_muon, muon_esums);
-
-    type pt_vector_array is array (natural range <>) of std_logic_vector(MAX_PT_VECTOR_WIDTH-1 downto 0);
-
-    type comp_mode is (greater_equal,equal,sign,unsign);
-
-    type slices_type is array (0 to 2*MAX_N_REQ-1) of natural;
-
 -- *******************************************************************************************************
 -- MUON charge
     constant NR_MUON_CHARGE_BITS : positive := MUON_CHARGE_HIGH-MUON_CHARGE_LOW+1;
