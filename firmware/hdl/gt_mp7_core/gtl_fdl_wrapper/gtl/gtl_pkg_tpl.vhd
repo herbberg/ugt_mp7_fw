@@ -41,26 +41,26 @@ package gtl_pkg is
     constant MAX_OBJ_BITS : positive := 64; -- muon
 
     constant MAX_CALO_ARRAY_LENGTH: positive := max(EG_ARRAY_LENGTH, JET_ARRAY_LENGTH, TAU_ARRAY_LENGTH);
-    constant MAX_OBJ_ARRAY_LENGTH: positive := max(MAX_CALO_ARRAY_LENGTH, MUON_ARRAY_LENGTH);
+    constant MAX_OBJ_ARRAY_LENGTH: positive := max(MAX_CALO_ARRAY_LENGTH, MUON_ARRAY_LENGTH); -- actual value = 12 (calos)
     constant MAX_OBJ_PARAMETER_WIDTH : positive := 16; -- used 16 for hex notation of requirements - max. parameter width of objects: towercount = 13
     constant MAX_CORR_CUTS_WIDTH : positive := 52; -- max inv mass width (2*MAX_PT_WIDTH+MAX_COSH_COS_WIDTH = 51) - used 52 for hex notation !
     constant MAX_COSH_COS_WIDTH : positive := 27; -- CALO_MUON_COSH_COS_VECTOR_WIDTH 
     constant MAX_PT_WIDTH : positive := 12; -- max. pt width (esums pt = 12)
-    constant MAX_ETA_WIDTH : positive := 12; -- max. eta width(muon eta = 9)
-    constant MAX_PHI_WIDTH : positive := 12; -- max. phi width (muon phi = 10)
-    constant MAX_PT_VECTOR_WIDTH : positive := 15; -- esums - max. value 2047.5 GeV => 20475 (2047.5 * 10) => 0x4FFB
+    constant MAX_ETA_WIDTH : positive := 9; -- max. eta width(muon eta = 9)
+    constant MAX_PHI_WIDTH : positive := 10; -- max. phi width (muon phi = 10)
+    constant MAX_PT_VECTOR_WIDTH : positive := 15; -- esums - max. value 2047.8 GeV => 20478 (2047.8 * 10**1) => 0x4FFE
 
-    constant OUT_REG_CALC: boolean := false;
-    constant IN_REG_COMP: boolean := true;
-    constant OUT_REG_COMP: boolean := true;
-    constant OUT_REG_COND: boolean := false;
+    constant OUT_REG_CALC: boolean := false; -- actually no output register in calculation modules used
+    constant IN_REG_COMP: boolean := true; -- actually input register in comparator modules used
+    constant OUT_REG_COMP: boolean := true; -- actually output register in comparator modules used
+    constant OUT_REG_COND: boolean := false; -- actually no output register in condition modules used
     
     constant BX_PIPELINE_STAGES: natural := 5; -- pipeline stages for +/- 2bx
     constant EXT_COND_STAGES: natural := 2; -- pipeline stages for "External conditions" to get same pipeline to algos as conditions
     constant CENTRALITY_STAGES: natural := 2; -- pipeline stages for "Centrality" to get same pipeline to algos as conditions
     
 -- *******************************************************************************************************
--- MUON objects bits
+-- MUON objects parameter definition
 
     constant MUON_PHI_LOW : natural := 0;
     constant MUON_PHI_HIGH : natural := 9;
@@ -84,7 +84,7 @@ package gtl_pkg is
     constant MUON_PT_VECTOR_WIDTH: positive := 12; -- max. value 255.5 GeV => 2555 (255.5 * 10**MUON_INV_MASS_PT_PRECISION) => 0x9FB
 
     -- *******************************************************************************************************
--- CALO objects bits
+-- CALO objects parameter definition
 
     constant EG_PT_LOW : natural := 0;
     constant EG_PT_HIGH : natural := 8;
@@ -94,7 +94,7 @@ package gtl_pkg is
     constant EG_PHI_HIGH : natural := 24;
     constant EG_ISO_LOW : natural := 25;
     constant EG_ISO_HIGH : natural := 26;
-    constant EG_PT_VECTOR_WIDTH: positive := 12; -- max. value 255.5 GeV => 2555 (255.5 * 10**CALO_INV_MASS_PT_PRECISION) => 0x9FB
+    constant EG_PT_VECTOR_WIDTH: positive := 12; -- max. value 255.5 GeV => 2555 (255.5 * 10**EG_PT_PRECISION) => 0x9FB
 
     constant JET_PT_LOW : natural := 0;
     constant JET_PT_HIGH : natural := 10;
@@ -102,7 +102,7 @@ package gtl_pkg is
     constant JET_ETA_HIGH : natural := 18;
     constant JET_PHI_LOW : natural := 19;
     constant JET_PHI_HIGH : natural := 26;
-    constant JET_PT_VECTOR_WIDTH: positive := 14; -- max. value 1023.5 GeV => 10235 (1023.5 * 10**CALO_INV_MASS_PT_PRECISION) => 0x27FB
+    constant JET_PT_VECTOR_WIDTH: positive := 14; -- max. value 1023.5 GeV => 10235 (1023.5 * 10**JET_PT_PRECISION) => 0x27FB
 
     constant TAU_PT_LOW : natural := 0;
     constant TAU_PT_HIGH : natural := 8;
@@ -112,10 +112,10 @@ package gtl_pkg is
     constant TAU_PHI_HIGH : natural := 24;
     constant TAU_ISO_LOW : natural := 25;
     constant TAU_ISO_HIGH : natural := 26;
-    constant TAU_PT_VECTOR_WIDTH: positive := 12; -- max. value 255.5 GeV => 2555 (255.5 * 10**CALO_INV_MASS_PT_PRECISION) => 0x9FB
+    constant TAU_PT_VECTOR_WIDTH: positive := 12; -- max. value 255.5 GeV => 2555 (255.5 * 10**TAU_PT_PRECISION) => 0x9FB
 
 -- *******************************************************************************************************
--- Esums objects bits
+-- Esums objects parameter definition
     constant MAX_ESUMS_BITS : positive := 20; -- see ETM, HTM, etc.
 
     constant ETT_PT_LOW : natural := 0;
@@ -128,11 +128,13 @@ package gtl_pkg is
     constant ETM_PT_HIGH : natural := 11;
     constant ETM_PHI_LOW : natural := 12;
     constant ETM_PHI_HIGH : natural := 19;
+    constant ETM_PT_VECTOR_WIDTH: positive := 15; -- max. value 2047.8 GeV => 20478 (2047.8 * 10**JET_PT_PRECISION) => 0x4FFE
 
     constant HTM_PT_LOW : natural := 0;
     constant HTM_PT_HIGH : natural := 11;
     constant HTM_PHI_LOW : natural := 12;
     constant HTM_PHI_HIGH : natural := 19;
+    constant HTM_PT_VECTOR_WIDTH: positive := 15; -- max. value 2047.8 GeV => 20478 (2047.8 * 10**JET_PT_PRECISION) => 0x4FFE
 
     constant ETTEM_IN_ETT_LOW : natural := 12;
     constant ETTEM_IN_ETT_HIGH : natural := 23;
@@ -143,11 +145,48 @@ package gtl_pkg is
     constant ETMHF_PT_HIGH : natural := 11;
     constant ETMHF_PHI_LOW : natural := 12;
     constant ETMHF_PHI_HIGH : natural := 19;
+    constant ETMHF_PT_VECTOR_WIDTH: positive := 15; -- max. value 2047.8 GeV => 20478 (2047.8 * 10**JET_PT_PRECISION) => 0x4FFE
 
     constant HTMHF_PT_LOW : natural := 0;
     constant HTMHF_PT_HIGH : natural := 11;
     constant HTMHF_PHI_LOW : natural := 12;
     constant HTMHF_PHI_HIGH : natural := 19;
+    constant HTMHF_PT_VECTOR_WIDTH: positive := 15; -- max. value 2047.8 GeV => 20478 (2047.8 * 10**JET_PT_PRECISION) => 0x4FFE
+
+-- *******************************************************************************************************
+-- Towercount bits
+-- HB 2016-09-16: inserted TOWERCOUNT
+    constant TOWERCOUNT_IN_HTT_LOW : natural := 12;
+    constant TOWERCOUNT_IN_HTT_HIGH : natural := 24;
+    constant TOWERCOUNT_COUNT_LOW : natural := 0;
+    constant TOWERCOUNT_COUNT_HIGH : natural := 12;
+    constant MAX_TOWERCOUNT_BITS : natural := 16;
+
+-- *******************************************************************************************************
+-- Minimum Bias bits
+-- HB 2016-04-18: updates for "min bias trigger" objects (quantities) for Low-pileup-run May 2016
+-- HB 2016-04-21: see email from Johannes (Andrew Rose), 2016-04-20 15:34
+-- Frame 0: (HF+ thresh 0) ... ... (Scalar ET) - 4 MSBs
+-- Frame 1: (HF- thresh 0) ... ... (Scalar HT) - 4 MSBs
+-- Frame 2: (HF+ thresh 1) ... ... (Vector ET) - 4 MSBs
+-- Frame 3: (HF- thresh 1) ... ... (Vector HT) - 4 MSBs
+-- HB 2016-04-26: grammar notation
+-- HF+ thresh 0 => MBT0HFP
+-- HF- thresh 0 => MBT0HFM
+-- HF+ thresh 1 => MBT1HFP
+-- HF- thresh 1 => MBT1HFM
+
+    constant MBT0HFP_IN_ETT_HIGH : natural := 31;
+    constant MBT0HFP_IN_ETT_LOW : natural := 28;
+    constant MBT0HFM_IN_HTT_HIGH : natural := 31;
+    constant MBT0HFM_IN_HTT_LOW : natural := 28;
+    constant MBT1HFP_IN_ETM_HIGH : natural := 31;
+    constant MBT1HFP_IN_ETM_LOW : natural := 28;
+    constant MBT1HFM_IN_HTM_HIGH : natural := 31;
+    constant MBT1HFM_IN_HTM_LOW : natural := 28;
+
+    constant MB_COUNT_LOW : natural := 0;
+    constant MB_COUNT_HIGH : natural := 3;
 
 -- *******************************************************************************************************
 -- Asymmetry bits
@@ -188,41 +227,6 @@ package gtl_pkg is
 
     constant NR_CENTRALITY_BITS : positive := CENT_UBITS_HIGH-CENT_LBITS_LOW+1;
     
--- *******************************************************************************************************
--- Towercount bits
--- HB 2016-09-16: inserted TOWERCOUNT
-    constant TOWERCOUNT_IN_HTT_LOW : natural := 12;
-    constant TOWERCOUNT_IN_HTT_HIGH : natural := 24;
-    constant TOWERCOUNT_COUNT_LOW : natural := 0;
-    constant TOWERCOUNT_COUNT_HIGH : natural := 12;
-    constant MAX_TOWERCOUNT_BITS : natural := 16; -- 4 hex digits !
-
--- *******************************************************************************************************
--- Minimum Bias bits
--- HB 2016-04-18: updates for "min bias trigger" objects (quantities) for Low-pileup-run May 2016
--- HB 2016-04-21: see email from Johannes (Andrew Rose), 2016-04-20 15:34
--- Frame 0: (HF+ thresh 0) ... ... (Scalar ET) - 4 MSBs
--- Frame 1: (HF- thresh 0) ... ... (Scalar HT) - 4 MSBs
--- Frame 2: (HF+ thresh 1) ... ... (Vector ET) - 4 MSBs
--- Frame 3: (HF- thresh 1) ... ... (Vector HT) - 4 MSBs
--- HB 2016-04-26: grammar notation
--- HF+ thresh 0 => MBT0HFP
--- HF- thresh 0 => MBT0HFM
--- HF+ thresh 1 => MBT1HFP
--- HF- thresh 1 => MBT1HFM
-
-    constant MBT0HFP_IN_ETT_HIGH : natural := 31;
-    constant MBT0HFP_IN_ETT_LOW : natural := 28;
-    constant MBT0HFM_IN_HTT_HIGH : natural := 31;
-    constant MBT0HFM_IN_HTT_LOW : natural := 28;
-    constant MBT1HFP_IN_ETM_HIGH : natural := 31;
-    constant MBT1HFP_IN_ETM_LOW : natural := 28;
-    constant MBT1HFM_IN_HTM_HIGH : natural := 31;
-    constant MBT1HFM_IN_HTM_LOW : natural := 28;
-
-    constant MB_COUNT_LOW : natural := 0;
-    constant MB_COUNT_HIGH : natural := 3;
-
 -- *******************************************************************************
 -- Record declarations
     type eg_record is record
@@ -344,10 +348,9 @@ package gtl_pkg is
     end record obj_bx_record;
     
 -- Type declarations
-    type array_gtl_data_record is array (0 to BX_PIPELINE_STAGES-1) of gtl_data_record;         
-    type array_obj_bx_record is array (0 to BX_PIPELINE_STAGES-1) of obj_bx_record;   
-    type centrality_array is array (0 to BX_PIPELINE_STAGES-1) of std_logic_vector(NR_CENTRALITY_BITS-1 downto 0);    
-    type ext_cond_array is array (0 to BX_PIPELINE_STAGES-1) of std_logic_vector(EXTERNAL_CONDITIONS_DATA_WIDTH-1 downto 0);    
+    type array_obj_bx_record is array (0 to BX_PIPELINE_STAGES-1) of obj_bx_record; -- used for outputs of bx_pipeline module  
+    type centrality_array is array (0 to BX_PIPELINE_STAGES-1) of std_logic_vector(NR_CENTRALITY_BITS-1 downto 0); -- used for centrality outputs of bx_pipeline module    
+    type ext_cond_array is array (0 to BX_PIPELINE_STAGES-1) of std_logic_vector(EXTERNAL_CONDITIONS_DATA_WIDTH-1 downto 0); -- used for ext_cond outputs of bx_pipeline module    
     
     type pt_array is array (natural range <>) of std_logic_vector((MAX_PT_WIDTH)-1 downto 0);
     type pt_vector_array is array (natural range <>) of std_logic_vector(MAX_PT_VECTOR_WIDTH-1 downto 0);
@@ -378,26 +381,22 @@ package gtl_pkg is
     constant CC_LS : std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0) := "01"; 
     constant CC_OS : std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0) := "10"; 
 
--- ==== FDL definitions - begin ============================================================
+-- *******************************************************************************************************
+-- FDL definitions
 -- Definitions for prescalers (for FDL !)
     constant PRESCALER_COUNTER_WIDTH : integer := 24;
+-- Definitions for rate counters
+    constant RATE_COUNTER_WIDTH : integer := 32;
+-- HB 2014-02-28: changed vector length of init values for finor- and veto-maks, because of min. 32 bits for register
+    constant MASKS_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"00000001"); --Finor and veto masks registers (bit 0 = finor, bit 1 = veto)
+    constant PRESCALE_FACTOR_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"00000001"); -- written by TME
 
 -- HB HB 2016-03-02: type definition for "global" index use.
     type prescale_factor_global_array is array (MAX_NR_ALGOS-1 downto 0) of std_logic_vector(31 downto 0);
-
     type prescale_factor_array is array (NR_ALGOS-1 downto 0) of std_logic_vector(31 downto 0); -- same width as PCIe data
-    constant PRESCALE_FACTOR_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"00000001"); -- written by TME
-
--- Definitions for rate counters
-    constant RATE_COUNTER_WIDTH : integer := 32;
 
 -- HB HB 2016-03-02: type definition for "global" index use.
     type rate_counter_global_array is array (MAX_NR_ALGOS-1 downto 0) of std_logic_vector(RATE_COUNTER_WIDTH-1 downto 0);
-
     type rate_counter_array is array (NR_ALGOS-1 downto 0) of std_logic_vector(RATE_COUNTER_WIDTH-1 downto 0);
-
--- HB 2014-02-28: changed vector length of init values for finor- and veto-maks, because of min. 32 bits for register
-    constant MASKS_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"00000001"); --Finor and veto masks registers (bit 0 = finor, bit 1 = veto)
--- ==== FDL definitions - end ============================================================
 
 end package;

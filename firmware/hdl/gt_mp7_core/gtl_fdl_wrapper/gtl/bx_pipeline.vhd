@@ -11,26 +11,11 @@ entity bx_pipeline is
     port(
         clk : in std_logic;
         data : in gtl_data_record;
-        muon_bx : out array_obj_bx_record := (others => (others => (others => (others => '0'))));
-        eg_bx : out array_obj_bx_record := (others => (others => (others => (others => '0'))));
-        jet_bx : out array_obj_bx_record := (others => (others => (others => (others => '0'))));
-        tau_bx : out array_obj_bx_record := (others => (others => (others => (others => '0'))));
-        ett_bx : out array_obj_bx_record := (others => (others => (others => (others => '0'))));
-        etm_bx : out array_obj_bx_record := (others => (others => (others => (others => '0'))));
-        htt_bx : out array_obj_bx_record := (others => (others => (others => (others => '0'))));
-        htm_bx : out array_obj_bx_record := (others => (others => (others => (others => '0'))));
-        ettem_bx : out array_obj_bx_record := (others => (others => (others => (others => '0'))));
-        etmhf_bx : out array_obj_bx_record := (others => (others => (others => (others => '0'))));
-        htmhf_bx : out array_obj_bx_record := (others => (others => (others => (others => '0'))));
+        muon_bx, eg_bx, jet_bx, tau_bx : out array_obj_bx_record := (others => (others => (others => (others => '0'))));
+        ett_bx, etm_bx, htt_bx, htm_bx, ettem_bx, etmhf_bx, htmhf_bx : out array_obj_bx_record := (others => (others => (others => (others => '0'))));
         towercount_bx : out array_obj_bx_record := (others => (others => (others => (others => '0'))));
-        mbt1hfp_bx : out array_obj_bx_record := (others => (others => (others => (others => '0'))));
-        mbt1hfm_bx : out array_obj_bx_record := (others => (others => (others => (others => '0'))));
-        mbt0hfp_bx : out array_obj_bx_record := (others => (others => (others => (others => '0'))));
-        mbt0hfm_bx : out array_obj_bx_record := (others => (others => (others => (others => '0'))));
-        asymet_bx : out array_obj_bx_record := (others => (others => (others => (others => '0'))));
-        asymht_bx : out array_obj_bx_record := (others => (others => (others => (others => '0'))));
-        asymethf_bx : out array_obj_bx_record := (others => (others => (others => (others => '0'))));
-        asymhthf_bx : out array_obj_bx_record := (others => (others => (others => (others => '0'))));
+        mbt1hfp_bx, mbt1hfm_bx, mbt0hfp_bx, mbt0hfm_bx : out array_obj_bx_record := (others => (others => (others => (others => '0'))));
+        asymet_bx, asymht_bx, asymethf_bx, asymhthf_bx : out array_obj_bx_record := (others => (others => (others => (others => '0'))));
         centrality : out centrality_array := (others => (others => '0'));
         ext_cond : out ext_cond_array := (others => (others => '0'))
     );
@@ -38,6 +23,7 @@ end bx_pipeline;
 
 architecture rtl of bx_pipeline is
 
+    type array_gtl_data_record is array (0 to BX_PIPELINE_STAGES-1) of gtl_data_record;       
     signal data_tmp : array_gtl_data_record;
 
 begin

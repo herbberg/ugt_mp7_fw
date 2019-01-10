@@ -1,7 +1,7 @@
 
 -- actual versions:
 --	frame: v1.2.3
---	gtl: v1.6.0
+--	gtl: v2.0.0
 --	fdl: v1.2.2
 
 -- HB 2016-09-19: removed more unused constants
@@ -41,8 +41,8 @@ package gt_mp7_core_pkg is
            std_logic_vector(to_unsigned(FRAME_MINOR_VERSION, 8)) &
            std_logic_vector(to_unsigned(FRAME_REV_VERSION, 8));
 -- GTL firmware (fix part) version
-    constant GTL_FW_MAJOR_VERSION      : integer range 0 to 255 := 1;
-    constant GTL_FW_MINOR_VERSION      : integer range 0 to 255 := 6;
+    constant GTL_FW_MAJOR_VERSION      : integer range 0 to 255 := 2;
+    constant GTL_FW_MINOR_VERSION      : integer range 0 to 255 := 0;
     constant GTL_FW_REV_VERSION        : integer range 0 to 255 := 0;
 -- FDL firmware version
     constant FDL_FW_MAJOR_VERSION      : integer range 0 to 255 := 1;
@@ -51,19 +51,21 @@ package gt_mp7_core_pkg is
 -- ==================================================================================================
 
     constant BUNCHES_PER_ORBIT : natural range 3564 to 3564 := LHC_BUNCH_COUNT;
-
 -- HB, 24-10-2013: proposed MAX_NR_ALGOS instead of NR_ALGOS
     constant MAX_NR_ALGOS        : integer := 512;
-
-    type ipb_regs_array is array (natural range <>) of std_logic_vector(31 downto 0);
-
     constant FINOR_WIDTH : integer := 4; -- for read-out record
+-- HB 12-11-2013: GTL_FDL_LATENCY = 6 with fixed pipeline structure (2 = +/- 2bx, 3 = conditions and algos, 1 = FDL)
+    constant GTL_FDL_LATENCY : integer := 6;
+-- ADDRESS DECODER
+    constant SYNC_STAGES : natural := 3;
 
 -- HB 2014-07-08: ipbus_rst is high active, RST_ACT changed to '1' (for lhc_rst [in gt_mp7_core_pkg.vhd]) to get proper reset-conditions,
 --                because in delay_line_sl.vhd and delay_line_slv.vhd both resets are used !!!
 -- constant RST_ACT : std_logic := '0';
     constant RST_ACT : std_logic := '1';
     constant RST_ACT_ROP : std_logic := '0';
+
+    type ipb_regs_array is array (natural range <>) of std_logic_vector(31 downto 0);
 
     type vec32_array is array (NATURAL RANGE <>) of std_logic_vector(31 downto 0);
     type vec16_array is array (NATURAL RANGE <>) of std_logic_vector(15 downto 0);
@@ -112,17 +114,6 @@ package gt_mp7_core_pkg is
 --------------------------------------------------------------------------------
     constant DM_MAX_DELAY_OBJECTS : integer  range 0 to BUNCHES_PER_ORBIT := BUNCHES_PER_ORBIT/2;
     constant DM_MAX_DELAY_BCRES : integer  range 0 to BUNCHES_PER_ORBIT := BUNCHES_PER_ORBIT;
-
---------------------------------------------------------------------------------
--- SIM/SPY Memory + Spytrigger
---------------------------------------------------------------------------------
--- HB, 12-11-2013: GTL_FDL_LATENCY = 6 with fixed pipeline structure (2 = +/- 2bx, 3 = conditions and algos, 1 = FDL)
-    constant GTL_FDL_LATENCY : integer := 6;
-
---------------------------------------------------------------------------------
--- ADDRESS DECODER
---------------------------------------------------------------------------------
-    constant SYNC_STAGES : natural := 3;
 
 --------------------------------------------------------------------------------
 
