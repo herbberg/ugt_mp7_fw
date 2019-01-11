@@ -22,7 +22,6 @@ entity delta_r is
         N_OBJ_2 : positive
     );
     port(
-        clk : in std_logic;
         diff_eta : in deta_dphi_vector_array(0 to N_OBJ_1-1, 0 to N_OBJ_2-1);
         diff_phi : in deta_dphi_vector_array(0 to N_OBJ_1-1, 0 to N_OBJ_2-1);
         dr_squared_o : out std_logic_3dim_array(0 to N_OBJ_1-1, 0 to N_OBJ_2-1, (2*DETA_DPHI_VECTOR_WIDTH)-1 downto 0)

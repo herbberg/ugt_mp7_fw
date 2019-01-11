@@ -24,7 +24,6 @@ entity difference_phi is
         OBJ_CORR : obj_corr_type
     );
     port(
-        clk : in std_logic;
         phi_1 : in integer_array(0 to N_OBJ_1-1);
         phi_2 : in integer_array(0 to N_OBJ_2-1);
         diff_phi_o : out deta_dphi_vector_array(0 to N_OBJ_1-1, 0 to N_OBJ_2-1) := (others => (others => (others => '0')));

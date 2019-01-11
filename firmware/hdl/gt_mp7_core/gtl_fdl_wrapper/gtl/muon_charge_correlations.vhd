@@ -13,7 +13,6 @@ use work.gtl_pkg.all;
 
 entity muon_charge_correlations is
     port(
-        clk : in std_logic;
         in_1: in obj_parameter_array;
         in_2: in obj_parameter_array;
         cc_double: out muon_cc_double_array;
