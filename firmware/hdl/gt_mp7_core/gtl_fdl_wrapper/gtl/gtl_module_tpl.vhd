@@ -38,27 +38,29 @@ begin
 
 -- Additional delay for centrality and ext_cond (no comparators register) in "bx_pipeline"
 
-bx_pipeline_i: entity work.bx_pipeline
-    port map(
-        lhc_clk,
-        data,
-        muon_d, eg_d, jet_d, tau_d, 
-        ett_d, etm_d, htt_d, htm_d, ettem_d, etmhf_d, htmhf_d, 
-        towercount_d,
-        mbt1hfp_d, mbt1hfm_d, mbt0hfp_d, mbt0hfm_d, 
-        asymet_d, asymht_d, asymethf_d, asymhthf_d, 
-        centrality_d,
-        ext_cond_d
-    );
+    bx_pipeline_i: entity work.bx_pipeline
+        port map(
+            lhc_clk,
+            data,
+            muon_d, eg_d, jet_d, tau_d, 
+            ett_d, etm_d, htt_d, htm_d, ettem_d, etmhf_d, htmhf_d, 
+            towercount_d,
+            mbt1hfp_d, mbt1hfm_d, mbt0hfp_d, mbt0hfm_d, 
+            asymet_d, asymht_d, asymethf_d, asymhthf_d, 
+            centrality_d,
+            ext_cond_d
+        );
 
 {{gtl_module_instances}}
 
--- One pipeline stages for algorithms
-algo_pipeline_p: process(lhc_clk, algo)
-    begin
-    if (lhc_clk'event and lhc_clk = '1') then
-        algo_o <= algo;
-    end if;
-end process;
+-- Pipeline stages for algorithms
+    algo_pipeline_i: entity work.delay_pipeline
+        generic map(
+            DATA_WIDTH => NR_ALGOS,
+            STAGES => ALGO_REG_STAGES
+        )
+        port map(
+            lhc_clk, algo, algo_o
+        );
 
 end architecture rtl;

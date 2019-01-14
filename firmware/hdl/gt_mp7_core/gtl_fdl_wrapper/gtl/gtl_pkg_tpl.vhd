@@ -80,7 +80,6 @@ package gtl_pkg is
     constant MAX_PHI_WIDTH : positive := 10; -- max. phi width (muon phi = 10)
     constant MAX_PT_VECTOR_WIDTH : positive := 15; -- esums - max. value 2047.8 GeV => 20478 (2047.8 * 10**1) => 0x4FFE
 
---     constant OUT_REG_CALC: boolean := false; -- actually no output register in calculation modules used
     constant IN_REG_COMP: boolean := true; -- actually input register in comparator modules used
     constant OUT_REG_COMP: boolean := true; -- actually output register in comparator modules used
     constant OUT_REG_COND: boolean := false; -- actually no output register in condition modules used
@@ -88,6 +87,7 @@ package gtl_pkg is
     constant BX_PIPELINE_STAGES: natural := 5; -- pipeline stages for +/- 2bx
     constant EXT_COND_STAGES: natural := 2; -- pipeline stages for "External conditions" to get same pipeline to algos as conditions
     constant CENTRALITY_STAGES: natural := 2; -- pipeline stages for "Centrality" to get same pipeline to algos as conditions
+    constant ALGO_REG_STAGES: natural := 1; -- algo out register stages
     
 -- *******************************************************************************************************
 -- MUON objects parameter definition

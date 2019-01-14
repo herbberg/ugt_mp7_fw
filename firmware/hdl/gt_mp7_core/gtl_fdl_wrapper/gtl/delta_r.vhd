@@ -44,9 +44,9 @@ architecture rtl of delta_r is
 
 begin
 
+-- HB 2015-11-26: calculation of ΔR**2 with formular ΔR**2 = (eta1-eta2)**2+(phi1-phi2)**2
     l_1: for i in 0 to N_OBJ_1-1 generate
         l_2: for j in 0 to N_OBJ_2-1 generate
--- HB 2015-11-26: calculation of ΔR**2 with formular ΔR**2 = (eta1-eta2)**2+(phi1-phi2)**2
             diff_eta_squared(i,j) <= diff_eta(i,j)*diff_eta(i,j);
             diff_phi_squared(i,j) <= diff_phi(i,j)*diff_phi(i,j);
             dr_squared(i,j) <= diff_eta_squared(i,j)+diff_phi_squared(i,j);

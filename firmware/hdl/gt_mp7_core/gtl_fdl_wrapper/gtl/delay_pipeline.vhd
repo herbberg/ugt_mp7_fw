@@ -32,6 +32,8 @@ begin
                 if (clk'event and (clk = '1') ) then
                     in_tmp(0 to STAGES) := in_tmp(1 to STAGES+1);
                 end if;
+            else
+                in_tmp(1) := in_data; -- no register
             end if;
             out_data <= in_tmp(1); -- used in_tmp(1) instead of in_tmp(0), to prevent warnings in compilation
     end process;
