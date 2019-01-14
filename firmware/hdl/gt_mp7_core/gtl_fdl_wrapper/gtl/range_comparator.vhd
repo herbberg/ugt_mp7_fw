@@ -38,14 +38,14 @@ begin
         in_reg_i : entity work.reg_mux
             generic map(DATA_WIDTH, IN_REG_COMP)  
             port map(clk, data(i)(DATA_WIDTH-1 downto 0), data_i(i));
-        if_win_sign: if MODE = sign generate
+        if_1: if MODE = ETA generate
             comp_signed_i : entity work.comp_signed
                 generic map(MIN_I, MAX_I)  
                 port map(data_i(i), comp(i));
-        end generate if_win_sign;
-        if_win_unsign: if MODE = unsign generate
+        end generate if_1;
+        if_2: if MODE = PHI generate
             comp(i) <= '1' when (data_i(i) >= MIN_I(DATA_WIDTH-1 downto 0)) and (data_i(i) <= MAX_I(DATA_WIDTH-1 downto 0)) else '0';
-        end generate if_win_unsign;
+        end generate if_2;
     end generate l1;
 
     out_reg_i : entity work.reg_mux

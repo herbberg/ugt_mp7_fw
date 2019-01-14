@@ -13,7 +13,7 @@ entity threshold_comparator is
     generic(
         N_OBJ : positive;
         DATA_WIDTH : positive;
-        MODE : comp_mode := greater_equal;
+        MODE : comp_mode := GE;
         THRESHOLD : std_logic_vector(MAX_OBJ_PARAMETER_WIDTH-1 downto 0) := (others => '0')
     );
     port(
@@ -36,12 +36,15 @@ begin
         in_reg_i : entity work.reg_mux
             generic map(DATA_WIDTH, IN_REG_COMP)  
             port map(clk, data(i)(DATA_WIDTH-1 downto 0), data_i(i));
-        if_ge: if MODE = greater_equal generate
+        if_ge: if MODE = GE generate
             comp(i) <= '1' when (data_i(i) >= THRESHOLD_I) else '0';
         end generate if_ge;
-        if_eq: if MODE = equal generate
+        if_eq: if MODE = EQ generate
             comp(i) <= '1' when (data_i(i) = THRESHOLD_I) else '0';
         end generate if_eq;
+        if_ne: if MODE = NE generate
+            comp(i) <= '1' when (data_i(i) /= THRESHOLD_I) else '0';
+        end generate if_ne;
     end generate l1;
 
     out_reg_i : entity work.reg_mux

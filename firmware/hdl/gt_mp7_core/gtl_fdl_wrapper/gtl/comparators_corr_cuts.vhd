@@ -46,20 +46,12 @@ begin
             in_reg_i : entity work.reg_mux
                 generic map(DATA_WIDTH, IN_REG_COMP)  
                 port map(clk, data_vec(i,j), data_vec_i(i,j));
-            if_ge: if MODE = greater_equal generate
+            if_1: if MODE = twoBodyPt generate
                 comp(i,j) <= '1' when (data_vec_i(i,j) >= MIN_I) else '0';
-            end generate if_ge;
-            if_win_sign: if MODE = sign generate
-                comp_signed_i : entity work.comp_signed
-                    generic map(MIN_I, MAX_I)  
-                    port map(data_vec_i(i,j), comp(i,j));
-            end generate if_win_sign;
-            if_win_unsign: if MODE = unsign generate
+            end generate if_1;
+            if_2: if MODE = deltaEta or MODE = deltaPhi or MODE = deltaR or MODE = mass generate
                 comp(i,j) <= '1' when ((data_vec_i(i,j) >= MIN_I) and (data_vec_i(i,j) <= MAX_I)) else '0';
-            end generate if_win_unsign;
-            if_eq: if MODE = equal generate
-                comp(i,j) <= '1' when (data_vec_i(i,j) = MIN_I) else '0';
-            end generate if_eq;
+            end generate if_2;
             comp_i(i,j)(0) <= comp(i,j);
             out_reg_i : entity work.reg_mux
                 generic map(1, OUT_REG_COMP) 

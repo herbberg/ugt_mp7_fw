@@ -415,13 +415,10 @@ package gtl_pkg is
 -- enums
     type obj_type is (muon,eg,jet,tau,ett,etm,htt,htm,ettem,etmhf,htmhf,towercount,mbt1hfp,mbt1hfm,mbt0hfp,mbt0hfm,asymet,asymht,asymethf,asymhthf);
     type obj_type_array is array (1 to 2) of obj_type;
-    type obj_corr_type is (calo_calo,calo_esums,calo_muon,muon_muon,muon_esums);
-    type comp_mode is (greater_equal,equal,sign,unsign);
+    type comp_mode is (GE,EQ,NE,ETA,PHI,deltaEta,deltaPhi,deltaR,mass,twoBodyPt);
 
 -- slices
-    constant SL_L : natural := 0;
-    constant SL_H : natural := 1;
-    type slices_type is array (SL_L to SL_H) of natural; -- index 0 contains lower slice value, index 1 contains upper slice value
+    type slices_type is array (0 to 1) of natural; -- index 0 contains lower slice value, index 1 contains upper slice value
     type slices_type_array is array (1 to MAX_N_REQ) of slices_type;
 
 -- more dimensional
