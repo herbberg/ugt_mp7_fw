@@ -1,5 +1,5 @@
 -- Description:
--- COSH LUTs of Differences in eta.
+-- COS LUTs of Differences in eta.
 
 -- Version-history:
 -- HB 2019-01-11: First design.
@@ -15,23 +15,23 @@ use ieee.std_logic_unsigned.all;
 use work.gtl_pkg.all;
 use work.lut_pkg.all;
 
-entity cosh_deta_lut is
+entity cos_dphi_lut is
     generic(
         N_OBJ_1 : positive;
         N_OBJ_2 : positive;
         OBJ : obj_type_array
     );
     port(
-        sub_eta : in dim2_max_eta_range_array(0 to N_OBJ_1-1, 0 to N_OBJ_2-1);
-        cosh_deta_o : out cosh_cos_vector_array(0 to N_OBJ_1-1, 0 to N_OBJ_2-1) := (others => (others => (others => '0')))
+        sub_phi : in dim2_max_phi_range_array(0 to N_OBJ_1-1, 0 to N_OBJ_2-1);
+        cos_dphi_o : out cosh_cos_vector_array(0 to N_OBJ_1-1, 0 to N_OBJ_2-1) := (others => (others => (others => '0')))
     );
-end cosh_deta_lut;
+end cos_dphi_lut;
 
-architecture rtl of cosh_deta_lut is
+architecture rtl of cos_dphi_lut is
 
 begin
 
-    cosh_deta_p: process(sub_eta)
+    cos_dphi_p: process(sub_phi)
         variable calo_calo, calo_muon, muon_muon : boolean := false;    
     begin
         if_1: if OBJ(1) = eg or OBJ(1) = jet or OBJ(1) = tau then
@@ -57,16 +57,16 @@ begin
         loop_1: for i in 0 to N_OBJ_1-1 loop
             loop_2: for j in 0 to N_OBJ_2-1 loop
                 calo_calo_i: if (calo_calo) then
-                    cosh_deta_o(i,j)(CALO_CALO_COSH_COS_VECTOR_WIDTH-1 downto 0) <= CONV_STD_LOGIC_VECTOR(CALO_CALO_COSH_DETA_LUT(sub_eta(i,j)), CALO_CALO_COSH_COS_VECTOR_WIDTH);
+                    cos_dphi_o(i,j)(CALO_CALO_COSH_COS_VECTOR_WIDTH-1 downto 0) <= CONV_STD_LOGIC_VECTOR(CALO_CALO_COS_DPHI_LUT(sub_phi(i,j)), CALO_CALO_COSH_COS_VECTOR_WIDTH);
                 end if;
                 calo_muon_i: if (calo_muon) then
-                    cosh_deta_o(i,j)(CALO_MUON_COSH_COS_VECTOR_WIDTH-1 downto 0) <= CONV_STD_LOGIC_VECTOR(CALO_MUON_COSH_DETA_LUT(sub_eta(i,j)), CALO_MUON_COSH_COS_VECTOR_WIDTH);
+                    cos_dphi_o(i,j)(CALO_MUON_COSH_COS_VECTOR_WIDTH-1 downto 0) <= CONV_STD_LOGIC_VECTOR(CALO_MUON_COS_DPHI_LUT(sub_phi(i,j)), CALO_MUON_COSH_COS_VECTOR_WIDTH);
                 end if;
                 muon_muon_i: if (muon_muon) then
-                    cosh_deta_o(i,j)(MUON_MUON_COSH_COS_VECTOR_WIDTH-1 downto 0) <= CONV_STD_LOGIC_VECTOR(MU_MU_COSH_DETA_LUT(sub_eta(i,j)), MUON_MUON_COSH_COS_VECTOR_WIDTH);
+                    cos_dphi_o(i,j)(MUON_MUON_COSH_COS_VECTOR_WIDTH-1 downto 0) <= CONV_STD_LOGIC_VECTOR(MUON_MUON_COS_DPHI_LUT(sub_phi(i,j)), MUON_MUON_COSH_COS_VECTOR_WIDTH);
                 end if;
             end loop loop_2;
         end loop loop_1;
-    end process cosh_deta_p;
+    end process cos_dphi_p;
 
 end architecture rtl;

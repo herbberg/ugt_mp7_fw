@@ -2,7 +2,7 @@
 -- Subtraction in eta.
 
 -- Version-history:
--- HB 2018-11-26: First design.
+-- HB 2019-01-11: First design.
 
 library ieee;
 use ieee.std_logic_1164.all;

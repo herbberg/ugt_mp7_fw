@@ -22,13 +22,13 @@ end gtl_module;
 
 architecture rtl of gtl_module is
     
-    signal muon_arr, eg_arr, jet_arr, tau_arr : array_obj_bx_record; 
-    signal ett_arr, etm_arr, htt_arr, htm_arr, ettem_arr, etmhf_arr, htmhf_arr : array_obj_bx_record; 
-    signal towercount_arr : array_obj_bx_record;
-    signal mbt1hfp_arr, mbt1hfm_arr, mbt0hfp_arr, mbt0hfm_arr : array_obj_bx_record; 
-    signal asymet_arr, asymht_arr, asymethf_arr, asymhthf_arr : array_obj_bx_record; 
-    signal centrality_arr : centrality_array;
-    signal ext_cond_arr : ext_cond_array;
+    signal muon_d, eg_d, jet_d, tau_d : array_obj_bx_record; 
+    signal ett_d, etm_d, htt_d, htm_d, ettem_d, etmhf_d, htmhf_d : array_obj_bx_record; 
+    signal towercount_d : array_obj_bx_record;
+    signal mbt1hfp_d, mbt1hfm_d, mbt0hfp_d, mbt0hfm_d : array_obj_bx_record; 
+    signal asymet_d, asymht_d, asymethf_d, asymhthf_d : array_obj_bx_record; 
+    signal centrality_d : centrality_array;
+    signal ext_cond_d : ext_cond_array;
 
     signal algo : std_logic_vector(NR_ALGOS-1 downto 0) := (others => '0');
 
@@ -42,13 +42,13 @@ bx_pipeline_i: entity work.bx_pipeline
     port map(
         lhc_clk,
         data,
-        muon_arr, eg_arr, jet_arr, tau_arr, 
-        ett_arr, etm_arr, htt_arr, htm_arr, ettem_arr, etmhf_arr, htmhf_arr, 
-        towercount_arr,
-        mbt1hfp_arr, mbt1hfm_arr, mbt0hfp_arr, mbt0hfm_arr, 
-        asymet_arr, asymht_arr, asymethf_arr, asymhthf_arr, 
-        centrality_arr,
-        ext_cond_arr
+        muon_d, eg_d, jet_d, tau_d, 
+        ett_d, etm_d, htt_d, htm_d, ettem_d, etmhf_d, htmhf_d, 
+        towercount_d,
+        mbt1hfp_d, mbt1hfm_d, mbt0hfp_d, mbt0hfm_d, 
+        asymet_d, asymht_d, asymethf_d, asymhthf_d, 
+        centrality_d,
+        ext_cond_d
     );
 
 {{gtl_module_instances}}

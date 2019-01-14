@@ -43,7 +43,17 @@ package gtl_pkg is
     constant CALO_PHI_BINS : positive := 144; -- values from scales
     constant MUON_PHI_BINS : positive := 576; -- values from scales
     constant CALO_PHI_HALF_RANGE_BINS : positive := CALO_PHI_BINS/2; -- 144/2, because of phi bin width = 2*PI/144
+    constant EG_EG_PHI_HALF_RANGE_BINS : positive := CALO_PHI_HALF_RANGE_BINS;
+    constant EG_JET_PHI_HALF_RANGE_BINS : positive := CALO_PHI_HALF_RANGE_BINS;
+    constant EG_TAU_PHI_HALF_RANGE_BINS : positive := CALO_PHI_HALF_RANGE_BINS;
+    constant JET_JET_PHI_HALF_RANGE_BINS : positive := CALO_PHI_HALF_RANGE_BINS;
+    constant JET_TAU_PHI_HALF_RANGE_BINS : positive := CALO_PHI_HALF_RANGE_BINS;
+    constant TAU_TAU_PHI_HALF_RANGE_BINS : positive := CALO_PHI_HALF_RANGE_BINS;
     constant MUON_PHI_HALF_RANGE_BINS : positive := MUON_PHI_BINS/2; -- 576/2, because of phi bin width = 2*PI/576
+    constant EG_MUON_PHI_HALF_RANGE_BINS : positive := MUON_PHI_HALF_RANGE_BINS;
+    constant JET_MUON_PHI_HALF_RANGE_BINS : positive := MUON_PHI_HALF_RANGE_BINS;
+    constant TAU_MUON_PHI_HALF_RANGE_BINS : positive := MUON_PHI_HALF_RANGE_BINS;
+    constant MUON_MUON_PHI_HALF_RANGE_BINS : positive := MUON_PHI_HALF_RANGE_BINS;
 
     constant PHI_MIN : real := 0.0; -- phi min.: 0.0
     constant PHI_MAX : real := 2.0*PI; -- phi max.: 2*PI
@@ -70,7 +80,7 @@ package gtl_pkg is
     constant MAX_PHI_WIDTH : positive := 10; -- max. phi width (muon phi = 10)
     constant MAX_PT_VECTOR_WIDTH : positive := 15; -- esums - max. value 2047.8 GeV => 20478 (2047.8 * 10**1) => 0x4FFE
 
-    constant OUT_REG_CALC: boolean := false; -- actually no output register in calculation modules used
+--     constant OUT_REG_CALC: boolean := false; -- actually no output register in calculation modules used
     constant IN_REG_COMP: boolean := true; -- actually input register in comparator modules used
     constant OUT_REG_COMP: boolean := true; -- actually output register in comparator modules used
     constant OUT_REG_COND: boolean := false; -- actually no output register in condition modules used
@@ -404,6 +414,7 @@ package gtl_pkg is
     
 -- enums
     type obj_type is (muon,eg,jet,tau,ett,etm,htt,htm,ettem,etmhf,htmhf,towercount,mbt1hfp,mbt1hfm,mbt0hfp,mbt0hfm,asymet,asymht,asymethf,asymhthf);
+    type obj_type_array is array (1 to 2) of obj_type;
     type obj_corr_type is (calo_calo,calo_esums,calo_muon,muon_muon,muon_esums);
     type comp_mode is (greater_equal,equal,sign,unsign);
 

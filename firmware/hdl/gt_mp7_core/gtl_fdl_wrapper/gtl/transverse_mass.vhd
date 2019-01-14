@@ -1,7 +1,8 @@
 -- Description:
--- Calculation of invariant mass or transverse mass based on LUTs.
+-- Calculation of transverse mass based on LUTs.
 
 -- Version history:
+-- HB 2019-01-14: No output register.
 -- HB 2018-11-26: First design.
 
 library ieee;
@@ -22,7 +23,7 @@ entity transverse_mass is
         COSH_COS_PREC : positive
     );
     port(
-        clk : in std_logic;
+--         clk : in std_logic;
         pt1 : in pt_array(N_OBJ_1-1 downto 0);
         pt2 : in pt_array(N_OBJ_2-1 downto 0);
         cos_dphi : in cosh_cos_vector_array(N_OBJ_1-1 downto 0, N_OBJ_2-1 downto 0);
@@ -53,11 +54,12 @@ begin
             transverse_mass_sq_div2_i(i,j) <= pt1(i)(PT1_WIDTH-1 downto 0) * pt2(j)(PT2_WIDTH-1 downto 0) * 
                 ((conv_std_logic_vector((10**COSH_COS_PREC), COSH_COS_WIDTH)) - (cos_dphi(i,j)(COSH_COS_WIDTH-1 downto 0)));
             l_3: for k in 0 to MASS_WIDTH-1 generate
-                transverse_mass_sq_div2(i,j,k)(0) <= transverse_mass_sq_div2_i(i,j)(k);                 
-                out_reg_i : entity work.reg_mux
-                    generic map(1, OUT_REG_CALC)  
-                    port map(clk, transverse_mass_sq_div2(i,j,k), transverse_mass_sq_div2_r(i,j,k)); 
-                transverse_mass_o(i,j,k) <= transverse_mass_sq_div2_r(i,j,k)(0);
+                transverse_mass_o(i,j,k) <= transverse_mass_sq_div2_i(i,j)(k);                 
+--                 transverse_mass_sq_div2(i,j,k)(0) <= transverse_mass_sq_div2_i(i,j)(k);                 
+--                 out_reg_i : entity work.reg_mux
+--                     generic map(1, OUT_REG_CALC)  
+--                     port map(clk, transverse_mass_sq_div2(i,j,k), transverse_mass_sq_div2_r(i,j,k)); 
+--                 transverse_mass_o(i,j,k) <= transverse_mass_sq_div2_r(i,j,k)(0);
             end generate l_3;
         end generate l_2;
     end generate l_1;

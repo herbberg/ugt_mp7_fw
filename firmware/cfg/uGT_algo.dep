@@ -44,13 +44,16 @@ src gt_mp7_core/gtl_fdl_wrapper/gtl/comparator_muon_charge_corr.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/combinatorial_conditions.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/correlation_conditions.vhd
 
-## HB 2019-01-11: used for test of resources
+## HB 2019-01-11: used for less amount of resources
 src gt_mp7_core/gtl_fdl_wrapper/gtl/sub_eta.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/diff_eta_lut.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/cosh_deta_lut.vhd
+src gt_mp7_core/gtl_fdl_wrapper/gtl/sub_phi.vhd
+src gt_mp7_core/gtl_fdl_wrapper/gtl/diff_phi_lut.vhd
+src gt_mp7_core/gtl_fdl_wrapper/gtl/cos_dphi_lut.vhd
 
-src gt_mp7_core/gtl_fdl_wrapper/gtl/difference_eta.vhd
-src gt_mp7_core/gtl_fdl_wrapper/gtl/difference_phi.vhd
+#src gt_mp7_core/gtl_fdl_wrapper/gtl/difference_eta.vhd
+#src gt_mp7_core/gtl_fdl_wrapper/gtl/difference_phi.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/delta_r.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/invariant_mass.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/transverse_mass.vhd
