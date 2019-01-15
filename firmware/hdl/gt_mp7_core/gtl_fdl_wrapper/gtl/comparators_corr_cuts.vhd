@@ -11,55 +11,50 @@ use work.gtl_pkg.all;
 
 entity comparators_corr_cuts is
     generic(
-        CONF : comparators_conf;
-        REQ_L : std_logic_vector(MAX_COMP_CORR_CUTS_DATA_WIDTH-1 downto 0) := (others => '0');
-        REQ_H : std_logic_vector(MAX_COMP_CORR_CUTS_DATA_WIDTH-1 downto 0) := (others => '0')
+        N_OBJ_1 : positive;
+        N_OBJ_2 : positive;
+        DATA_WIDTH : positive;
+        MODE : comp_mode;
+        MIN_REQ : std_logic_vector(MAX_CORR_CUTS_WIDTH-1 downto 0) := (others => '0');
+        MAX_REQ : std_logic_vector(MAX_CORR_CUTS_WIDTH-1 downto 0) := (others => '0')
     );
     port(
         clk : in std_logic;
-        data : in std_logic_3dim_array(0 to CONF.N_OBJ_1_H, 0 to CONF.N_OBJ_2_H, CONF.DATA_WIDTH-1 downto 0) := (others => (others => (others => '0')));
-        comp_o : out std_logic_2dim_array(0 to CONF.N_OBJ_1_H, 0 to CONF.N_OBJ_2_H) := (others => (others => '0'))
+        data : in std_logic_3dim_array(0 to N_OBJ_1-1, 0 to N_OBJ_2-1, DATA_WIDTH-1 downto 0) := (others => (others => (others => '0')));
+        comp_o : out std_logic_2dim_array(0 to N_OBJ_1-1, 0 to N_OBJ_2-1) := (others => (others => '0'))
     );
 end comparators_corr_cuts;
 
 architecture rtl of comparators_corr_cuts is
 
-    constant REQ_L_I : std_logic_vector(CONF.DATA_WIDTH-1 downto 0) := REQ_L(CONF.DATA_WIDTH-1 downto 0);
-    constant REQ_H_I : std_logic_vector(CONF.DATA_WIDTH-1 downto 0) := REQ_H(CONF.DATA_WIDTH-1 downto 0);
-    type data_vec_array is array(0 to CONF.N_OBJ_1_H, 0 to CONF.N_OBJ_2_H) of std_logic_vector(CONF.DATA_WIDTH-1 downto 0);
+    constant MIN_I : std_logic_vector(DATA_WIDTH-1 downto 0) := MIN_REQ(DATA_WIDTH-1 downto 0);
+    constant MAX_I : std_logic_vector(DATA_WIDTH-1 downto 0) := MAX_REQ(DATA_WIDTH-1 downto 0);
+    type data_vec_array is array(0 to N_OBJ_1-1, 0 to N_OBJ_2-1) of std_logic_vector(DATA_WIDTH-1 downto 0);
     signal data_vec, data_vec_i : data_vec_array;
-    signal comp : std_logic_2dim_array(0 to CONF.N_OBJ_1_H, 0 to CONF.N_OBJ_2_H);
-    type comp_i_array is array (0 to CONF.N_OBJ_1_H, 0 to CONF.N_OBJ_2_H) of std_logic_vector(0 downto 0);
+    signal comp : std_logic_2dim_array(0 to N_OBJ_1-1, 0 to N_OBJ_2-1);
+    type comp_i_array is array (0 to N_OBJ_1, 0 to N_OBJ_2-1) of std_logic_vector(0 downto 0);
     signal comp_i : comp_i_array;
     signal comp_r : comp_i_array;
 
 begin
 
-    l1: for i in 0 to CONF.N_OBJ_1_H generate
-        l2: for j in 0 to CONF.N_OBJ_2_H generate
-            l3: for k in 0 to CONF.DATA_WIDTH-1 generate
+    l1: for i in 0 to N_OBJ_1-1 generate
+        l2: for j in 0 to N_OBJ_2-1 generate
+            l3: for k in 0 to DATA_WIDTH-1 generate
                 data_vec(i,j)(k) <= data(i,j,k);
             end generate l3;
             in_reg_i : entity work.reg_mux
-                generic map(CONF.DATA_WIDTH, CONF.IN_REG)  
+                generic map(DATA_WIDTH, IN_REG_COMP)  
                 port map(clk, data_vec(i,j), data_vec_i(i,j));
-            if_ge: if CONF.MODE = greater_equal generate
-                comp(i,j) <= '1' when (data_vec_i(i,j) >= REQ_L_I) else '0';
-            end generate if_ge;
-            if_win_sign: if CONF.MODE = win_sign generate
-                comp_signed_i : entity work.comp_signed
-                    generic map(REQ_L_I, REQ_H_I)  
-                    port map(data_vec_i(i,j), comp(i,j));
-            end generate if_win_sign;
-            if_win_unsign: if CONF.MODE = win_unsign generate
-                comp(i,j) <= '1' when ((data_vec_i(i,j) >= REQ_L_I) and (data_vec_i(i,j) <= REQ_H_I)) else '0';
-            end generate if_win_unsign;
-            if_eq: if CONF.MODE = equal generate
-                comp(i,j) <= '1' when (data_vec_i(i,j) = REQ_L_I) else '0';
-            end generate if_eq;
+            if_1: if MODE = twoBodyPt generate
+                comp(i,j) <= '1' when (data_vec_i(i,j) >= MIN_I) else '0';
+            end generate if_1;
+            if_2: if MODE = deltaEta or MODE = deltaPhi or MODE = deltaR or MODE = mass generate
+                comp(i,j) <= '1' when ((data_vec_i(i,j) >= MIN_I) and (data_vec_i(i,j) <= MAX_I)) else '0';
+            end generate if_2;
             comp_i(i,j)(0) <= comp(i,j);
             out_reg_i : entity work.reg_mux
-                generic map(1, CONF.OUT_REG) 
+                generic map(1, OUT_REG_COMP) 
                 port map(clk, comp_i(i,j), comp_r(i,j)); 
             comp_o(i,j) <= comp_r(i,j)(0);
         end generate l2;

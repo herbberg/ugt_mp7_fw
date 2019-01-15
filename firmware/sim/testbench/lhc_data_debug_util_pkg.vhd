@@ -196,19 +196,19 @@ package body lhc_data_debug_util_pkg is
 		variable end_index : integer := 0;
 	begin
 		hexstring := data_in & ' '; -- make sure string ends on a space character
-		for i in 0 to MUON_ARRAY_LENGTH-1 loop
+		for i in 0 to N_MUON_OBJECTS-1 loop
 			next_range(start_index, end_index, hexstring);
 			ret_value.muon(i) := hex_to_slv("" & hexstring(start_index to end_index), MUON_DATA_WIDTH);
 		end loop;
-		for i in 0 to EG_ARRAY_LENGTH-1 loop
+		for i in 0 to N_EG_OBJECTS-1 loop
 			next_range(start_index, end_index, hexstring);
 			ret_value.eg(i) := hex_to_slv("" & hexstring(start_index to end_index), EG_DATA_WIDTH);
 		end loop;
-		for i in 0 to TAU_ARRAY_LENGTH-1 loop
+		for i in 0 to N_TAU_OBJECTS-1 loop
 			next_range(start_index, end_index, hexstring);
 			ret_value.tau(i) := hex_to_slv("" & hexstring(start_index to end_index), TAU_DATA_WIDTH);
 		end loop;
-		for i in 0 to JET_ARRAY_LENGTH-1 loop
+		for i in 0 to N_JET_OBJECTS-1 loop
 			next_range(start_index, end_index, hexstring);
 			ret_value.jet(i) := hex_to_slv("" & hexstring(start_index to end_index), JET_DATA_WIDTH);
 		end loop;

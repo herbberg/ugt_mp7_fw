@@ -73,13 +73,13 @@ package lhc_data_pkg is
 --  for simspy memory (test with ipb_dpmem_4096_32)
 	constant SW_DATA_WIDTH : integer := 32;
 
-	constant MUON_ARRAY_LENGTH : integer := 8;
+	constant N_MUON_OBJECTS : integer := 8;
 	constant MUON_DATA_WIDTH : integer := SW_DATA_WIDTH*2;
-	constant EG_ARRAY_LENGTH : integer := 12;
+	constant N_EG_OBJECTS : integer := 12;
 	constant EG_DATA_WIDTH : integer := SW_DATA_WIDTH;
-	constant TAU_ARRAY_LENGTH : integer := 12;
+	constant N_TAU_OBJECTS : integer := 12;
 	constant TAU_DATA_WIDTH : integer := SW_DATA_WIDTH;
-	constant JET_ARRAY_LENGTH : integer := 12;
+	constant N_JET_OBJECTS : integer := 12;
 	constant JET_DATA_WIDTH : integer := SW_DATA_WIDTH;
 	constant ETT_DATA_WIDTH : integer := SW_DATA_WIDTH;
 	constant HT_DATA_WIDTH : integer := SW_DATA_WIDTH;
@@ -97,10 +97,10 @@ package lhc_data_pkg is
 
 	constant LHC_DATA_WIDTH : integer := 
 		(
-			(MUON_ARRAY_LENGTH*MUON_DATA_WIDTH) +
-			(EG_ARRAY_LENGTH*EG_DATA_WIDTH) +
-			(TAU_ARRAY_LENGTH*TAU_DATA_WIDTH) +
-			(JET_ARRAY_LENGTH*JET_DATA_WIDTH) +
+			(N_MUON_OBJECTS*MUON_DATA_WIDTH) +
+			(N_EG_OBJECTS*EG_DATA_WIDTH) +
+			(N_TAU_OBJECTS*TAU_DATA_WIDTH) +
+			(N_JET_OBJECTS*JET_DATA_WIDTH) +
 			ETT_DATA_WIDTH +
 			HT_DATA_WIDTH +
 			ETM_DATA_WIDTH +
@@ -113,10 +113,10 @@ package lhc_data_pkg is
 			EXTERNAL_CONDITIONS_DATA_WIDTH
 		);
 
-	type muon_array_t is array(0 to MUON_ARRAY_LENGTH-1) of std_logic_vector(MUON_DATA_WIDTH-1 downto 0);
-	type eg_array_t is array(0 to EG_ARRAY_LENGTH-1) of std_logic_vector(EG_DATA_WIDTH-1 downto 0);
-	type tau_array_t is array(0 to TAU_ARRAY_LENGTH-1) of std_logic_vector(TAU_DATA_WIDTH-1 downto 0);
-	type jet_array_t is array(0 to JET_ARRAY_LENGTH-1) of std_logic_vector(JET_DATA_WIDTH-1 downto 0);
+	type muon_array_t is array(0 to N_MUON_OBJECTS-1) of std_logic_vector(MUON_DATA_WIDTH-1 downto 0);
+	type eg_array_t is array(0 to N_EG_OBJECTS-1) of std_logic_vector(EG_DATA_WIDTH-1 downto 0);
+	type tau_array_t is array(0 to N_TAU_OBJECTS-1) of std_logic_vector(TAU_DATA_WIDTH-1 downto 0);
+	type jet_array_t is array(0 to N_JET_OBJECTS-1) of std_logic_vector(JET_DATA_WIDTH-1 downto 0);
 
 	type lhc_data_t is record 
 		muon : muon_array_t;
@@ -181,10 +181,10 @@ package lhc_data_pkg is
 
 	constant LHC_DATA_SLV_OBJECT_WIDTH : lhc_data_slv_property_t := 
 		(
-			MUON_ARRAY_LENGTH * MUON_DATA_WIDTH,
-			EG_ARRAY_LENGTH * EG_DATA_WIDTH,
-			TAU_ARRAY_LENGTH * TAU_DATA_WIDTH,
-			JET_ARRAY_LENGTH * JET_DATA_WIDTH,
+			N_MUON_OBJECTS * MUON_DATA_WIDTH,
+			N_EG_OBJECTS * EG_DATA_WIDTH,
+			N_TAU_OBJECTS * TAU_DATA_WIDTH,
+			N_JET_OBJECTS * JET_DATA_WIDTH,
 			ETT_DATA_WIDTH,
 			HT_DATA_WIDTH,
 			ETM_DATA_WIDTH,
@@ -216,25 +216,25 @@ package body lhc_data_pkg is
 		variable ret_value : std_logic_vector(LHC_DATA_WIDTH-1 downto 0);
 		variable index : natural := 0;
 	begin
-		for i in 0 to MUON_ARRAY_LENGTH-1 loop
+		for i in 0 to N_MUON_OBJECTS-1 loop
 			ret_value(index+(i+1)*MUON_DATA_WIDTH-1 downto index+(i*MUON_DATA_WIDTH)) := data_in.muon(i);
 		end loop;
-		index := index + (MUON_ARRAY_LENGTH * MUON_DATA_WIDTH);
+		index := index + (N_MUON_OBJECTS * MUON_DATA_WIDTH);
 
-		for i in 0 to EG_ARRAY_LENGTH-1 loop
+		for i in 0 to N_EG_OBJECTS-1 loop
 			ret_value(index+(i+1)*EG_DATA_WIDTH-1 downto index+(i*EG_DATA_WIDTH)) := data_in.eg(i);
 		end loop;
-		index := index + (EG_ARRAY_LENGTH * EG_DATA_WIDTH);
+		index := index + (N_EG_OBJECTS * EG_DATA_WIDTH);
 
-		for i in 0 to TAU_ARRAY_LENGTH-1 loop
+		for i in 0 to N_TAU_OBJECTS-1 loop
 			ret_value(index+(i+1)*TAU_DATA_WIDTH-1 downto index+(i*TAU_DATA_WIDTH)) := data_in.tau(i);
 		end loop;
-		index := index + (TAU_ARRAY_LENGTH * TAU_DATA_WIDTH);
+		index := index + (N_TAU_OBJECTS * TAU_DATA_WIDTH);
 
-		for i in 0 to JET_ARRAY_LENGTH-1 loop
+		for i in 0 to N_JET_OBJECTS-1 loop
 			ret_value(index+(i+1)*JET_DATA_WIDTH-1 downto index+(i*JET_DATA_WIDTH)) := data_in.jet(i);
 		end loop;
-		index := index + (JET_ARRAY_LENGTH * JET_DATA_WIDTH);
+		index := index + (N_JET_OBJECTS * JET_DATA_WIDTH);
 
 		ret_value(index + ETT_DATA_WIDTH-1 downto index) := data_in.ett;
 		index := index + ETT_DATA_WIDTH;
@@ -273,25 +273,25 @@ package body lhc_data_pkg is
 		variable ret_value : lhc_data_t;
 		variable index : natural := 0;
 	begin
-		for i in 0 to MUON_ARRAY_LENGTH-1 loop
+		for i in 0 to N_MUON_OBJECTS-1 loop
 			ret_value.muon(i) := data_in( index+(i+1)*MUON_DATA_WIDTH-1 downto index+(i* MUON_DATA_WIDTH));
 		end loop;
-		index := index + (MUON_ARRAY_LENGTH * MUON_DATA_WIDTH);
+		index := index + (N_MUON_OBJECTS * MUON_DATA_WIDTH);
 
-		for i in 0 to EG_ARRAY_LENGTH-1 loop
+		for i in 0 to N_EG_OBJECTS-1 loop
 			ret_value.eg(i) := data_in( index+(i+1)*EG_DATA_WIDTH-1 downto index+(i* EG_DATA_WIDTH));
 		end loop;
-		index := index + (EG_ARRAY_LENGTH * EG_DATA_WIDTH);
+		index := index + (N_EG_OBJECTS * EG_DATA_WIDTH);
 
-		for i in 0 to TAU_ARRAY_LENGTH-1 loop
+		for i in 0 to N_TAU_OBJECTS-1 loop
 			ret_value.tau(i) := data_in( index+(i+1)*TAU_DATA_WIDTH-1 downto index+(i* TAU_DATA_WIDTH));
 		end loop;
-		index := index + (TAU_ARRAY_LENGTH * TAU_DATA_WIDTH);
+		index := index + (N_TAU_OBJECTS * TAU_DATA_WIDTH);
 		
-		for i in 0 to JET_ARRAY_LENGTH-1 loop
+		for i in 0 to N_JET_OBJECTS-1 loop
 			ret_value.jet(i) := data_in( index+(i+1)*JET_DATA_WIDTH-1 downto index+(i* JET_DATA_WIDTH));
 		end loop;
-		index := index + (JET_ARRAY_LENGTH * JET_DATA_WIDTH);
+		index := index + (N_JET_OBJECTS * JET_DATA_WIDTH);
 
 		ret_value.ett := data_in(index + ETT_DATA_WIDTH-1 downto index);
 		index := index + ETT_DATA_WIDTH;

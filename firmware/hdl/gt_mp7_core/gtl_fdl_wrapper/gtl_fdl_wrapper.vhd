@@ -64,49 +64,38 @@ architecture rtl of gtl_fdl_wrapper is
 
     signal algo : std_logic_vector(nr_algos-1 downto 0);
 
-    signal eg_internal : calo_objects_array(0 to EG_ARRAY_LENGTH-1);
-    signal jet_internal : calo_objects_array(0 to JET_ARRAY_LENGTH-1);
-    signal tau_internal : calo_objects_array(0 to TAU_ARRAY_LENGTH-1);
-    signal ett_internal : std_logic_vector(MAX_ESUMS_BITS-1 downto 0) := (others => '0');
-    signal ht_internal : std_logic_vector(MAX_ESUMS_BITS-1 downto 0) := (others => '0');
-    signal etm_internal : std_logic_vector(MAX_ESUMS_BITS-1 downto 0) := (others => '0');
-    signal htm_internal : std_logic_vector(MAX_ESUMS_BITS-1 downto 0) := (others => '0');
-    signal muon_internal : muon_objects_array(0 to MUON_ARRAY_LENGTH-1);
-    signal ext_cond_internal : std_logic_vector(EXTERNAL_CONDITIONS_DATA_WIDTH-1 downto 0);
--- HB 2016-04-18: updates for "min bias trigger" objects (quantities) for Low-pileup-run May 2016
-    signal mbt1hfp_internal : std_logic_vector(MAX_ESUMS_BITS-1 downto 0) := (others => '0');
-    signal mbt1hfm_internal : std_logic_vector(MAX_ESUMS_BITS-1 downto 0) := (others => '0');
-    signal mbt0hfp_internal : std_logic_vector(MAX_ESUMS_BITS-1 downto 0) := (others => '0');
-    signal mbt0hfm_internal : std_logic_vector(MAX_ESUMS_BITS-1 downto 0) := (others => '0');
--- HB 2016-09-16: inserted new esums
-    signal ettem_internal : std_logic_vector(MAX_ESUMS_BITS-1 downto 0) := (others => '0');
-    signal etmhf_internal : std_logic_vector(MAX_ESUMS_BITS-1 downto 0) := (others => '0');
-    signal htmhf_internal : std_logic_vector(MAX_ESUMS_BITS-1 downto 0) := (others => '0');
-    signal towercount_internal : std_logic_vector(MAX_TOWERCOUNT_BITS-1 downto 0) := (others => '0');
--- HB 2018-08-06: inserted signals for "Asymmetry" and "Centrality"
-    signal asymet_internal : std_logic_vector(MAX_ESUMS_BITS-1 downto 0) := (others => '0');
-    signal asymht_internal : std_logic_vector(MAX_ESUMS_BITS-1 downto 0) := (others => '0');
-    signal asymethf_internal : std_logic_vector(MAX_ESUMS_BITS-1 downto 0) := (others => '0');
-    signal asymhthf_internal : std_logic_vector(MAX_ESUMS_BITS-1 downto 0) := (others => '0');
-    signal centrality_internal : std_logic_vector(NR_CENTRALITY_BITS-1 downto 0);
+    signal data : gtl_data_record;
 
 begin
 
-    eg_internal_l: for i in 0 to EG_ARRAY_LENGTH-1 generate
-       eg_internal(i) <= lhc_data.eg(i)(MAX_CALO_BITS-1 downto 0);
-    end generate;
+    eg_data_l: for i in 0 to N_EG_OBJECTS-1 generate
+       data.eg(i).pt <= lhc_data.eg(i)(EG_PT_HIGH downto EG_PT_LOW);
+       data.eg(i).eta <= lhc_data.eg(i)(EG_ETA_HIGH downto EG_ETA_LOW);
+       data.eg(i).phi <= lhc_data.eg(i)(EG_PHI_HIGH downto EG_PHI_LOW);
+       data.eg(i).iso <= lhc_data.eg(i)(EG_ISO_HIGH downto EG_ISO_LOW);
+    end generate eg_data_l;
 
-    jet_internal_l: for i in 0 to JET_ARRAY_LENGTH-1 generate
-        jet_internal(i) <= lhc_data.jet(i)(MAX_CALO_BITS-1 downto 0);
-    end generate;
+    jet_data_l: for i in 0 to N_JET_OBJECTS-1 generate
+       data.jet(i).pt <= lhc_data.jet(i)(JET_PT_HIGH downto JET_PT_LOW);
+       data.jet(i).eta <= lhc_data.jet(i)(JET_ETA_HIGH downto JET_ETA_LOW);
+       data.jet(i).phi <= lhc_data.jet(i)(JET_PHI_HIGH downto JET_PHI_LOW);
+    end generate jet_data_l;
 
-    tau_internal_l: for i in 0 to TAU_ARRAY_LENGTH-1 generate
-        tau_internal(i) <= lhc_data.tau(i)(MAX_CALO_BITS-1 downto 0);
-    end generate;
+    tau_data_l: for i in 0 to N_TAU_OBJECTS-1 generate
+       data.tau(i).pt <= lhc_data.tau(i)(TAU_PT_HIGH downto TAU_PT_LOW);
+       data.tau(i).eta <= lhc_data.tau(i)(TAU_ETA_HIGH downto TAU_ETA_LOW);
+       data.tau(i).phi <= lhc_data.tau(i)(TAU_PHI_HIGH downto TAU_PHI_LOW);
+       data.tau(i).iso <= lhc_data.tau(i)(TAU_ISO_HIGH downto TAU_ISO_LOW);
+    end generate tau_data_l;
 
-    muon_internal_l: for i in 0 to MUON_ARRAY_LENGTH-1 generate
-        muon_internal(i) <= lhc_data.muon(i)(MAX_MUON_BITS-1 downto 0);
-    end generate;
+    muon_data_l: for i in 0 to N_MUON_OBJECTS-1 generate
+       data.muon(i).pt <= lhc_data.muon(i)(MUON_PT_HIGH downto MUON_PT_LOW);
+       data.muon(i).eta <= lhc_data.muon(i)(MUON_ETA_HIGH downto MUON_ETA_LOW);
+       data.muon(i).phi <= lhc_data.muon(i)(MUON_PHI_HIGH downto MUON_PHI_LOW);
+       data.muon(i).iso <= lhc_data.muon(i)(MUON_ISO_HIGH downto MUON_ISO_LOW);
+       data.muon(i).qual <= lhc_data.muon(i)(MUON_QUAL_HIGH downto MUON_QUAL_LOW);
+       data.muon(i).charge <= lhc_data.muon(i)(MUON_CHARGE_HIGH downto MUON_CHARGE_LOW);
+    end generate muon_data_l;
 
 -- ****************************************************************************************
 -- HB 2016-04-18: updates for "min bias trigger" objects (quantities) for Low-pileup-run May 2016
@@ -121,20 +110,24 @@ begin
 -- HF+ thresh 1 => MBT1HFP
 -- HF- thresh 1 => MBT1HFM
 
-    ett_internal(ETT_STRUCT.pt_h downto ETT_STRUCT.pt_l) <= lhc_data.ett(ETT_STRUCT.pt_h downto ETT_STRUCT.pt_l);
-    ht_internal(HTT_STRUCT.pt_h downto HTT_STRUCT.pt_l) <= lhc_data.ht(HTT_STRUCT.pt_h downto HTT_STRUCT.pt_l);
-    etm_internal(ETM_STRUCT.phi_h downto ETM_STRUCT.pt_l) <= lhc_data.etm(ETM_STRUCT.phi_h downto ETM_STRUCT.pt_l);
-    htm_internal(HTM_STRUCT.phi_h downto HTM_STRUCT.pt_l) <= lhc_data.htm(HTM_STRUCT.phi_h downto HTM_STRUCT.pt_l);
--- HB 2016-09-16: inserted new esums
-    ettem_internal(ETTEM_STRUCT.pt_h downto ETTEM_STRUCT.pt_l) <= lhc_data.ett(ETTEM_IN_ETT_HIGH downto ETTEM_IN_ETT_LOW);
-    etmhf_internal(ETMHF_STRUCT.phi_h downto ETMHF_STRUCT.pt_l) <= lhc_data.etmhf(ETMHF_STRUCT.phi_h downto ETMHF_STRUCT.pt_l);
-    htmhf_internal(HTMHF_STRUCT.phi_h downto HTMHF_STRUCT.pt_l) <= lhc_data.htmhf(HTMHF_STRUCT.phi_h downto HTMHF_STRUCT.pt_l);
-    towercount_internal(TOWERCOUNT_STRUCT.high-TOWERCOUNT_STRUCT.low downto 0) <= lhc_data.ht(TOWERCOUNT_IN_HTT_HIGH downto TOWERCOUNT_IN_HTT_LOW);
+    data.ett.pt <= lhc_data.ett(ETT_PT_HIGH downto ETT_PT_LOW);
+    data.htt.pt <= lhc_data.ht(HTT_PT_HIGH downto HTT_PT_LOW);
+    data.etm.pt <= lhc_data.etm(ETM_PT_HIGH downto ETM_PT_LOW);
+    data.etm.phi <= lhc_data.etm(ETM_PHI_HIGH downto ETM_PHI_LOW);
+    data.htm.pt <= lhc_data.htm(HTM_PT_HIGH downto HTM_PT_LOW);
+    data.htm.phi <= lhc_data.htm(HTM_PHI_HIGH downto HTM_PHI_LOW);
+    data.ettem.pt <= lhc_data.ett(ETTEM_IN_ETT_HIGH downto ETTEM_IN_ETT_LOW);
+    data.etmhf.pt <= lhc_data.etmhf(ETMHF_PT_HIGH downto ETMHF_PT_LOW);
+    data.etmhf.phi <= lhc_data.etmhf(ETMHF_PHI_HIGH downto ETMHF_PHI_LOW);
+    data.htmhf.pt <= lhc_data.htmhf(HTMHF_PT_HIGH downto HTMHF_PT_LOW);
+    data.htmhf.phi <= lhc_data.htmhf(HTMHF_PHI_HIGH downto HTMHF_PHI_LOW);
 
-    mbt0hfp_internal(MBT0HFP_STRUCT.high downto MBT0HFP_STRUCT.low) <= lhc_data.ett(MBT0HFP_IN_ETT_HIGH downto MBT0HFP_IN_ETT_LOW);
-    mbt0hfm_internal(MBT0HFM_STRUCT.high downto MBT0HFM_STRUCT.low) <= lhc_data.ht(MBT0HFM_IN_HTT_HIGH downto MBT0HFM_IN_HTT_LOW);
-    mbt1hfp_internal(MBT1HFP_STRUCT.high downto MBT1HFP_STRUCT.low) <= lhc_data.etm(MBT1HFP_IN_ETM_HIGH downto MBT1HFP_IN_ETM_LOW);
-    mbt1hfm_internal(MBT1HFM_STRUCT.high downto MBT1HFM_STRUCT.low) <= lhc_data.htm(MBT1HFM_IN_HTM_HIGH downto MBT1HFM_IN_HTM_LOW);
+    data.towercount.count <= lhc_data.ht(TOWERCOUNT_IN_HTT_HIGH downto TOWERCOUNT_IN_HTT_LOW);
+
+    data.mbt0hfp.count <= lhc_data.ett(MBT0HFP_IN_ETT_HIGH downto MBT0HFP_IN_ETT_LOW);
+    data.mbt0hfm.count <= lhc_data.ht(MBT0HFM_IN_HTT_HIGH downto MBT0HFM_IN_HTT_LOW);
+    data.mbt1hfp.count <= lhc_data.etm(MBT1HFP_IN_ETM_HIGH downto MBT1HFP_IN_ETM_LOW);
+    data.mbt1hfm.count <= lhc_data.htm(MBT1HFM_IN_HTM_HIGH downto MBT1HFM_IN_HTM_LOW);
 
 -- HB 2018-08-06: inserted signals for "Asymmetry" and "Centrality" (included in esums data structure).
 -- see: https://indico.cern.ch/event/746381/contributions/3085360/subcontributions/260912/attachments/1693846/2725976/DemuxOutput.pdf
@@ -147,49 +140,23 @@ begin
 -- Frame 4, ETMHF: bits 31..28 => CENT3..CENT0
 -- Frame 5, HTMHF: bits 31..28 => CENT7..CENT4
 
-    asymet_internal(ASYMET_STRUCT.high downto ASYMET_STRUCT.low) <= lhc_data.etm(ASYMET_IN_ETM_HIGH downto ASYMET_IN_ETM_LOW);
-    asymht_internal(ASYMHT_STRUCT.high downto ASYMHT_STRUCT.low) <= lhc_data.htm(ASYMHT_IN_HTM_HIGH downto ASYMHT_IN_HTM_LOW);
-    asymethf_internal(ASYMETHF_STRUCT.high downto ASYMETHF_STRUCT.low) <= lhc_data.etmhf(ASYMETHF_IN_ETMHF_HIGH downto ASYMETHF_IN_ETMHF_LOW);
-    asymhthf_internal(ASYMHTHF_STRUCT.high downto ASYMHTHF_STRUCT.low) <= lhc_data.htmhf(ASYMHTHF_IN_HTMHF_HIGH downto ASYMHTHF_IN_HTMHF_LOW);
+    data.asymet.count <= lhc_data.etm(ASYMET_IN_ETM_HIGH downto ASYMET_IN_ETM_LOW);
+    data.asymht.count <= lhc_data.htm(ASYMHT_IN_HTM_HIGH downto ASYMHT_IN_HTM_LOW);
+    data.asymethf.count <= lhc_data.etmhf(ASYMETHF_IN_ETMHF_HIGH downto ASYMETHF_IN_ETMHF_LOW);
+    data.asymhthf.count <= lhc_data.htmhf(ASYMHTHF_IN_HTMHF_HIGH downto ASYMHTHF_IN_HTMHF_LOW);
     
-    centrality_internal(CENT_LBITS_HIGH downto CENT_LBITS_LOW) <= lhc_data.etmhf(CENT_IN_ETMHF_HIGH downto CENT_IN_ETMHF_LOW);
-    centrality_internal(CENT_UBITS_HIGH downto CENT_UBITS_LOW) <= lhc_data.htmhf(CENT_IN_HTMHF_HIGH downto CENT_IN_HTMHF_LOW);
+    data.centrality(CENT_LBITS_HIGH downto CENT_LBITS_LOW) <= lhc_data.etmhf(CENT_IN_ETMHF_HIGH downto CENT_IN_ETMHF_LOW);
+    data.centrality(CENT_UBITS_HIGH downto CENT_UBITS_LOW) <= lhc_data.htmhf(CENT_IN_HTMHF_HIGH downto CENT_IN_HTMHF_LOW);
     
 -- ****************************************************************************************
     
-    ext_cond_internal <= lhc_data.external_conditions(EXTERNAL_CONDITIONS_DATA_WIDTH-1 downto 0);
+    data.external_conditions <= lhc_data.external_conditions(EXTERNAL_CONDITIONS_DATA_WIDTH-1 downto 0);
 
 gtl_module_i: entity work.gtl_module
     port map( 
-        lhc_clk         => lhc_clk,
-        eg_data         => eg_internal,
-        jet_data        => jet_internal,
-        tau_data        => tau_internal,
-        ett_data        => ett_internal,
-        ht_data         => ht_internal,
-        etm_data        => etm_internal,
-        htm_data        => htm_internal,
--- ****************************************************************************************
--- HB 2016-04-18: updates for "min bias trigger" objects (quantities) for Low-pileup-run May 2016
-        mbt1hfp_data    => mbt1hfp_internal,
-        mbt1hfm_data    => mbt1hfm_internal,
-        mbt0hfp_data    => mbt0hfp_internal,
-        mbt0hfm_data    => mbt0hfm_internal,
--- HB 2016-09-16: inserted new esums
-        ettem_data      => ettem_internal,
-        etmhf_data      => etmhf_internal,
-        htmhf_data      => htmhf_internal,
-        towercount_data => towercount_internal,
--- HB 2018-08-06: inserted signals for "Asymmetry" and "Centrality" (included in esums data structure).
-        asymet_data      => asymet_internal,
-        asymht_data      => asymht_internal,
-        asymethf_data      => asymethf_internal,
-        asymhthf_data      => asymhthf_internal,
-        centrality_data       => centrality_internal,
--- ****************************************************************************************
-        muon_data       => muon_internal,
-        external_conditions => ext_cond_internal,
-        algo_o          => algo
+        lhc_clk => lhc_clk,
+        data => data,
+        algo_o => algo
     );
 
 fdl_module_i: entity work.fdl_module
@@ -199,18 +166,18 @@ fdl_module_i: entity work.fdl_module
         MASKS_INIT => MASKS_INIT
     )
     port map( 
-        ipb_clk         => ipb_clk,
-        ipb_rst         => ipb_rst,
-        ipb_in          => ipb_in,
-        ipb_out         => ipb_out,
+        ipb_clk => ipb_clk,
+        ipb_rst => ipb_rst,
+        ipb_in  => ipb_in,
+        ipb_out => ipb_out,
 -- ========================================================
-        lhc_clk         => lhc_clk,
-        lhc_rst         => lhc_rst,
-        bcres           => bcres,
-        test_en         => test_en,
-        l1a             => l1a,
+        lhc_clk => lhc_clk,
+        lhc_rst => lhc_rst,
+        bcres => bcres,
+        test_en => test_en,
+        l1a => l1a,
         begin_lumi_section => begin_lumi_section,
-        algo_i          => algo,
+        algo_i => algo,
         prescale_factor_set_index_rop => prescale_factor_set_index_rop,
         algo_after_gtLogic_rop => algo_after_gtLogic_rop,
         algo_after_bxomask_rop => algo_after_bxomask_rop,
