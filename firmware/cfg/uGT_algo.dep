@@ -32,10 +32,6 @@ src gt_mp7_core/gtl_fdl_wrapper/gtl/delay_pipeline.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/bx_pipeline.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/comp_signed.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/conversions.vhd
-#src gt_mp7_core/gtl_fdl_wrapper/gtl/eg_conversions.vhd
-#src gt_mp7_core/gtl_fdl_wrapper/gtl/jet_conversions.vhd
-#src gt_mp7_core/gtl_fdl_wrapper/gtl/tau_conversions.vhd
-#src gt_mp7_core/gtl_fdl_wrapper/gtl/muon_conversions.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/lut_comparator.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/range_comparator.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/threshold_comparator.vhd
@@ -52,8 +48,6 @@ src gt_mp7_core/gtl_fdl_wrapper/gtl/sub_phi.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/diff_phi_lut.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/cos_dphi_lut.vhd
 
-#src gt_mp7_core/gtl_fdl_wrapper/gtl/difference_eta.vhd
-#src gt_mp7_core/gtl_fdl_wrapper/gtl/difference_phi.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/delta_r.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/invariant_mass.vhd
 src gt_mp7_core/gtl_fdl_wrapper/gtl/transverse_mass.vhd
