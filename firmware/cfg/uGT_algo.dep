@@ -6,7 +6,7 @@
 src lhc_data_pkg.vhd
 src gt_mp7_top_pkg.vhd
 src bgo_sync.vhd
-src gt_mp7_core/gt_mp7_core_pkg.vhd
+src gt_mp7_core_pkg.vhd
 
 ## HB 2017-09-18: tp_mux not used anymore
 
