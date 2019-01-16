@@ -1,19 +1,3 @@
-##--------------------------------------------------------------------------------
-##-- Simulator   : ModelSim 10.3b
-##-- Platform    : Linux Ubuntu 10.04
-##-- Targets     : Simulation
-##--------------------------------------------------------------------------------
-##-- This work is held in copyright as an unpublished work by HEPHY (Institute
-##-- of High Energy Physics) All rights reserved.  This work may not be used
-##-- except by authorized licensees of HEPHY. This work is the
-##-- confidential information of HEPHY.
-##--------------------------------------------------------------------------------
-##---Description:
-##-- $HeadURL: https://svn.cern.ch/reps/cactus/trunk/cactusupgrades/projects/ugt/mp7_ugt/firmware/sim/scripts/gtl_fdl_wrapper_test_tpl.do $
-##-- $Date: 2015-09-08 11:26:11 +0200 (Tue, 08 Sep 2015) $
-##-- $Author: hbergaue $
-##-- $Revision: 39037 $
-##--------------------------------------------------------------------------------
 
 ##***************************** Beginning of Script ***************************
 
@@ -55,56 +39,62 @@ vcom -93 -work work $MP7_COMPONENTS/ipbus_core/firmware/hdl/ipbus_trans_decl.vhd
 vcom -93 -work work $HDL_DIR/lhc_data_pkg.vhd
 vcom -93 -work work $HDL_DIR/math_pkg.vhd
 ## HB 2016-12-05: used gt_mp7_core_pkg_sim.vhd for simulation without other MP7 packages
-vcom -93 -work work $HDL_DIR/gt_mp7_core/gt_mp7_core_pkg_sim.vhd
+vcom -93 -work work $HDL_DIR/gt_mp7_core_pkg_sim.vhd
 vcom -93 -work work $MENU_DIR/gtl_pkg.vhd
 vcom -93 -work work $TB_DIR/lhc_data_debug_util_pkg.vhd
 vcom -93 -work work $TB_DIR/txt_util_pkg.vhd
 
-vcom -93 -work work $HDL_DIR/gt_mp7_core/gtl_fdl_wrapper/gtl/lut_pkg.vhd
-vcom -93 -work work $HDL_DIR/gt_mp7_core/gtl_fdl_wrapper/gtl/reg_mux.vhd
-vcom -93 -work work $HDL_DIR/gt_mp7_core/gtl_fdl_wrapper/gtl/delay_pipeline.vhd
-vcom -93 -work work $HDL_DIR/gt_mp7_core/gtl_fdl_wrapper/gtl/bx_pipeline.vhd
-vcom -93 -work work $HDL_DIR/gt_mp7_core/gtl_fdl_wrapper/gtl/comp_signed.vhd
-vcom -93 -work work $HDL_DIR/gt_mp7_core/gtl_fdl_wrapper/gtl/conversions.vhd
-vcom -93 -work work $HDL_DIR/gt_mp7_core/gtl_fdl_wrapper/gtl/lut_comparator.vhd
-vcom -93 -work work $HDL_DIR/gt_mp7_core/gtl_fdl_wrapper/gtl/range_comparator.vhd
-vcom -93 -work work $HDL_DIR/gt_mp7_core/gtl_fdl_wrapper/gtl/threshold_comparator.vhd
-vcom -93 -work work $HDL_DIR/gt_mp7_core/gtl_fdl_wrapper/gtl/comparators_corr_cuts.vhd
-vcom -93 -work work $HDL_DIR/gt_mp7_core/gtl_fdl_wrapper/gtl/comparator_muon_charge_corr.vhd
-vcom -93 -work work $HDL_DIR/gt_mp7_core/gtl_fdl_wrapper/gtl/combinatorial_conditions.vhd
-vcom -93 -work work $HDL_DIR/gt_mp7_core/gtl_fdl_wrapper/gtl/correlation_conditions.vhd
+vcom -93 -work work $HDL_DIR/gtl/lut_pkg.vhd
+vcom -93 -work work $HDL_DIR/gtl/reg_mux.vhd
+vcom -93 -work work $HDL_DIR/gtl/delay_pipeline.vhd
+vcom -93 -work work $HDL_DIR/gtl/bx_pipeline.vhd
+vcom -93 -work work $HDL_DIR/gtl/comp_signed.vhd
+vcom -93 -work work $HDL_DIR/gtl/conversions.vhd
+#vcom -93 -work work $HDL_DIR/gtl/eg_conversions.vhd
+#vcom -93 -work work $HDL_DIR/gtl/jet_conversions.vhd
+#vcom -93 -work work $HDL_DIR/gtl/tau_conversions.vhd
+#vcom -93 -work work $HDL_DIR/gtl/muon_conversions.vhd
+vcom -93 -work work $HDL_DIR/gtl/lut_comparator.vhd
+vcom -93 -work work $HDL_DIR/gtl/range_comparator.vhd
+vcom -93 -work work $HDL_DIR/gtl/threshold_comparator.vhd
+vcom -93 -work work $HDL_DIR/gtl/comparators_corr_cuts.vhd
+vcom -93 -work work $HDL_DIR/gtl/comparator_muon_charge_corr.vhd
+vcom -93 -work work $HDL_DIR/gtl/combinatorial_conditions.vhd
+vcom -93 -work work $HDL_DIR/gtl/correlation_conditions.vhd
 
 ## HB 2019-01-11: used for less amount of resources
-vcom -93 -work work $HDL_DIR/gt_mp7_core/gtl_fdl_wrapper/gtl/sub_eta.vhd
-vcom -93 -work work $HDL_DIR/gt_mp7_core/gtl_fdl_wrapper/gtl/diff_eta_lut.vhd
-vcom -93 -work work $HDL_DIR/gt_mp7_core/gtl_fdl_wrapper/gtl/cosh_deta_lut.vhd
-vcom -93 -work work $HDL_DIR/gt_mp7_core/gtl_fdl_wrapper/gtl/sub_phi.vhd
-vcom -93 -work work $HDL_DIR/gt_mp7_core/gtl_fdl_wrapper/gtl/diff_phi_lut.vhd
-vcom -93 -work work $HDL_DIR/gt_mp7_core/gtl_fdl_wrapper/gtl/cos_dphi_lut.vhd
+vcom -93 -work work $HDL_DIR/gtl/sub_eta.vhd
+vcom -93 -work work $HDL_DIR/gtl/diff_eta_lut.vhd
+vcom -93 -work work $HDL_DIR/gtl/cosh_deta_lut.vhd
+vcom -93 -work work $HDL_DIR/gtl/sub_phi.vhd
+vcom -93 -work work $HDL_DIR/gtl/diff_phi_lut.vhd
+vcom -93 -work work $HDL_DIR/gtl/cos_dphi_lut.vhd
 
-vcom -93 -work work $HDL_DIR/gt_mp7_core/gtl_fdl_wrapper/gtl/delta_r.vhd
-vcom -93 -work work $HDL_DIR/gt_mp7_core/gtl_fdl_wrapper/gtl/invariant_mass.vhd
-vcom -93 -work work $HDL_DIR/gt_mp7_core/gtl_fdl_wrapper/gtl/transverse_mass.vhd
-vcom -93 -work work $HDL_DIR/gt_mp7_core/gtl_fdl_wrapper/gtl/muon_charge_correlations.vhd
+#vcom -93 -work work $HDL_DIR/gtl/difference_eta.vhd
+#vcom -93 -work work $HDL_DIR/gtl/difference_phi.vhd
+vcom -93 -work work $HDL_DIR/gtl/delta_r.vhd
+vcom -93 -work work $HDL_DIR/gtl/invariant_mass.vhd
+vcom -93 -work work $HDL_DIR/gtl/transverse_mass.vhd
+vcom -93 -work work $HDL_DIR/gtl/muon_charge_correlations.vhd
 
 vcom -93 -work work $MENU_DIR/gtl_module.vhd
-vcom -93 -work work $HDL_DIR/gt_mp7_core/frame/dm/delay_element.vhd
-vcom -93 -work work $HDL_DIR/gt_mp7_core/gtl_fdl_wrapper/fdl/update_process.vhd
-vcom -93 -work work $HDL_DIR/gt_mp7_core/gtl_fdl_wrapper/fdl/pulse_converter.vhd
-vcom -93 -work work $HDL_DIR/gt_mp7_core/gtl_fdl_wrapper/fdl/fdl_addr_decode.vhd
-vcom -93 -work work $HDL_DIR/gt_mp7_core/gtl_fdl_wrapper/fdl/fdl_fabric.vhd
-vcom -93 -work work $HDL_DIR/gt_mp7_core/gtl_fdl_wrapper/fdl/algo_pre_scaler.vhd
-vcom -93 -work work $HDL_DIR/gt_mp7_core/gtl_fdl_wrapper/fdl/algo_rate_counter.vhd
-vcom -93 -work work $HDL_DIR/gt_mp7_core/gtl_fdl_wrapper/fdl/algo_post_dead_time_counter.vhd
-vcom -93 -work work $HDL_DIR/gt_mp7_core/gtl_fdl_wrapper/fdl/algo_slice.vhd
+vcom -93 -work work $HDL_DIR/frame/delay_element.vhd
+vcom -93 -work work $HDL_DIR/fdl/update_process.vhd
+vcom -93 -work work $HDL_DIR/fdl/pulse_converter.vhd
+vcom -93 -work work $HDL_DIR/fdl/fdl_addr_decode.vhd
+vcom -93 -work work $HDL_DIR/fdl/fdl_fabric.vhd
+vcom -93 -work work $HDL_DIR/fdl/algo_pre_scaler.vhd
+vcom -93 -work work $HDL_DIR/fdl/algo_rate_counter.vhd
+vcom -93 -work work $HDL_DIR/fdl/algo_post_dead_time_counter.vhd
+vcom -93 -work work $HDL_DIR/fdl/algo_slice.vhd
 vcom -93 -work work $NGC_DIR/dp_mem_4096x32/dp_mem_4096x32.vhd
-vcom -93 -work work $HDL_DIR/ipbus/slaves/ipb_dpmem_4096_32.vhd
-vcom -93 -work work $HDL_DIR/ipbus/slaves/ipb_read_regs.vhd
-vcom -93 -work work $HDL_DIR/ipbus/slaves/ipb_write_regs.vhd
-vcom -93 -work work $HDL_DIR/ipbus/slaves/ipb_pulse_regs.vhd
+vcom -93 -work work $HDL_DIR/ipbus/ipb_dpmem_4096_32.vhd
+vcom -93 -work work $HDL_DIR/ipbus/ipb_read_regs.vhd
+vcom -93 -work work $HDL_DIR/ipbus/ipb_write_regs.vhd
+vcom -93 -work work $HDL_DIR/ipbus/ipb_pulse_regs.vhd
 vcom -93 -work work $MENU_DIR/algo_mapping_rop.vhd
-vcom -93 -work work $HDL_DIR/gt_mp7_core/gtl_fdl_wrapper/fdl/fdl_module.vhd
-vcom -93 -work work $HDL_DIR/gt_mp7_core/gtl_fdl_wrapper/gtl_fdl_wrapper.vhd
+vcom -93 -work work $HDL_DIR/fdl/fdl_module.vhd
+vcom -93 -work work $HDL_DIR/gtl_fdl_wrapper.vhd
 
 ##TB_DIR
 vcom -93 -work work $MOD_TB_DIR/gtl_fdl_wrapper_tb.vhd

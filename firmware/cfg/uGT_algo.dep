@@ -6,79 +6,85 @@
 src lhc_data_pkg.vhd
 src gt_mp7_top_pkg.vhd
 src bgo_sync.vhd
-src gt_mp7_core/gt_mp7_core_pkg.vhd
+src gt_mp7_core_pkg.vhd
 
 ## HB 2017-09-18: tp_mux not used anymore
 
-src gt_mp7_core/gtl_fdl_wrapper/gtl_fdl_wrapper.vhd
+src gtl_fdl_wrapper.vhd
 #
 ## HB 2016-11-16: gtl_module.vhd, gtl_pkg.vhd and algo_mapping_rop.vhd from gt_mp7_core/..
-src gt_mp7_core/gtl_fdl_wrapper/gtl/gtl_pkg.vhd
-src gt_mp7_core/gtl_fdl_wrapper/gtl/lut_pkg.vhd
-src gt_mp7_core/gtl_fdl_wrapper/fdl/algo_mapping_rop.vhd
-src gt_mp7_core/gtl_fdl_wrapper/gtl/gtl_module.vhd
+src gtl/gtl_pkg.vhd
+src gtl/lut_pkg.vhd
+src fdl/algo_mapping_rop.vhd
+src gtl/gtl_module.vhd
 #
-src gt_mp7_core/gtl_fdl_wrapper/fdl/fdl_addr_decode.vhd
-src gt_mp7_core/gtl_fdl_wrapper/fdl/fdl_module.vhd
-src gt_mp7_core/gtl_fdl_wrapper/fdl/algo_rate_counter.vhd
-src gt_mp7_core/gtl_fdl_wrapper/fdl/algo_post_dead_time_counter.vhd
-src gt_mp7_core/gtl_fdl_wrapper/fdl/fdl_fabric.vhd
-src gt_mp7_core/gtl_fdl_wrapper/fdl/algo_pre_scaler.vhd
-src gt_mp7_core/gtl_fdl_wrapper/fdl/update_process.vhd
-src gt_mp7_core/gtl_fdl_wrapper/fdl/pulse_converter.vhd
-src gt_mp7_core/gtl_fdl_wrapper/fdl/algo_slice.vhd
+src fdl/fdl_addr_decode.vhd
+src fdl/fdl_module.vhd
+src fdl/algo_rate_counter.vhd
+src fdl/algo_post_dead_time_counter.vhd
+src fdl/fdl_fabric.vhd
+src fdl/algo_pre_scaler.vhd
+src fdl/update_process.vhd
+src fdl/pulse_converter.vhd
+src fdl/algo_slice.vhd
 #
-src gt_mp7_core/gtl_fdl_wrapper/gtl/delay_pipeline.vhd
-src gt_mp7_core/gtl_fdl_wrapper/gtl/bx_pipeline.vhd
-src gt_mp7_core/gtl_fdl_wrapper/gtl/comp_signed.vhd
-src gt_mp7_core/gtl_fdl_wrapper/gtl/conversions.vhd
-src gt_mp7_core/gtl_fdl_wrapper/gtl/lut_comparator.vhd
-src gt_mp7_core/gtl_fdl_wrapper/gtl/range_comparator.vhd
-src gt_mp7_core/gtl_fdl_wrapper/gtl/threshold_comparator.vhd
-src gt_mp7_core/gtl_fdl_wrapper/gtl/comparators_corr_cuts.vhd
-src gt_mp7_core/gtl_fdl_wrapper/gtl/comparator_muon_charge_corr.vhd
-src gt_mp7_core/gtl_fdl_wrapper/gtl/combinatorial_conditions.vhd
-src gt_mp7_core/gtl_fdl_wrapper/gtl/correlation_conditions.vhd
+src gtl/delay_pipeline.vhd
+src gtl/bx_pipeline.vhd
+src gtl/comp_signed.vhd
+src gtl/conversions.vhd
+#src gtl/eg_conversions.vhd
+#src gtl/jet_conversions.vhd
+#src gtl/tau_conversions.vhd
+#src gtl/muon_conversions.vhd
+src gtl/lut_comparator.vhd
+src gtl/range_comparator.vhd
+src gtl/threshold_comparator.vhd
+src gtl/comparators_corr_cuts.vhd
+src gtl/comparator_muon_charge_corr.vhd
+src gtl/combinatorial_conditions.vhd
+src gtl/correlation_conditions.vhd
 
 ## HB 2019-01-11: used for less amount of resources
-src gt_mp7_core/gtl_fdl_wrapper/gtl/sub_eta.vhd
-src gt_mp7_core/gtl_fdl_wrapper/gtl/diff_eta_lut.vhd
-src gt_mp7_core/gtl_fdl_wrapper/gtl/cosh_deta_lut.vhd
-src gt_mp7_core/gtl_fdl_wrapper/gtl/sub_phi.vhd
-src gt_mp7_core/gtl_fdl_wrapper/gtl/diff_phi_lut.vhd
-src gt_mp7_core/gtl_fdl_wrapper/gtl/cos_dphi_lut.vhd
+src gtl/sub_eta.vhd
+src gtl/diff_eta_lut.vhd
+src gtl/cosh_deta_lut.vhd
+src gtl/sub_phi.vhd
+src gtl/diff_phi_lut.vhd
+src gtl/cos_dphi_lut.vhd
 
-src gt_mp7_core/gtl_fdl_wrapper/gtl/delta_r.vhd
-src gt_mp7_core/gtl_fdl_wrapper/gtl/invariant_mass.vhd
-src gt_mp7_core/gtl_fdl_wrapper/gtl/transverse_mass.vhd
-src gt_mp7_core/gtl_fdl_wrapper/gtl/muon_charge_correlations.vhd
-src gt_mp7_core/gtl_fdl_wrapper/gtl/reg_mux.vhd
+#src gtl/difference_eta.vhd
+#src gtl/difference_phi.vhd
+src gtl/delta_r.vhd
+src gtl/invariant_mass.vhd
+src gtl/transverse_mass.vhd
+src gtl/muon_charge_correlations.vhd
+src gtl/reg_mux.vhd
 #
 ## HB 2017-09-18: rop and mem not used anymore
 
-src gt_mp7_core/frame/demux_lane/demux_lane_data.vhd
-src gt_mp7_core/frame/frame.vhd
-src gt_mp7_core/frame/rb/rb_pkg.vhd
-src gt_mp7_core/frame/rb/rb.vhd
-src gt_mp7_core/frame/tcm/tcm.vhd
-src gt_mp7_core/frame/mem/spytrig.vhd
-src gt_mp7_core/frame/frame_fabric.vhd
-src gt_mp7_core/frame/frame_addr_decode.vhd
-src gt_mp7_core/frame/lmp/lmp.vhd
-src gt_mp7_core/frame/frame_module_info.vhd
-src gt_mp7_core/frame/dm/delay_element.vhd
+src frame/demux_lane_data.vhd
+src frame/frame.vhd
+src frame/rb_pkg.vhd
+src frame/rb.vhd
+src frame/tcm.vhd
+src frame/spytrig.vhd
+src frame/frame_fabric.vhd
+src frame/frame_addr_decode.vhd
+src frame/lmp.vhd
+src frame/frame_module_info.vhd
+src frame/delay_element.vhd
 
 ## HB 2017-09-18: dm and dsmux not used anymore
 
-src gt_mp7_core/frame/output_mux/mux.vhd
-src gt_mp7_core/frame/output_mux/output_mux.vhd
-src gt_mp7_core/gt_mp7_core_addr_decode.vhd
+src frame/mux.vhd
+src frame/output_mux.vhd
+src gt_mp7_core_addr_decode.vhd
 src math_pkg.vhd
 src mp7_payload.vhd
-src ipbus/slaves/ipb_write_regs.vhd
-src ipbus/slaves/ipb_pulse_regs.vhd
-src ipbus/slaves/ipb_read_regs.vhd
-src ipbus/slaves/ipb_dpmem_4096_32.vhd
+src ipbus/ipb_write_regs.vhd
+src ipbus/ipb_pulse_regs.vhd
+src ipbus/ipb_read_regs.vhd
+src ipbus/ipb_dpmem_4096_32.vhd
 src ../ngc/dp_mem_4096x32/dp_mem_4096x32.ngc
 src ../ngc/dp_mem_4096x32/dp_mem_4096x32.vhd
 src -c components/ipbus_slaves ipbus_reg_v.vhd
