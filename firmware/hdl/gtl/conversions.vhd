@@ -22,18 +22,18 @@ entity conversions is
         OBJ_T : obj_type
     );
     port(
+        pt : in obj_parameter_array;
+        eta : in obj_parameter_array;
+        phi : in obj_parameter_array;
         pt_vector : out pt_vector_array(0 to N_OBJ-1) := (others => (others => '0'));
         cos_phi : out integer_array(0 to N_OBJ-1) := (others => 0);
         sin_phi : out integer_array(0 to N_OBJ-1) := (others => 0);
         conv_mu_cos_phi : out integer_array(0 to N_OBJ-1) := (others => 0);
         conv_mu_sin_phi : out integer_array(0 to N_OBJ-1) := (others => 0);
-        eta_integer : out integer_array(0 to N_OBJ-1) := (others => 0);
-        phi_integer : out integer_array(0 to N_OBJ-1) := (others => 0);
         conv_2_muon_eta_integer : out integer_array(0 to N_OBJ-1) := (others => 0);
         conv_2_muon_phi_integer : out integer_array(0 to N_OBJ-1) := (others => 0);
-        pt : in obj_parameter_array;
-        eta : in obj_parameter_array;
-        phi : in obj_parameter_array
+        eta_integer : out integer_array(0 to N_OBJ-1) := (others => 0);
+        phi_integer : out integer_array(0 to N_OBJ-1) := (others => 0)
     );
 end conversions;
 
