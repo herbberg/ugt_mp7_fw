@@ -3,7 +3,7 @@
 Top of hierarchy of ugt firmware, which is embedded in the MP7 firmware framework, is *mp7_payload.vhd (firmware/hdl)* and contains three main parts:
 
 * Frame
-* [GTL](docs/gtl.md) version 2.x.y for new structure of GTL logic with 3 stages: 
+* [GTL](doc/gtl.md) version 2.x.y for new structure of GTL logic with 3 stages: 
   * conversions and calculations
   * comparisons
   * conditions and algos
