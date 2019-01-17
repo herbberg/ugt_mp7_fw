@@ -1,2 +1,2 @@
-# Global Trigger Logic
+## Global Trigger Logic
 
