@@ -99,7 +99,6 @@ architecture rtl of gt_control is
     signal rb2tcm : sw_reg_tcm_in_t;
     signal tcm2rb : sw_reg_tcm_out_t;
 
-    signal bcres : std_logic; -- NOT USED, "bc0" of mp7_ttc is used instead of "bcres"
     signal bcres_d_int : std_logic; -- delayed version of bcres
     signal bcres_d_FDL_int : std_logic; -- delayed version of bcres for FDL
     signal bcres_outputmux : std_logic; -- non-delayed version of bcres for output mux
@@ -126,7 +125,7 @@ architecture rtl of gt_control is
     constant  mux_ctrl : ipb_regs_array(0 to 15) := (0 => X"00000bb8", 1 => X"00000c80", 2 => X"00000000", 3 => X"00000001", others => X"00000000"); -- bb8 =^ 3000, c80 =^ 3200
 
 --TCM signals
-    signal ec0_int, ec0_d_int, oc0_int, oc0_d_int, start_int, start_d_int : std_logic;
+    signal bc0, ec0_int, ec0_d_int, oc0_int, oc0_d_int, start_int, start_d_int : std_logic;
 
     begin
 
@@ -212,7 +211,7 @@ architecture rtl of gt_control is
         ec0_sync_bc0_out => ec0_int,
         oc0_sync_bc0_out => oc0_int,
         start_sync_bc0_out => start_int,
-        test_en_out => test_en_int
+        test_en_out => test_en_out
     );
 
     bc0_out <= bc0;

@@ -9,6 +9,7 @@ use unisim.VComponents.all;
 
 use work.mp7_data_types.all;
 use work.gt_mp7_core_pkg.all;
+use work.lhc_data_pkg.all;
 
 entity data_cdc_lmp is
   generic
@@ -57,8 +58,8 @@ begin
 --       for j in 0 to 1 loop
 	for k in 0 to N_MUON_WORDS-1 loop
 -- 	for k in 0 to 1 loop
-	  data_o.muon(i*N_MUON_OBJ_PER_LANE+j)(k*32+31 downto k*32) <= data_40mhz(OFFSET_MUON_LANES+i)(j*N_MUON_WORDS+k+MUON_OBJ_OFFSET);
--- 	  data_o.muon(i*2+j)(k*32+31 downto k*32)  <= data_40mhz(OFFSET_MUON_LANES+i)(j*2+k+2);
+        data_o.muon(i*N_MUON_LANES_PER_OBJ+j)(k*32+31 downto k*32) <= data_40mhz(OFFSET_MUON_LANES+i)(j*N_MUON_WORDS+k+MUON_OBJ_OFFSET);
+-- 	  data_o.muon(i*2+j)(k*32+31 downto k*32) <= data_40mhz(OFFSET_MUON_LANES+i)(j*2+k+2);
 	end loop;
       end loop;
     end loop;
@@ -88,9 +89,9 @@ begin
 --     for i in 0 to 1 loop
       for j in 0 to N_CALO_OBJ_PER_LANE-1 loop
 --       for j in 0 to 5 loop
-	data_o.eg(i*N_CALO_OBJ_PER_LANE+j) <= data_40mhz(OFFSET_EG_LANES+i)(i*N_CALO_OBJ_PER_LANE+j);
-	data_o.jet(i*N_CALO_OBJ_PER_LANE+j) <= data_40mhz(OFFSET_JET_LANES+i)(i*N_CALO_OBJ_PER_LANE+j);
-	data_o.tau(i*N_CALO_OBJ_PER_LANE+j) <= data_40mhz(OFFSET_TAU_LANES+i)(i*N_CALO_OBJ_PER_LANE+j);
+        data_o.eg(i*N_CALO_OBJ_PER_LANE+j) <= data_40mhz(OFFSET_EG_LANES+i)(j);
+        data_o.jet(i*N_CALO_OBJ_PER_LANE+j) <= data_40mhz(OFFSET_JET_LANES+i)(j);
+        data_o.tau(i*N_CALO_OBJ_PER_LANE+j) <= data_40mhz(OFFSET_TAU_LANES+i)(j);
 -- 	data_o.eg(i*6+j) <= data_40mhz(OFFSET_EG_LANES+i)(i*6+j);
 -- 	data_o.jet(i*6+j) <= data_40mhz(OFFSET_JET_LANES+i)(i*6+j);
 -- 	data_o.tau(i*6+j) <= data_40mhz(OFFSET_TAU_LANES+i)(i*6+j);
@@ -166,8 +167,8 @@ begin
 --     for i in 0 to 3 loop
       for j in 0 to N_EXT_COND_WORDS-1 loop
 --       for j in 0 to 1 loop
-	data_o.external_conditions(index*32+31 downto index*32) <= data_40mhz(OFFSET_EXT_COND_LANES+i)(j);
-	index := index + 1;
+        data_o.external_conditions(index*32+31 downto index*32) <= data_40mhz(OFFSET_EXT_COND_LANES+i)(j);
+        index := index + 1;
       end loop;
     end loop;
   end process;

@@ -7,8 +7,9 @@ use ieee.std_logic_arith.all;
 
 use work.ipbus.all;
 
-use work.gtl_pkg.all;
+-- use work.gtl_pkg.all;
 
+use work.mp7_data_types.all;
 use work.gt_mp7_core_pkg.all;
 use work.lhc_data_pkg.all;
 
@@ -26,7 +27,7 @@ entity gt_data is
         clk240 : in std_logic;
         lhc_clk : in std_logic;
         lhc_rst : in std_logic;
-        lane_data_in : in lword; -- 240MHZ
+        lane_data_in : in ldata(NR_LANES-1 downto 0); -- 240MHZ
         lhc_data_2_ctrl : out lhc_data_t;
         bcres : in std_logic;
         test_en : in std_logic;
@@ -67,7 +68,7 @@ begin
 -- HB 2019-01-21: wrapper for "Global Trigger Logic" and "Final Decision Logic". (Module used for simulation.)
   gtl_fdl_wrapper_i: entity work.gtl_fdl_wrapper
     generic map(
-        NR_LANES => NR_LANES, SIM_MODE => SIM_MODE
+        SIM_MODE => SIM_MODE
     )
     port map(
         ipb_clk => ipb_clk,

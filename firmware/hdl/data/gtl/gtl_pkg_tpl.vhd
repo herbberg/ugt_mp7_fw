@@ -70,8 +70,6 @@ package gtl_pkg is
     constant MAX_LUT_WIDTH : positive := 16; -- muon qual lut
     constant MAX_OBJ_BITS : positive := 64; -- muon
 
-    constant MAX_CALO_OBJECTS: positive := max(N_EG_OBJECTS, N_JET_OBJECTS, N_TAU_OBJECTS);
-    constant MAX_N_OBJECTS: positive := max(MAX_CALO_OBJECTS, N_MUON_OBJECTS); -- actual value = 12 (calos)
     constant MAX_OBJ_PARAMETER_WIDTH : positive := 16; -- used 16 for hex notation of requirements - max. parameter width of objects: towercount = 13
     constant MAX_CORR_CUTS_WIDTH : positive := 52; -- max inv mass width (2*MAX_PT_WIDTH+MAX_COSH_COS_WIDTH = 51) - used 52 for hex notation !
     constant MAX_COSH_COS_WIDTH : positive := 27; -- CALO_MUON_COSH_COS_VECTOR_WIDTH 

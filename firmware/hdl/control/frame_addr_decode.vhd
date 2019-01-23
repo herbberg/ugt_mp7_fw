@@ -27,7 +27,7 @@ package frame_addr_decode is
     constant C_IPB_SIMSPYMEM : ipb_simspymem_index_array := (4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
                                                              20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39,
                                                              40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59,
-							     60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75);
+                                                             60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75);
 
 --     constant C_IPB_SPYMEM2_ALGOS : natural := 64;
 -- HEPHY:21-05-2015: test version with spy2_algos and spy2_finor instantiated with ipb_dpmem_4096_32 modules.
@@ -174,10 +174,10 @@ package body frame_addr_decode is
         elsif std_match(addr, "10000000001000000000------------") then sel := C_IPB_SPYMEM2_FINOR;  -- 0x80200000
         elsif std_match(addr, "1000000000101000----------------") then sel := C_IPB_SPYMEM3;        -- 0x80280000
         elsif std_match(addr, "1000000001000000----------------") then sel := C_IPB_SPYMEM3_P;      -- 0x80400000
-		else sel := 99;
-		end if;
-		return sel;
+        else sel := 99;
+        end if;
+        return sel;
 
-	end frame_addr_sel;
+    end frame_addr_sel;
 
 end frame_addr_decode;
