@@ -37,7 +37,7 @@ firmware_dir = os.path.abspath(os.path.join(scripts_dir, '..', 'firmware'))
 
 # Target VHDL package and it's template must be defined.
 TARGET_PKG_TPL = os.path.join(firmware_dir, 'hdl', 'gt_mp7_top_pkg_tpl.vhd')
-TARGET_PKG = os.path.join(firmware_dir, 'hdl', 'gt_mp7_top_pkg.vhd')
+TARGET_PKG = os.path.join(firmware_dir, 'hdl', 'packages', 'gt_mp7_top_pkg.vhd')
 
 def parse_args():
     """Parse command line arguments."""
