@@ -1,6 +1,6 @@
 
 -- Description: this module contains the "frame module info"
--- HEPHY:21-11-2014 TOP_SERIAL_VENDOR is not mor relevant, because in future we will read from hardware over ipmi just MAC address
+-- HEPHY:21-11-2014 TOP_SERIAL_VENDOR is not relevant anymore, because in future we will read from hardware over ipmi just MAC address
 
 library ieee;
 use ieee.std_logic_1164.all;
@@ -10,6 +10,7 @@ use ieee.numeric_std.all;
 use work.ipbus.all;
 use work.frame_addr_decode.all;
 use work.gt_mp7_core_pkg.all;
+use work.top_decl.all;
 
 entity frame_module_info is
     port(

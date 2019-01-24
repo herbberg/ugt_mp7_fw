@@ -9,9 +9,15 @@ import argparse
 import logging
 import ConfigParser
 import sys, os, re
+import socket
 
-VIVADO_BASE_DIR = '/opt/xilinx/Vivado'
-"""Default Xilinx Vivado installation location."""
+HB_PC = 'powerslave'
+"""if HB_PC => Bergauer PC 'powerslave' Xilinx Vivado installation location = '/opt/Xilinx/Vivado."""
+"""else => Default Xilinx Vivado installation location = '/opt/xilinx/Vivado'."""
+if socket.gethostname() == HB_PC:
+    VIVADO_BASE_DIR = '/opt/Xilinx/Vivado'
+else:
+    VIVADO_BASE_DIR = '/opt/xilinx/Vivado'
 
 EXIT_SUCCESS = 0
 EXIT_FAILURE = 1

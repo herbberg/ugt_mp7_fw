@@ -4,6 +4,7 @@
 --	gtl: v2.0.0
 --	fdl: v1.2.2
 
+-- HB 2019-01-24: moved replacement of "IPBUS_TIMESTAMP", etc. from gt_mp7_top_pkg (which is obsolete now). [Therefore changed "makeProject.py" script]
 -- HB 2019-01-22: cleaned up
 
 -- HB 2016-09-19: removed more unused constants
@@ -18,23 +19,23 @@ use work.mp7_data_types.all;
 use work.math_pkg.all;
 use work.lhc_data_pkg.all;
 
-use work.gt_mp7_top_pkg.all;
+-- use work.gt_mp7_top_pkg.all;
 
 use work.top_decl.all;
 -- use work.mp7_brd_decl.all;
 
 package gt_mp7_core_pkg is
 
--- ==================================================================================================
--- HB 2014-05-30: definitions (TOP_xxx) moved to gt_mp7_top_pkg.vhd
-    constant TIMESTAMP : std_logic_vector(31 downto 0) := TOP_TIMESTAMP;
-    constant MODULE_TYPE : std_logic_vector(31 downto 0) := (others => '0');
-    constant USERNAME : std_logic_vector(32*8-1 downto 0) := TOP_USERNAME;
-    constant HOSTNAME : std_logic_vector(32*8-1 downto 0) := TOP_HOSTNAME;
-    constant BUILD_VERSION : std_logic_vector(31 downto 0) := TOP_BUILD_VERSION;
+-- -- ==================================================================================================
+-- -- HB 2019-01-24: definitions (TOP_xxx) moved to top_decl_tpl.vhd
+--     constant TIMESTAMP : std_logic_vector(31 downto 0) := TOP_TIMESTAMP;
+--     constant MODULE_TYPE : std_logic_vector(31 downto 0) := (others => '0');
+--     constant USERNAME : std_logic_vector(32*8-1 downto 0) := TOP_USERNAME;
+--     constant HOSTNAME : std_logic_vector(32*8-1 downto 0) := TOP_HOSTNAME;
+--     constant BUILD_VERSION : std_logic_vector(31 downto 0) := TOP_BUILD_VERSION;
 
 -- ==================================================================================================
--- FRAME version (given by the editor of frame.vhd)
+-- CONTROL = FRAME version (given by the editor of control.vhd)
     constant FRAME_MAJOR_VERSION : integer range 0 to 255 := 2;
     constant FRAME_MINOR_VERSION : integer range 0 to 255 := 0;
     constant FRAME_REV_VERSION   : integer range 0 to 255 := 0;
@@ -64,8 +65,6 @@ package gt_mp7_core_pkg is
     type ipb_regs_array is array (natural range <>) of std_logic_vector(31 downto 0);
 
 -- LMP (Lane Mapping Process)
---     constant OBJECTS_PER_LANE : integer := 6; -- CLOCK_RATIO defined in top_decl.vhd 6 objects with 32 bits per lane (CLOCK_RATIO = 6 => 240MHZ / 40MHZ)
---     type lane_objects_array_t is array (OBJECTS_PER_LANE-1 downto 0) of std_logic_vector(LWORD_WIDTH-1 downto 0);
     type lane_objects_array_t is array (CLOCK_RATIO-1 downto 0) of std_logic_vector(LWORD_WIDTH-1 downto 0);
 
 -- TCM

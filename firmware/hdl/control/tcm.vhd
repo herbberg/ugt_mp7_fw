@@ -85,12 +85,14 @@ begin
 	    v.bx_nr := bx_nr_t(to_unsigned(TTC_BC0_BX + 1, BX_NR_WIDTH)); -- JW 08.09.2015  Changed reset value of the bc cntr
 	end if;
 	if l.started_bx = '1' then
-	    if to_integer(unsigned(l.bx_nr)) = BC_TOP then
+-- 	    if to_integer(unsigned(l.bx_nr)) = BC_TOP then
+	    if to_integer(unsigned(l.bx_nr)) = (LHC_BUNCH_COUNT-1) then
 		v.bx_nr := (others => '0');
 	    else
 		v.bx_nr := bx_nr_t(unsigned(l.bx_nr) + to_unsigned(1, BX_NR_WIDTH));
 	    end if;
-	    if to_integer(unsigned(l.internal_bx_nr)) = BC_TOP then
+-- 	    if to_integer(unsigned(l.internal_bx_nr)) = BC_TOP then
+	    if to_integer(unsigned(l.internal_bx_nr)) = (LHC_BUNCH_COUNT-1) then
 		v.internal_bx_nr := (others => '0');
 		v.orbit_nr := orbit_nr_t(unsigned(l.orbit_nr) + to_unsigned(1, ORBIT_NR_WIDTH));
 	    -- luminosity segment counter, if unsigned(l.orbit_nr_periodic) >= (unsigned(LUM_SEG_PERIOD_SIMU) - 1)
@@ -120,7 +122,8 @@ begin
 	--v.bx_nr_d_FDL := bx_nr_t(to_unsigned(1, BX_NR_WIDTH));
             v.bx_nr_d_FDL := bx_nr_t(to_unsigned(TTC_BC0_BX + 1, BX_NR_WIDTH)); -- JW 08.09.2015  Changed reset value of the bc cntr
 	elsif l.started_bx_FDL = '1' then
-	    if to_integer(unsigned(l.bx_nr_d_FDL)) = BC_TOP then
+-- 	    if to_integer(unsigned(l.bx_nr_d_FDL)) = BC_TOP then
+	    if to_integer(unsigned(l.bx_nr_d_FDL)) = (LHC_BUNCH_COUNT-1) then
 		v.bx_nr_d_FDL := (others => '0');
 	    else
 		v.bx_nr_d_FDL := bx_nr_t(unsigned(l.bx_nr_d_FDL) + to_unsigned(1, BX_NR_WIDTH));

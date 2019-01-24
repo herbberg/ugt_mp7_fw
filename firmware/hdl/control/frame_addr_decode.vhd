@@ -9,6 +9,7 @@ use IEEE.STD_LOGIC_1164.all;
 use ieee.numeric_std.all;
 use work.ipbus.all;
 use work.gt_mp7_core_pkg.all;
+use work.top_decl.all;
 
 package frame_addr_decode is
 --
