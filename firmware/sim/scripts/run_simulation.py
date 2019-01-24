@@ -189,8 +189,8 @@ class Module(object):#module class and nessesary information
         #gtl_fdl_wrapper_dir = os.path.join(uGTalgosPath, 'hdl', 'gt_mp7_core', 'gtl_fdl_wrapper')
         ## HB 2019-01-15: changed dir structure of FW
         gtl_fdl_wrapper_dir = os.path.join(uGTalgosPath, 'hdl')
-        gtl_dir = os.path.join(gtl_fdl_wrapper_dir, 'gtl')
-        fdl_dir = os.path.join(gtl_fdl_wrapper_dir, 'fdl')
+        gtl_dir = os.path.join(gtl_fdl_wrapper_dir, 'data', 'gtl')
+        fdl_dir = os.path.join(gtl_fdl_wrapper_dir, 'data', 'fdl')
         # Patch VHDL files
         render_template(os.path.join(fdl_dir, 'algo_mapping_rop_tpl.vhd'), '%s/vhdl/algo_mapping_rop.vhd' % self.path, replace_map)
         render_template(os.path.join(gtl_dir, 'gtl_pkg_tpl.vhd'), '%s/vhdl/gtl_pkg.vhd' % self.path, replace_map)

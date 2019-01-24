@@ -66,7 +66,7 @@ package gtl_pkg is
 -- Global constants
 
     constant MAX_N_REQ : positive := 4; -- max. number of requirements for combinatorial conditions
-    constant MAX_N_OBJ : positive := 12; -- max. number of objects
+--     constant MAX_N_OBJ : positive := 12; -- max. number of objects
     constant MAX_LUT_WIDTH : positive := 16; -- muon qual lut
     constant MAX_OBJ_BITS : positive := 64; -- muon
 
