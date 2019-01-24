@@ -4,7 +4,6 @@
 ?toolset=="Vivado"? src ../ucf/mp7_payload.tcl
 #
 #
-src gt_mp7_top_pkg.vhd
 src packages/math_pkg.vhd
 src packages/lhc_data_pkg.vhd
 src packages/gt_mp7_core_pkg.vhd

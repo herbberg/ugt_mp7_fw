@@ -14,6 +14,7 @@ use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 
 library work;
+use work.top_decl.all;
 use work.gt_mp7_core_pkg.all;
 use work.rb_pkg.all;
 use work.mp7_ttc_decl.all;

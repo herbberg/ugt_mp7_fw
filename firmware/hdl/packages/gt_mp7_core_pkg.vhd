@@ -18,11 +18,7 @@ use IEEE.numeric_std.all;
 use work.mp7_data_types.all;
 use work.math_pkg.all;
 use work.lhc_data_pkg.all;
-
--- use work.gt_mp7_top_pkg.all;
-
 use work.top_decl.all;
--- use work.mp7_brd_decl.all;
 
 package gt_mp7_core_pkg is
 
