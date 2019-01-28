@@ -100,18 +100,18 @@ end package;
 package body gt_mp7_core_pkg is
 
     function to_obrit_nr(i : integer) return orbit_nr_t is
-	variable ret_value : orbit_nr_t := (others=>'0');
+        variable ret_value : orbit_nr_t := (others=>'0');
     begin
-	ret_value := std_logic_vector(to_unsigned(i, ret_value'length));
-	return ret_value;
+        ret_value := std_logic_vector(to_unsigned(i, ret_value'length));
+        return ret_value;
     end function;
 
     function to_bx_nr(i : integer) return bx_nr_t is
-	variable ret_value : bx_nr_t := (others=>'0');
+        variable ret_value : bx_nr_t := (others=>'0');
     begin
-	assert(i < LHC_BUNCH_COUNT) report "Unable to convert integer to bx_nr_t: value too large" severity error;
-	ret_value := std_logic_vector(to_unsigned(i, ret_value'length));
-	return ret_value;
+        assert(i < LHC_BUNCH_COUNT) report "Unable to convert integer to bx_nr_t: value too large" severity error;
+        ret_value := std_logic_vector(to_unsigned(i, ret_value'length));
+        return ret_value;
     end function;
 
 end;
