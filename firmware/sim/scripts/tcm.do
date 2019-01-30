@@ -48,7 +48,7 @@ view wave
 do $TESTBENCH/../scripts/tcm_wave.do
 
 ##Run simulation
-run 500 ns
+run 20000 ns
 
 # eof
 

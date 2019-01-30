@@ -1,7 +1,7 @@
 -- Description:
 -- Contains control part ("framework") of Global Trigger firmware.
 
--- HB 2019-01-21: v2.0.0 - renamed frame.vhd to gt_control.vhd and inplemented bgo_sync.vhd to this module. 
+-- HB 2019-01-21: v2.0.0 - renamed frame.vhd to gt_control.vhd and inplemented bgo_sync.vhd to this module. Removed signal bc0_outputmux, not used since svn rev. 45071.
 
 -- HB 2017-10-10: v1.2.3 - bug fix "simmem_in_use_i" input of spytrig.
 -- HB 2017-10-10: v1.2.2 - removed mux control register ("mux_ctrl_regs_1"), used fixed values for output mux inputs ("mux_ctrl").
@@ -99,9 +99,8 @@ architecture rtl of gt_control is
     signal rb2tcm : sw_reg_tcm_in_t;
     signal tcm2rb : sw_reg_tcm_out_t;
 
-    signal bcres_d_int : std_logic; -- delayed version of bcres
-    signal bcres_d_FDL_int : std_logic; -- delayed version of bcres for FDL
-    signal bcres_outputmux : std_logic; -- non-delayed version of bcres for output mux
+    signal bc0_i : std_logic; -- delayed version of bcres
+    signal bc0_FDL_i : std_logic; -- delayed version of bcres for FDL
 
     --TCM signals
     signal bx_nr : bx_nr_t;
@@ -125,7 +124,7 @@ architecture rtl of gt_control is
     constant  mux_ctrl : ipb_regs_array(0 to 15) := (0 => X"00000bb8", 1 => X"00000c80", 2 => X"00000000", 3 => X"00000001", others => X"00000000"); -- bb8 =^ 3000, c80 =^ 3200
 
 --TCM signals
-    signal bc0, ec0_int, ec0_d_int, oc0_int, oc0_d_int, start_int, start_d_int : std_logic;
+    signal bc0, ec0, ec0_i, oc0, oc0_i, start, start_i : std_logic;
 
     begin
 
@@ -208,9 +207,9 @@ architecture rtl of gt_control is
         rst_payload => rst_payload,
         ttc_in => ttc_in,
         bc0_out => bc0,
-        ec0_sync_bc0_out => ec0_int,
-        oc0_sync_bc0_out => oc0_int,
-        start_sync_bc0_out => start_int,
+        ec0_sync_bc0_out => ec0,
+        oc0_sync_bc0_out => oc0,
+        start_sync_bc0_out => start,
         test_en_out => test_en_out
     );
 
@@ -220,24 +219,22 @@ architecture rtl of gt_control is
     sync_proc_i : process (lhc_clk, lhc_rst)
     begin
         if lhc_rst = RST_ACT then
-            bcres_d_int <= '0';
-            ec0_d_int <= '0';
-            oc0_d_int <= '0';
-            start_d_int <= '0';
-            bcres_d_FDL_int <= '0';
-            bcres_outputmux <= '0';
+            bc0_i <= '0';
+            ec0_i <= '0';
+            oc0_i <= '0';
+            start_i <= '0';
+            bc0_FDL_i <= '0';
         elsif rising_edge(lhc_clk) then
-            bcres_d_int  <= bc0;
-            ec0_d_int <= ec0_int;
-            oc0_d_int <= oc0_int;
-            start_d_int <= start_int;
-            bcres_d_FDL_int <= bc0;
-            bcres_outputmux <= bc0;
+            bc0_i  <= bc0;
+            ec0_i <= ec0;
+            oc0_i <= oc0;
+            start_i <= start;
+            bc0_FDL_i <= bc0;
         end if;
     end process;
 
-    bcres_d_FDL <= bcres_d_FDL_int;
-    bcres_d <= bcres_d_int;
+    bcres_d <= bc0_i;
+    bcres_d_FDL <= bc0_FDL_i;
 
 --===============================================================================================--
 --                          TIMER COUNTER MODULE                             --
@@ -249,12 +246,12 @@ architecture rtl of gt_control is
             lhc_rst           => lhc_rst,
             cntr_rst          => cntr_rst,
 -- HB 2017-09-11: all bgos from sync_proc_i instead of dm.vhd
-            ec0               => ec0_d_int,
-            oc0               => oc0_d_int,
-            start             => start_d_int,
+            ec0               => ec0_i,
+            oc0               => oc0_i,
+            start             => start_i,
             l1a_sync          => l1a,
-            bcres_d           => bcres_d_int,
-            bcres_d_FDL       => bcres_d_FDL_int,
+            bcres_d           => bc0_i,
+            bcres_d_FDL       => bc0_FDL_i,
             sw_reg_in         => rb2tcm,
             sw_reg_out        => tcm2rb,
             bx_nr             => bx_nr,
@@ -360,24 +357,24 @@ architecture rtl of gt_control is
             NR_LANES => NR_LANES
         )
         port map(
-            lhc_clk     => lhc_clk,
-            clk240      => clk240,
-            lhc_rst     => lhc_rst,
-            ctrs        => ctrs,
-            bx_nr       => bx_nr,
-            bx_nr_fdl   => bx_nr_d_FDL_int,
-            algo_after_gtLogic   => algo_after_gtLogic_rop,
-            algo_after_bxomask   => algo_after_bxomask_rop,
+            lhc_clk => lhc_clk,
+            clk240 => clk240,
+            lhc_rst => lhc_rst,
+            ctrs => ctrs,
+            bx_nr => bx_nr,
+            bx_nr_fdl => bx_nr_d_FDL_int,
+            algo_after_gtLogic => algo_after_gtLogic_rop,
+            algo_after_bxomask => algo_after_bxomask_rop,
             algo_after_prescaler => algo_after_prescaler_rop,
-            local_finor_in      => local_finor_rop,
-            local_veto_in       => local_veto_rop,
+            local_finor_in => local_finor_rop,
+            local_veto_in => local_veto_rop,
             local_finor_veto_in => local_finor_with_veto_2_spy2,
-            prescale_factor     => prescale_factor_set_index_rop,
-            valid_lo    => mux_ctrl(0)(15 downto 0),
-            valid_hi    => mux_ctrl(1)(15 downto 0),
-            start       => mux_ctrl(2)(0),
-            strobe      => mux_ctrl(3)(0),
-            lane_out     => lane_data_out
+            prescale_factor  => prescale_factor_set_index_rop,
+            valid_lo => mux_ctrl(0)(15 downto 0),
+            valid_hi => mux_ctrl(1)(15 downto 0),
+            start  => mux_ctrl(2)(0),
+            strobe  => mux_ctrl(3)(0),
+            lane_out => lane_data_out
         );
 
 end rtl;

@@ -4,6 +4,7 @@
 --	gtl: v2.0.0
 --	fdl: v1.2.2
 
+-- HB 2019-01-29: removed unused BC_TOP and bx_nr_array_t, added increment funtions.
 -- HB 2019-01-24: moved replacement of "IPBUS_TIMESTAMP", etc. from gt_mp7_top_pkg (which is obsolete now). [Therefore changed "makeProject.py" script]
 -- HB 2019-01-22: cleaned up
 
@@ -16,6 +17,7 @@ use ieee.std_logic_unsigned.all;
 use IEEE.numeric_std.all;
 
 use work.mp7_data_types.all;
+use work.mp7_ttc_decl.all;
 use work.math_pkg.all;
 use work.lhc_data_pkg.all;
 use work.top_decl.all;
@@ -53,9 +55,10 @@ package gt_mp7_core_pkg is
     constant MAX_CALO_OBJECTS: positive := max(N_EG_OBJECTS, N_JET_OBJECTS, N_TAU_OBJECTS);
     constant MAX_N_OBJECTS: positive := max(MAX_CALO_OBJECTS, N_MUON_OBJECTS); -- actual value = 12 (calos)
     constant FINOR_WIDTH : integer := 4; -- for read-out record
--- HB 12-11-2013: GTL_FDL_LATENCY = 6 with fixed pipeline structure (2 = +/- 2bx, 3 = conditions and algos, 1 = FDL)
+-- HB 12-11-2013: GTL_FDL_LATENCY = 6 with fixed pipeline structure (2 = +/- 2bx, 2 = in- and out-reg for comparators, 1 = conditions and algos, 1 = FDL)
     constant GTL_FDL_LATENCY : integer := 6;
--- HB 2014-07-08: ipbus_rst is high active
+    
+-- HB 2019-01-29: eliminate RST_ACT from VHDL code
     constant RST_ACT : std_logic := '1';
 
     type ipb_regs_array is array (natural range <>) of std_logic_vector(31 downto 0);
@@ -63,11 +66,12 @@ package gt_mp7_core_pkg is
 -- LMP (Lane Mapping Process)
     type lane_objects_array_t is array (CLOCK_RATIO-1 downto 0) of std_logic_vector(LWORD_WIDTH-1 downto 0);
 
--- TCM
+-- RB
     constant BGOS_WIDTH : integer := 4;
+    subtype bgos_t is std_logic_vector(BGOS_WIDTH-1 downto 0); -- used in rb_pkg.vhd
+-- TCM
     constant BX_NR_WIDTH : integer := log2c(LHC_BUNCH_COUNT);
     constant ORBIT_NR_WIDTH : integer := 48;
-
     constant LUM_SEG_NR_WIDTH : integer := 32;
     constant EVENT_NR_WIDTH : integer := 32;
     constant EVENT_TYPE_WIDTH : integer := 4;
@@ -75,7 +79,7 @@ package gt_mp7_core_pkg is
     constant LUM_SEG_PERIOD_MSK_WIDTH : integer := 32;
     constant TRIGGER_NR_WIDTH : natural := 48;
 
-    subtype bgos_t is std_logic_vector(BGOS_WIDTH-1 downto 0);
+-- HB 2019-01-29: subtypes needed for functions
     subtype bx_nr_t is std_logic_vector(BX_NR_WIDTH-1 downto 0);
     subtype orbit_nr_t is std_logic_vector(ORBIT_NR_WIDTH-1 downto 0);
     subtype luminosity_seg_nr_t is std_logic_vector(LUM_SEG_NR_WIDTH-1 downto 0);
@@ -85,15 +89,23 @@ package gt_mp7_core_pkg is
     subtype luminosity_seg_period_msk_t is std_logic_vector(LUM_SEG_PERIOD_MSK_WIDTH-1 downto 0);
     subtype trigger_nr_t is std_logic_vector(TRIGGER_NR_WIDTH-1 downto 0);
 
-    type bx_nr_array_t is array(integer range<>) of bx_nr_t;
-
-    constant BC_TOP : integer := LHC_BUNCH_COUNT-1;
+-- HB 2019-01-29: constants for reset values, used in tcm.vhd
     constant LUM_SEG_PERIOD_MSK_RESET : luminosity_seg_period_msk_t := X"00040000";
+    constant TTC_BC0_BX_PLUS_1 : std_logic_vector(BX_NR_WIDTH-1 downto 0) := std_logic_vector(to_unsigned(TTC_BC0_BX + 1, BX_NR_WIDTH)); -- [JW 08.09.2015  Changed reset value of the bc cntr in tcm.vhd]
+    constant BX_NR_SET_TO_1 : std_logic_vector(BX_NR_WIDTH-1 downto 0) := std_logic_vector(to_unsigned(1, BX_NR_WIDTH));
+    constant ORBIT_NR_SET_TO_1 : std_logic_vector(ORBIT_NR_WIDTH-1 downto 0) := std_logic_vector(to_unsigned(1, ORBIT_NR_WIDTH));
+    constant LUM_SEC_NR_SET_TO_1 : std_logic_vector(LUM_SEG_NR_WIDTH-1 downto 0) := std_logic_vector(to_unsigned(1, LUM_SEG_NR_WIDTH));
+
 
 --------------------------------------------------------------------------------
 
     function to_obrit_nr(i : integer) return orbit_nr_t;
     function to_bx_nr(i : integer) return bx_nr_t;
+    
+-- HB 2019-01-29: added increment functions for tcm.vhd
+    function increment_bx_nr(inp : bx_nr_t) return bx_nr_t;
+    function increment_orbit_nr(inp : orbit_nr_t) return orbit_nr_t;
+    function increment_lum_seg_nr(inp : luminosity_seg_nr_t) return luminosity_seg_nr_t;
 
 end package;
 
@@ -112,6 +124,21 @@ package body gt_mp7_core_pkg is
         assert(i < LHC_BUNCH_COUNT) report "Unable to convert integer to bx_nr_t: value too large" severity error;
         ret_value := std_logic_vector(to_unsigned(i, ret_value'length));
         return ret_value;
+    end function;
+
+    function increment_bx_nr(inp : bx_nr_t) return bx_nr_t is
+    begin
+        return bx_nr_t(unsigned(inp) + 1);
+    end function;
+
+    function increment_orbit_nr(inp : orbit_nr_t) return orbit_nr_t is
+    begin
+        return orbit_nr_t(unsigned(inp) + 1);
+    end function;
+
+    function increment_lum_seg_nr(inp : luminosity_seg_nr_t) return luminosity_seg_nr_t is
+    begin
+        return luminosity_seg_nr_t(unsigned(inp) + 1);
     end function;
 
 end;
