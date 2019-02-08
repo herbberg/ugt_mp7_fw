@@ -80,15 +80,13 @@ def main():
         # module build directory inside build area
         builddir = os.path.join(buildarea, 'module_{i}'.format(**locals()))
         # command to be executed inside module screen session
-        #command = 'bash -c "source {settings64}; cd {builddir}; make project && make bitfile"'.format(**locals())
         command = 'bash -c "source {settings64}; cd {builddir}; make reset; make bitfile"'.format(**locals())
         # run screen command
         logging.info("starting screen session '%s' for module %s ...", session, i)
-        #run_command('screen', '-dmS', session, command)
-        run_command(command)
+        run_command('screen', '-dmS', session, command)
 
-    ## list runnign screen sessions
-    #run_command('screen', '-ls')
+    # list runnign screen sessions
+    run_command('screen', '-ls')
 
     logging.info("done.")
 
