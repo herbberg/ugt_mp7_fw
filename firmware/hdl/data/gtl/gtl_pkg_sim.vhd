@@ -33,40 +33,10 @@ constant NR_ALGOS : positive := 512; -- number of algorithmns (min. 32 for FDL r
 
 -- *******************************************************************************
 -- Definitions for GTL v2.x.y
--- Scales constants
-
-    constant PI : real :=  3.15; -- TM used this value for PI
-
-    constant CALO_ETA_STEP : real := 0.087/2.0; -- values from scales
-    constant MUON_ETA_STEP : real := 0.087/8.0; -- values from scales
-
-    constant CALO_PHI_BINS : positive := 144; -- values from scales
-    constant MUON_PHI_BINS : positive := 576; -- values from scales
-    constant CALO_PHI_HALF_RANGE_BINS : positive := CALO_PHI_BINS/2; -- 144/2, because of phi bin width = 2*PI/144
-    constant EG_EG_PHI_HALF_RANGE_BINS : positive := CALO_PHI_HALF_RANGE_BINS;
-    constant EG_JET_PHI_HALF_RANGE_BINS : positive := CALO_PHI_HALF_RANGE_BINS;
-    constant EG_TAU_PHI_HALF_RANGE_BINS : positive := CALO_PHI_HALF_RANGE_BINS;
-    constant JET_JET_PHI_HALF_RANGE_BINS : positive := CALO_PHI_HALF_RANGE_BINS;
-    constant JET_TAU_PHI_HALF_RANGE_BINS : positive := CALO_PHI_HALF_RANGE_BINS;
-    constant TAU_TAU_PHI_HALF_RANGE_BINS : positive := CALO_PHI_HALF_RANGE_BINS;
-    constant MUON_PHI_HALF_RANGE_BINS : positive := MUON_PHI_BINS/2; -- 576/2, because of phi bin width = 2*PI/576
-    constant EG_MUON_PHI_HALF_RANGE_BINS : positive := MUON_PHI_HALF_RANGE_BINS;
-    constant JET_MUON_PHI_HALF_RANGE_BINS : positive := MUON_PHI_HALF_RANGE_BINS;
-    constant TAU_MUON_PHI_HALF_RANGE_BINS : positive := MUON_PHI_HALF_RANGE_BINS;
-    constant MUON_MUON_PHI_HALF_RANGE_BINS : positive := MUON_PHI_HALF_RANGE_BINS;
-
-    constant PHI_MIN : real := 0.0; -- phi min.: 0.0
-    constant PHI_MAX : real := 2.0*PI; -- phi max.: 2*PI
-
-    constant ETA_MIN : real := -5.0; -- eta min.: -5.0
-    constant ETA_MAX : real := 5.0; -- eta max.: +5.0
-    constant ETA_RANGE_REAL : real := 10.0; -- eta range max.: -5.0 to +5.0
-
--- *******************************************************************************
 -- Global constants
 
     constant MAX_N_REQ : positive := 4; -- max. number of requirements for combinatorial conditions
---     constant MAX_N_OBJ : positive := 12; -- max. number of objects
+    constant MAX_N_OBJ : positive := 12; -- max. number of objects
     constant MAX_LUT_WIDTH : positive := 16; -- muon qual lut
     constant MAX_OBJ_BITS : positive := 64; -- muon
 
@@ -74,21 +44,21 @@ constant NR_ALGOS : positive := 512; -- number of algorithmns (min. 32 for FDL r
     constant MAX_CORR_CUTS_WIDTH : positive := 52; -- max inv mass width (2*MAX_PT_WIDTH+MAX_COSH_COS_WIDTH = 51) - used 52 for hex notation !
     constant MAX_COSH_COS_WIDTH : positive := 27; -- CALO_MUON_COSH_COS_VECTOR_WIDTH 
     constant MAX_PT_WIDTH : positive := 12; -- max. pt width (esums pt = 12)
-    constant MAX_ETA_WIDTH : positive := 9; -- max. eta width(muon eta = 9)
-    constant MAX_PHI_WIDTH : positive := 10; -- max. phi width (muon phi = 10)
-    constant MAX_PT_VECTOR_WIDTH : positive := 15; -- esums - max. value 2047.8 GeV => 20478 (2047.8 * 10**1) => 0x4FFE
+    constant MAX_ETA_WIDTH : positive := 12; -- max. eta width(muon eta = 9)
+    constant MAX_PHI_WIDTH : positive := 12; -- max. phi width (muon phi = 10)
+    constant MAX_PT_VECTOR_WIDTH : positive := 15; -- esums - max. value 2047.5 GeV => 20475 (2047.5 * 10) => 0x4FFB
 
-    constant IN_REG_COMP: boolean := true; -- actually input register in comparator modules used
-    constant OUT_REG_COMP: boolean := true; -- actually output register in comparator modules used
-    constant OUT_REG_COND: boolean := false; -- actually no output register in condition modules used
+    constant OUT_REG_CALC: boolean := false;
+    constant IN_REG_COMP: boolean := true;
+    constant OUT_REG_COMP: boolean := true;
+    constant OUT_REG_COND: boolean := false;
     
     constant BX_PIPELINE_STAGES: natural := 5; -- pipeline stages for +/- 2bx
     constant EXT_COND_STAGES: natural := 2; -- pipeline stages for "External conditions" to get same pipeline to algos as conditions
     constant CENTRALITY_STAGES: natural := 2; -- pipeline stages for "Centrality" to get same pipeline to algos as conditions
-    constant ALGO_REG_STAGES: natural := 1; -- algo out register stages
     
 -- *******************************************************************************************************
--- MUON objects parameter definition
+-- MUON objects bits
 
     constant MUON_PHI_LOW : natural := 0;
     constant MUON_PHI_HIGH : natural := 9;
@@ -112,7 +82,7 @@ constant NR_ALGOS : positive := 512; -- number of algorithmns (min. 32 for FDL r
     constant MUON_PT_VECTOR_WIDTH: positive := 12; -- max. value 255.5 GeV => 2555 (255.5 * 10**MUON_INV_MASS_PT_PRECISION) => 0x9FB
 
     -- *******************************************************************************************************
--- CALO objects parameter definition
+-- CALO objects bits
 
     constant EG_PT_LOW : natural := 0;
     constant EG_PT_HIGH : natural := 8;
@@ -122,7 +92,7 @@ constant NR_ALGOS : positive := 512; -- number of algorithmns (min. 32 for FDL r
     constant EG_PHI_HIGH : natural := 24;
     constant EG_ISO_LOW : natural := 25;
     constant EG_ISO_HIGH : natural := 26;
-    constant EG_PT_VECTOR_WIDTH: positive := 12; -- max. value 255.5 GeV => 2555 (255.5 * 10**EG_PT_PRECISION) => 0x9FB
+    constant EG_PT_VECTOR_WIDTH: positive := 12; -- max. value 255.5 GeV => 2555 (255.5 * 10**CALO_INV_MASS_PT_PRECISION) => 0x9FB
 
     constant JET_PT_LOW : natural := 0;
     constant JET_PT_HIGH : natural := 10;
@@ -130,7 +100,7 @@ constant NR_ALGOS : positive := 512; -- number of algorithmns (min. 32 for FDL r
     constant JET_ETA_HIGH : natural := 18;
     constant JET_PHI_LOW : natural := 19;
     constant JET_PHI_HIGH : natural := 26;
-    constant JET_PT_VECTOR_WIDTH: positive := 14; -- max. value 1023.5 GeV => 10235 (1023.5 * 10**JET_PT_PRECISION) => 0x27FB
+    constant JET_PT_VECTOR_WIDTH: positive := 14; -- max. value 1023.5 GeV => 10235 (1023.5 * 10**CALO_INV_MASS_PT_PRECISION) => 0x27FB
 
     constant TAU_PT_LOW : natural := 0;
     constant TAU_PT_HIGH : natural := 8;
@@ -140,13 +110,10 @@ constant NR_ALGOS : positive := 512; -- number of algorithmns (min. 32 for FDL r
     constant TAU_PHI_HIGH : natural := 24;
     constant TAU_ISO_LOW : natural := 25;
     constant TAU_ISO_HIGH : natural := 26;
-    constant TAU_PT_VECTOR_WIDTH: positive := 12; -- max. value 255.5 GeV => 2555 (255.5 * 10**TAU_PT_PRECISION) => 0x9FB
-
-    constant MAX_CALO_ETA_BITS : positive := max((EG_ETA_HIGH-EG_ETA_LOW+1), (JET_ETA_HIGH-JET_ETA_LOW+1), (TAU_ETA_HIGH-TAU_ETA_LOW+1));
-    constant MAX_CALO_PHI_BITS : positive := max((EG_PHI_HIGH-EG_PHI_LOW+1), (JET_PHI_HIGH-JET_PHI_LOW+1), (TAU_PHI_HIGH-TAU_PHI_LOW+1));
+    constant TAU_PT_VECTOR_WIDTH: positive := 12; -- max. value 255.5 GeV => 2555 (255.5 * 10**CALO_INV_MASS_PT_PRECISION) => 0x9FB
 
 -- *******************************************************************************************************
--- Esums objects parameter definition
+-- Esums objects bits
     constant MAX_ESUMS_BITS : positive := 20; -- see ETM, HTM, etc.
 
     constant ETT_PT_LOW : natural := 0;
@@ -159,13 +126,11 @@ constant NR_ALGOS : positive := 512; -- number of algorithmns (min. 32 for FDL r
     constant ETM_PT_HIGH : natural := 11;
     constant ETM_PHI_LOW : natural := 12;
     constant ETM_PHI_HIGH : natural := 19;
-    constant ETM_PT_VECTOR_WIDTH: positive := 15; -- max. value 2047.8 GeV => 20478 (2047.8 * 10**JET_PT_PRECISION) => 0x4FFE
 
     constant HTM_PT_LOW : natural := 0;
     constant HTM_PT_HIGH : natural := 11;
     constant HTM_PHI_LOW : natural := 12;
     constant HTM_PHI_HIGH : natural := 19;
-    constant HTM_PT_VECTOR_WIDTH: positive := 15; -- max. value 2047.8 GeV => 20478 (2047.8 * 10**JET_PT_PRECISION) => 0x4FFE
 
     constant ETTEM_IN_ETT_LOW : natural := 12;
     constant ETTEM_IN_ETT_HIGH : natural := 23;
@@ -176,48 +141,11 @@ constant NR_ALGOS : positive := 512; -- number of algorithmns (min. 32 for FDL r
     constant ETMHF_PT_HIGH : natural := 11;
     constant ETMHF_PHI_LOW : natural := 12;
     constant ETMHF_PHI_HIGH : natural := 19;
-    constant ETMHF_PT_VECTOR_WIDTH: positive := 15; -- max. value 2047.8 GeV => 20478 (2047.8 * 10**JET_PT_PRECISION) => 0x4FFE
 
     constant HTMHF_PT_LOW : natural := 0;
     constant HTMHF_PT_HIGH : natural := 11;
     constant HTMHF_PHI_LOW : natural := 12;
     constant HTMHF_PHI_HIGH : natural := 19;
-    constant HTMHF_PT_VECTOR_WIDTH: positive := 15; -- max. value 2047.8 GeV => 20478 (2047.8 * 10**JET_PT_PRECISION) => 0x4FFE
-
--- *******************************************************************************************************
--- Towercount bits
--- HB 2016-09-16: inserted TOWERCOUNT
-    constant TOWERCOUNT_IN_HTT_LOW : natural := 12;
-    constant TOWERCOUNT_IN_HTT_HIGH : natural := 24;
-    constant TOWERCOUNT_COUNT_LOW : natural := 0;
-    constant TOWERCOUNT_COUNT_HIGH : natural := 12;
-    constant MAX_TOWERCOUNT_BITS : natural := 16;
-
--- *******************************************************************************************************
--- Minimum Bias bits
--- HB 2016-04-18: updates for "min bias trigger" objects (quantities) for Low-pileup-run May 2016
--- HB 2016-04-21: see email from Johannes (Andrew Rose), 2016-04-20 15:34
--- Frame 0: (HF+ thresh 0) ... ... (Scalar ET) - 4 MSBs
--- Frame 1: (HF- thresh 0) ... ... (Scalar HT) - 4 MSBs
--- Frame 2: (HF+ thresh 1) ... ... (Vector ET) - 4 MSBs
--- Frame 3: (HF- thresh 1) ... ... (Vector HT) - 4 MSBs
--- HB 2016-04-26: grammar notation
--- HF+ thresh 0 => MBT0HFP
--- HF- thresh 0 => MBT0HFM
--- HF+ thresh 1 => MBT1HFP
--- HF- thresh 1 => MBT1HFM
-
-    constant MBT0HFP_IN_ETT_HIGH : natural := 31;
-    constant MBT0HFP_IN_ETT_LOW : natural := 28;
-    constant MBT0HFM_IN_HTT_HIGH : natural := 31;
-    constant MBT0HFM_IN_HTT_LOW : natural := 28;
-    constant MBT1HFP_IN_ETM_HIGH : natural := 31;
-    constant MBT1HFP_IN_ETM_LOW : natural := 28;
-    constant MBT1HFM_IN_HTM_HIGH : natural := 31;
-    constant MBT1HFM_IN_HTM_LOW : natural := 28;
-
-    constant MB_COUNT_LOW : natural := 0;
-    constant MB_COUNT_HIGH : natural := 3;
 
 -- *******************************************************************************************************
 -- Asymmetry bits
@@ -258,18 +186,40 @@ constant NR_ALGOS : positive := 512; -- number of algorithmns (min. 32 for FDL r
 
     constant NR_CENTRALITY_BITS : positive := CENT_UBITS_HIGH-CENT_LBITS_LOW+1;
     
--- *******************************************************************************
--- Constants for correlation cuts
+-- *******************************************************************************************************
+-- Towercount bits
+-- HB 2016-09-16: inserted TOWERCOUNT
+    constant TOWERCOUNT_IN_HTT_LOW : natural := 12;
+    constant TOWERCOUNT_IN_HTT_HIGH : natural := 24;
+    constant TOWERCOUNT_COUNT_LOW : natural := 0;
+    constant TOWERCOUNT_COUNT_HIGH : natural := 12;
+    constant MAX_TOWERCOUNT_BITS : natural := 16; -- 4 hex digits !
 
-    constant DETA_DPHI_PRECISION: positive := 3;
-    constant DETA_DPHI_VECTOR_WIDTH: positive := log2c(max(integer(ETA_RANGE_REAL*(real(10**DETA_DPHI_PRECISION))),integer(PHI_MAX*(real(10**DETA_DPHI_PRECISION)))));
+-- *******************************************************************************************************
+-- Minimum Bias bits
+-- HB 2016-04-18: updates for "min bias trigger" objects (quantities) for Low-pileup-run May 2016
+-- HB 2016-04-21: see email from Johannes (Andrew Rose), 2016-04-20 15:34
+-- Frame 0: (HF+ thresh 0) ... ... (Scalar ET) - 4 MSBs
+-- Frame 1: (HF- thresh 0) ... ... (Scalar HT) - 4 MSBs
+-- Frame 2: (HF+ thresh 1) ... ... (Vector ET) - 4 MSBs
+-- Frame 3: (HF- thresh 1) ... ... (Vector HT) - 4 MSBs
+-- HB 2016-04-26: grammar notation
+-- HF+ thresh 0 => MBT0HFP
+-- HF- thresh 0 => MBT0HFM
+-- HF+ thresh 1 => MBT1HFP
+-- HF- thresh 1 => MBT1HFM
 
-    constant CALO_CALO_COSH_COS_VECTOR_WIDTH: positive := 24; -- max. value cosh_deta-cos_dphi => [10597282-(-1000)]=10598282 => 0xA1B78A
-    constant CALO_MUON_COSH_COS_VECTOR_WIDTH: positive := 27; -- max. value cosh_deta-cos_dphi => [109487199-(-10000)]=109497199 => 0x686CB6F
-    constant MUON_MUON_COSH_COS_VECTOR_WIDTH: positive := 20; -- max. value cosh_deta-cos_dphi => [667303-(-10000)]=677303 => 0xA55B7
+    constant MBT0HFP_IN_ETT_HIGH : natural := 31;
+    constant MBT0HFP_IN_ETT_LOW : natural := 28;
+    constant MBT0HFM_IN_HTT_HIGH : natural := 31;
+    constant MBT0HFM_IN_HTT_LOW : natural := 28;
+    constant MBT1HFP_IN_ETM_HIGH : natural := 31;
+    constant MBT1HFP_IN_ETM_LOW : natural := 28;
+    constant MBT1HFM_IN_HTM_HIGH : natural := 31;
+    constant MBT1HFM_IN_HTM_LOW : natural := 28;
 
-    constant CALO_SIN_COS_VECTOR_WIDTH: positive := 11; -- log2c(1000-(-1000));
-    constant MUON_SIN_COS_VECTOR_WIDTH: positive := 15; -- log2c(10000-(-10000));
+    constant MB_COUNT_LOW : natural := 0;
+    constant MB_COUNT_HIGH : natural := 3;
 
 -- *******************************************************************************
 -- Record declarations
@@ -355,71 +305,47 @@ constant NR_ALGOS : positive := 512; -- number of algorithmns (min. 32 for FDL r
     end record asym_record;
     
     type gtl_data_record is record
-        muon : muon_record_array(0 to N_MUON_OBJECTS-1);
-        eg : eg_record_array(0 to N_EG_OBJECTS-1);
-        jet : jet_record_array(0 to N_JET_OBJECTS-1);
-        tau : tau_record_array(0 to N_TAU_OBJECTS-1);
-        ett : ett_record;
-        htt : htt_record;
-        etm : etm_record;
-        htm : htm_record;
-        mbt1hfp : mb_record;
-        mbt1hfm : mb_record;
-        mbt0hfp : mb_record;
-        mbt0hfm : mb_record;
-        ettem : ettem_record;
-        etmhf : etmhf_record;
-        htmhf : htmhf_record;
-        towercount : towercount_record;
-        asymet : asym_record;
-        asymht : asym_record;
-        asymethf : asym_record;
-        asymhthf : asym_record;
-        centrality : std_logic_vector(NR_CENTRALITY_BITS-1 downto 0);
+        muon_data : muon_record_array(0 to MUON_ARRAY_LENGTH-1);
+        eg_data : eg_record_array(0 to EG_ARRAY_LENGTH-1);
+        jet_data : jet_record_array(0 to JET_ARRAY_LENGTH-1);
+        tau_data : tau_record_array(0 to TAU_ARRAY_LENGTH-1);
+        ett_data : ett_record;
+        htt_data : htt_record;
+        etm_data : etm_record;
+        htm_data : htm_record;
+        mbt1hfp_data : mb_record;
+        mbt1hfm_data : mb_record;
+        mbt0hfp_data : mb_record;
+        mbt0hfm_data : mb_record;
+        ettem_data : ettem_record;
+        etmhf_data : etmhf_record;
+        htmhf_data : htmhf_record;
+        towercount_data : towercount_record;
+        asymet_data : asym_record;
+        asymht_data : asym_record;
+        asymethf_data : asym_record;
+        asymhthf_data : asym_record;
+        centrality_data : std_logic_vector(NR_CENTRALITY_BITS-1 downto 0);
         external_conditions : std_logic_vector(EXTERNAL_CONDITIONS_DATA_WIDTH-1 downto 0);
     end record gtl_data_record;
     
-    type obj_parameter_array is array (0 to MAX_N_OBJECTS-1) of std_logic_vector(MAX_OBJ_PARAMETER_WIDTH-1 downto 0);    
-    
-    type obj_bx_record is record
-        pt : obj_parameter_array;
-        eta : obj_parameter_array;
-        phi : obj_parameter_array;
-        iso : obj_parameter_array;
-        qual : obj_parameter_array;
-        charge : obj_parameter_array;
-        count : obj_parameter_array;
-    end record obj_bx_record;
-    
--- *******************************************************************************
 -- Type declarations
--- bx pipeline
-    type array_obj_bx_record is array (0 to BX_PIPELINE_STAGES-1) of obj_bx_record; -- used for outputs of bx_pipeline module  
-    type centrality_array is array (0 to BX_PIPELINE_STAGES-1) of std_logic_vector(NR_CENTRALITY_BITS-1 downto 0); -- used for centrality outputs of bx_pipeline module    
-    type ext_cond_array is array (0 to BX_PIPELINE_STAGES-1) of std_logic_vector(EXTERNAL_CONDITIONS_DATA_WIDTH-1 downto 0); -- used for ext_cond outputs of bx_pipeline module    
+    type array_gtl_data_record is array (0 to BX_PIPELINE_STAGES-1) of gtl_data_record;    
+ 
+    constant MAX_CALO_ARRAY_LENGTH: positive := max(EG_ARRAY_LENGTH, JET_ARRAY_LENGTH, TAU_ARRAY_LENGTH);
+    constant MAX_OBJ_ARRAY_LENGTH: positive := max(MAX_CALO_ARRAY_LENGTH, MUON_ARRAY_LENGTH);
     
--- correlation cuts
-    type pt_array is array (natural range <>) of std_logic_vector((MAX_PT_WIDTH)-1 downto 0);
-    type pt_vector_array is array (natural range <>) of std_logic_vector(MAX_PT_VECTOR_WIDTH-1 downto 0);
+    type obj_parameter_array is array (0 to MAX_OBJ_ARRAY_LENGTH-1) of std_logic_vector(MAX_OBJ_PARAMETER_WIDTH-1 downto 0);    
+    type array_obj_parameter_array is array (0 to BX_PIPELINE_STAGES-1) of obj_parameter_array;    
+
+    type centrality_array is array (0 to BX_PIPELINE_STAGES-1) of std_logic_vector(NR_CENTRALITY_BITS-1 downto 0);    
+    type ext_cond_array is array (0 to BX_PIPELINE_STAGES-1) of std_logic_vector(EXTERNAL_CONDITIONS_DATA_WIDTH-1 downto 0);    
+    
     type cosh_cos_vector_array is array (natural range <>, natural range <>) of std_logic_vector(MAX_COSH_COS_WIDTH-1 downto 0); 
-    type mass_vector_array is array (natural range <>, natural range <>) of std_logic_vector((2*MAX_PT_WIDTH+MAX_COSH_COS_WIDTH)-1 downto 0);
-    type deta_dphi_vector_array is array (natural range <>, natural range <>) of std_logic_vector(DETA_DPHI_VECTOR_WIDTH-1 downto 0);
-    type calo_cosh_cos_vector_array is array (natural range <>, natural range <>) of std_logic_vector(CALO_CALO_COSH_COS_VECTOR_WIDTH-1 downto 0);
-    type calo_muon_cosh_cos_vector_array is array (natural range <>, natural range <>) of std_logic_vector(CALO_MUON_COSH_COS_VECTOR_WIDTH-1 downto 0);
-    type muon_cosh_cos_vector_array is array (natural range <>, natural range <>) of std_logic_vector(MUON_MUON_COSH_COS_VECTOR_WIDTH-1 downto 0);
-    type calo_sin_cos_vector_array is array (natural range <>) of std_logic_vector(CALO_SIN_COS_VECTOR_WIDTH-1 downto 0);
-    type muon_sin_cos_vector_array is array (natural range <>) of std_logic_vector(MUON_SIN_COS_VECTOR_WIDTH-1 downto 0);
     
--- enums
-    type obj_type is (muon,eg,jet,tau,ett,etm,htt,htm,ettem,etmhf,htmhf,towercount,mbt1hfp,mbt1hfm,mbt0hfp,mbt0hfm,asymet,asymht,asymethf,asymhthf);
-    type obj_type_array is array (1 to 2) of obj_type;
-    type comp_mode is (GE,EQ,NE,ETA,PHI,deltaEta,deltaPhi,deltaR,mass,twoBodyPt);
-
--- slices
-    type slices_type is array (0 to 1) of natural; -- index 0 contains lower slice value, index 1 contains upper slice value
-    type slices_type_array is array (1 to MAX_N_REQ) of slices_type;
-
--- more dimensional
+    type pt_array is array (natural range <>) of std_logic_vector((MAX_PT_WIDTH)-1 downto 0);
+    type mass_vector_array is array (natural range <>, natural range <>) of std_logic_vector((2*MAX_PT_WIDTH+MAX_COSH_COS_WIDTH)-1 downto 0);
+    
     type std_logic_1dim_array is array (natural range <>) of std_logic;
     type std_logic_2dim_array is array (natural range <>, natural range <>) of std_logic;
     type std_logic_3dim_array is array (natural range <>, natural range <>, natural range <>) of std_logic;
@@ -427,50 +353,46 @@ constant NR_ALGOS : positive := 512; -- number of algorithmns (min. 32 for FDL r
     type integer_array is array (natural range <>) of integer;
     type integer_2dim_array is array (natural range <>, natural range <>) of integer;
     
+    type obj_type is (muon, eg, jet, tau, ett, etm, htt, htm, ettem, etmhf, htmhf, towercount, mbt1hfp, mbt1hfm, mbt0hfp, mbt0hfm, asymet, asymht, asymethf, asymhthf);
+    type obj_corr_type is (calo_calo, calo_esums, calo_muon, muon_muon, muon_esums);
+
+    type pt_vector_array is array (natural range <>) of std_logic_vector(MAX_PT_VECTOR_WIDTH-1 downto 0);
+
+    type comp_mode is (greater_equal,equal,sign,unsign);
+
+    type slices_type is array (0 to 2*MAX_N_REQ-1) of natural;
+
 -- *******************************************************************************************************
 -- MUON charge
     constant NR_MUON_CHARGE_BITS : positive := MUON_CHARGE_HIGH-MUON_CHARGE_LOW+1;
-    type muon_charge_bits_array is array (0 to N_MUON_OBJECTS-1) of std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0);
-    type muon_cc_double_array is array (0 to N_MUON_OBJECTS-1, 0 to N_MUON_OBJECTS-1) of std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0);
-    type muon_cc_triple_array is array (0 to N_MUON_OBJECTS-1, 0 to N_MUON_OBJECTS-1, 0 to N_MUON_OBJECTS-1) of std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0);
-    type muon_cc_quad_array is array (0 to N_MUON_OBJECTS-1, 0 to N_MUON_OBJECTS-1, 0 to N_MUON_OBJECTS-1, 0 to N_MUON_OBJECTS-1) of std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0);
+    type muon_charge_bits_array is array (0 to MUON_ARRAY_LENGTH-1) of std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0);
+    type muon_cc_double_array is array (0 to MUON_ARRAY_LENGTH-1, 0 to MUON_ARRAY_LENGTH-1) of std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0);
+    type muon_cc_triple_array is array (0 to MUON_ARRAY_LENGTH-1, 0 to MUON_ARRAY_LENGTH-1, 0 to MUON_ARRAY_LENGTH-1) of std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0);
+    type muon_cc_quad_array is array (0 to MUON_ARRAY_LENGTH-1, 0 to MUON_ARRAY_LENGTH-1, 0 to MUON_ARRAY_LENGTH-1, 0 to MUON_ARRAY_LENGTH-1) of std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0);
     constant CC_NOT_VALID : std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0) := "00"; 
     constant CC_LS : std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0) := "01"; 
     constant CC_OS : std_logic_vector(NR_MUON_CHARGE_BITS-1 downto 0) := "10"; 
 
--- *******************************************************************************************************
--- FDL definitions
+-- ==== FDL definitions - begin ============================================================
 -- Definitions for prescalers (for FDL !)
     constant PRESCALER_COUNTER_WIDTH : integer := 24;
--- Definitions for rate counters
-    constant RATE_COUNTER_WIDTH : integer := 32;
--- HB 2014-02-28: changed vector length of init values for finor- and veto-maks, because of min. 32 bits for register
-    constant MASKS_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"00000001"); --Finor and veto masks registers (bit 0 = finor, bit 1 = veto)
-    constant PRESCALE_FACTOR_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"00000001"); -- written by TME
 
 -- HB HB 2016-03-02: type definition for "global" index use.
     type prescale_factor_global_array is array (MAX_NR_ALGOS-1 downto 0) of std_logic_vector(31 downto 0);
+
     type prescale_factor_array is array (NR_ALGOS-1 downto 0) of std_logic_vector(31 downto 0); -- same width as PCIe data
+    constant PRESCALE_FACTOR_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"00000001"); -- written by TME
+
+-- Definitions for rate counters
+    constant RATE_COUNTER_WIDTH : integer := 32;
 
 -- HB HB 2016-03-02: type definition for "global" index use.
     type rate_counter_global_array is array (MAX_NR_ALGOS-1 downto 0) of std_logic_vector(RATE_COUNTER_WIDTH-1 downto 0);
+
     type rate_counter_array is array (NR_ALGOS-1 downto 0) of std_logic_vector(RATE_COUNTER_WIDTH-1 downto 0);
 
--- *******************************************************************************************************
-    function bx(i : integer) return natural;
-    
+-- HB 2014-02-28: changed vector length of init values for finor- and veto-maks, because of min. 32 bits for register
+    constant MASKS_INIT : ipb_regs_array(0 to MAX_NR_ALGOS-1) := (others => X"00000001"); --Finor and veto masks registers (bit 0 = finor, bit 1 = veto)
+-- ==== FDL definitions - end ============================================================
+
 end package;
-
-package body gtl_pkg is
-
--- Function to convert bx values from utm (e.g.: +2 to -2) to array index of bx data (e.g.: 0 to 4)
-    function bx(i : integer) return natural is
-        variable conv_val : natural := 0;
-        variable bx_conv : natural := 0;
-    begin
-        conv_val := (BX_PIPELINE_STAGES/2)-(i*2);
-        bx_conv := i+conv_val;        
-        return bx_conv;
-    end function;
-
-end package body gtl_pkg;

@@ -6,17 +6,17 @@ use ieee.std_logic_unsigned.all;
 
 
 package math_pkg is
-    function log2c(constant value                : in integer) return integer;
-    function log2f(constant value                : in integer) return integer;
-    function min(constant value1, value2         : in integer) return integer;
-    -- Returns the maximum of the two operands
-    function max(constant value1, value2         : in integer) return integer;
-    -- Returns the maximum of the three operands
-    function max(constant value1, value2, value3 : in integer) return integer;
+	function log2c(constant value                : in integer) return integer;
+	function log2f(constant value                : in integer) return integer;
+	function min(constant value1, value2         : in integer) return integer;
+	-- Returns the maximum of the two operands
+	function max(constant value1, value2         : in integer) return integer;
+	-- Returns the maximum of the three operands
+	function max(constant value1, value2, value3 : in integer) return integer;
 end package;
 
 package body math_pkg is
-    function log2c(constant value : in integer) return integer is
+	 function log2c(constant value : in integer) return integer is
         variable ret_value : integer;
         variable cur_value : integer;
     begin

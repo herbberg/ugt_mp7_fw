@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
-"""startSynth.py -- starting module synthesis using screens
+"""startSim.py -- starting simulation of gtl_fdl_wrapper with Vivado
 """
 
 import subprocess
@@ -38,6 +38,8 @@ def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('vivado', type=vivado_t, help="xilinx vivado version to run, eg. '2016.4'")
     parser.add_argument('config', type=os.path.abspath, help="build configuration file to read")
+    #parser.add_argument('--menu', metavar = 'path', help = 'menue folder path', type = os.path.abspath, required = True)
+    parser.add_argument('--testvector', metavar = 'path', help = 'testvector file path')
     return parser.parse_args()
 
 def main():
@@ -49,8 +51,6 @@ def main():
     # Setup console logging
     logging.basicConfig(format = '%(levelname)s: %(message)s', level = logging.DEBUG)
 
-    # with tarfile
-
     config = ConfigParser.RawConfigParser()
     config.read(args.config)
 
@@ -60,11 +60,19 @@ def main():
             logging.info(" %s.%s: %s", section, option, config.get(section, option))
 
     menu = config.get('menu', 'name')
+    #print 'menu=', menu
     build = config.get('menu', 'build')
+    #print 'build=', build    
     modules = int(config.get('menu', 'modules'))
+    #print 'modules=', modules
     buildarea = config.get('firmware', 'buildarea')
+    #print 'buildarea=', buildarea
+    tv = os.path.abspath(args.testvector)
+    #print 'tv=', tv
+    menu_location = config.get('menu', 'location')
+    #print 'menu location=', menu_location
 
-    logging.info("preparing to start synthesis for menu '%s' ...", menu)
+    logging.info("start Vivado simulation")
 
     # settings filename
     settings64 = os.path.join(VIVADO_BASE_DIR, args.vivado, 'settings64.sh')
@@ -75,20 +83,9 @@ def main():
         )
 
     for i in range(modules):
-        # screen session name for module
-        session = "build_{build}_{i}".format(**locals())
-        # module build directory inside build area
-        builddir = os.path.join(buildarea, 'module_{i}'.format(**locals()))
-        # command to be executed inside module screen session
-        #command = 'bash -c "source {settings64}; cd {builddir}; make project && make bitfile"'.format(**locals())
-        command = 'bash -c "source {settings64}; cd {builddir}; make reset; make bitfile"'.format(**locals())
-        # run screen command
-        logging.info("starting screen session '%s' for module %s ...", session, i)
-        #run_command('screen', '-dmS', session, command)
+        command = 'bash -c "source {settings64}; cd {buildarea}; python sim/scripts/run_vivado_simulation.py --menu {menu_location} --testvector {tv}"'.format(**locals())
+        #print 'command= ', command
         run_command(command)
-
-    ## list runnign screen sessions
-    #run_command('screen', '-ls')
 
     logging.info("done.")
 

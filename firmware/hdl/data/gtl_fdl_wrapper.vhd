@@ -45,6 +45,8 @@ entity gtl_fdl_wrapper is
         test_en : in std_logic;
         l1a : in std_logic;
         begin_lumi_section : in std_logic;
+        algo_bx_mask_mem_fdl : in std_logic_vector(MAX_NR_ALGOS-1 downto 0);
+        bx_nr_fdl : out std_logic_vector(11 downto 0);
         prescale_factor_set_index_rop : out std_logic_vector(7 downto 0);
         algo_after_gtLogic_rop : out std_logic_vector(MAX_NR_ALGOS-1 downto 0);
         algo_after_bxomask_rop : out std_logic_vector(MAX_NR_ALGOS-1 downto 0);
@@ -174,7 +176,9 @@ fdl_module_i: entity work.fdl_module
         test_en => test_en,
         l1a => l1a,
         begin_lumi_section => begin_lumi_section,
+        algo_bx_mask_mem_in => algo_bx_mask_mem_fdl,
         algo_i => algo,
+        bx_nr_out => bx_nr_fdl,
         prescale_factor_set_index_rop => prescale_factor_set_index_rop,
         algo_after_gtLogic_rop => algo_after_gtLogic_rop,
         algo_after_bxomask_rop => algo_after_bxomask_rop,

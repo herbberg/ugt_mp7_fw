@@ -2,6 +2,8 @@
 -- FDL structure
 
 -- Version-history:
+-- HB 2019-02-01: v2.0.0 - moved algo-bx-mem control.vhd (no ipbus in simulation of gtl_fdl_wrapper with vivado). 
+
 -- HB 2017-01-10: v1.2.2 - based on v1.2.1, but fixed bug with 1 bx delay for "begin_lumi_per" (in algo_slice.vhd) for rate counter after pre-scaler.
 -- HB 2016-12-01: v1.2.1 - based on v1.2.0, but inserted rate counter and register for finor with "prescaler preview" in monitoring.
 -- HB 2016-11-17: v1.2.0 - based on v1.1.1, but inserted logic for "prescaler preview" in monitoring. Removed port "finor_mask".
@@ -91,7 +93,9 @@ entity fdl_module is
         test_en             : in std_logic;
         l1a                 : in std_logic;
         begin_lumi_section  : in std_logic;
+        algo_bx_mask_mem_in : in std_logic_vector(MAX_NR_ALGOS-1 downto 0);
         algo_i              : in std_logic_vector(NR_ALGOS-1 downto 0);
+        bx_nr_out : out std_logic_vector(11 downto 0);
         prescale_factor_set_index_rop : out std_logic_vector(PRESCALE_FACTOR_SET_INDEX_WIDTH-1 downto 0);
         algo_after_gtLogic_rop  : out std_logic_vector(MAX_NR_ALGOS-1 downto 0);
         algo_after_bxomask_rop     : out std_logic_vector(MAX_NR_ALGOS-1 downto 0);
@@ -322,32 +326,36 @@ begin
         end if;
     end process suppress_cal_trigger_p;
 
--- Algo-bx-memory
--- HB 2016-02-11: 16 (MAX_NR_ALGOS/SW_DATA_WIDTH) memory-blocks instantiated, same as defined in XML for addresses
-    algo_bx_mem_l: for i in 0 to 15 generate
-        algo_bx_mem_i: entity work.ipb_dpmem_4096_32
-        port map
-        (
-            ipbus_clk => ipb_clk,
-            reset     => ipb_rst,
-            ipbus_in  => ipb_to_slaves(C_IPB_ALGO_BX_MEM(i)),
-            ipbus_out => ipb_from_slaves(C_IPB_ALGO_BX_MEM(i)),
-            ------------------
-            clk_b     => lhc_clk,
-            enb       => '1',
---             enb       => en_algo_bx_mem,
-            web       => '0', -- read
--- HB 2016-01-18: using internal bx number for algo_bx_mem
---             addrb     => bx_nr(11 downto 0),
-            addrb     => bx_nr_internal(11 downto 0),
-            dinb      => X"FFFFFFFF", -- dummy
-            doutb     => algo_bx_mask_mem_out(32*i+31 downto 32*i)
-        );
-    end generate algo_bx_mem_l;
+-- -- HB 2019-01-31: moved Algo-bx-memory outside of fdl_module for simulation with Vivado !!!
+-- -- Algo-bx-memory
+-- -- HB 2016-02-11: 16 (MAX_NR_ALGOS/SW_DATA_WIDTH) memory-blocks instantiated, same as defined in XML for addresses
+--     algo_bx_mem_l: for i in 0 to 15 generate
+--         algo_bx_mem_i: entity work.ipb_dpmem_4096_32
+--         port map
+--         (
+--             ipbus_clk => ipb_clk,
+--             reset     => ipb_rst,
+--             ipbus_in  => ipb_to_slaves(C_IPB_ALGO_BX_MEM(i)),
+--             ipbus_out => ipb_from_slaves(C_IPB_ALGO_BX_MEM(i)),
+--             ------------------
+--             clk_b     => lhc_clk,
+--             enb       => '1',
+-- --             enb       => en_algo_bx_mem,
+--             web       => '0', -- read
+-- -- HB 2016-01-18: using internal bx number for algo_bx_mem
+-- --             addrb     => bx_nr(11 downto 0),
+--             addrb     => bx_nr_internal(11 downto 0),
+--             dinb      => X"FFFFFFFF", -- dummy
+--             doutb     => algo_bx_mask_mem_out(32*i+31 downto 32*i)
+--         );
+--     end generate algo_bx_mem_l;
+-- 
 
+    bx_nr_out <= bx_nr_internal; -- to Algo-bx-memory
 -- HB 2015-08-14: v0.0.13 - algo_bx_mask_sim input for simulation use.
-    algo_bx_mask_global <= algo_bx_mask_mem_out when not SIM_MODE else
-		           algo_bx_mask_sim when SIM_MODE else (others => '1');
+    algo_bx_mask_global <=  algo_bx_mask_mem_in when not SIM_MODE -- from Algo-bx-memory
+                            else
+                            algo_bx_mask_sim when SIM_MODE else (others => '1');
 
 --===============================================================================================--
 -- Rate counter before prescaler registers

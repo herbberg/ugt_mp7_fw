@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
-"""startSynth.py -- starting module synthesis using screens
+"""prepareProjectSimSynth.py -- preparing project for simulation and symthesis with Vivado
 """
 
 import subprocess
@@ -63,8 +63,9 @@ def main():
     build = config.get('menu', 'build')
     modules = int(config.get('menu', 'modules'))
     buildarea = config.get('firmware', 'buildarea')
+    #print 'buildarea =', buildarea
 
-    logging.info("preparing to start synthesis for menu '%s' ...", menu)
+    logging.info("preparing project for Vivado simulation and synthesis")
 
     # settings filename
     settings64 = os.path.join(VIVADO_BASE_DIR, args.vivado, 'settings64.sh')
@@ -75,20 +76,11 @@ def main():
         )
 
     for i in range(modules):
-        # screen session name for module
-        session = "build_{build}_{i}".format(**locals())
-        # module build directory inside build area
         builddir = os.path.join(buildarea, 'module_{i}'.format(**locals()))
-        # command to be executed inside module screen session
-        #command = 'bash -c "source {settings64}; cd {builddir}; make project && make bitfile"'.format(**locals())
-        command = 'bash -c "source {settings64}; cd {builddir}; make reset; make bitfile"'.format(**locals())
-        # run screen command
-        logging.info("starting screen session '%s' for module %s ...", session, i)
-        #run_command('screen', '-dmS', session, command)
+        #print 'builddir =', builddir
+        command = 'bash -c "source {settings64}; cd {builddir}; make project; cp sim/xpr/sim.xpr top/sim.xpr; cp sim/xpr/gtl_fdl_wrapper_tb_behav.wcfg top/gtl_fdl_wrapper_tb_behav.wcfg"'.format(**locals())
+        #print 'command =', command
         run_command(command)
-
-    ## list runnign screen sessions
-    #run_command('screen', '-ls')
 
     logging.info("done.")
 

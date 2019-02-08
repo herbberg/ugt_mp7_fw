@@ -84,6 +84,9 @@ architecture rtl of mp7_payload is
     signal veto_2_mezz_lemo : std_logic;
     signal finor_w_veto_2_mezz_lemo : std_logic;
 
+    signal bx_nr_fdl : std_logic_vector(11 downto 0);
+    signal algo_bx_mask_mem_fdl : std_logic_vector(MAX_NR_ALGOS-1 downto 0);
+
 begin
 
     ipb_clk <= clk;
@@ -130,6 +133,8 @@ begin
         start_lumisection  => start_lumisection,
         lhc_data_i => lhc_data_2_ctrl,
         lane_data_out => lane_data_out,
+        bx_nr_fdl => bx_nr_fdl,
+        algo_bx_mask_mem_out => algo_bx_mask_mem_fdl,
         prescale_factor_set_index_rop => prescale_factor_set_index_rop,
         algo_after_gtLogic_rop => algo_after_gtLogic_rop,
         algo_after_bxomask_rop => algo_after_bxomask_rop,
@@ -159,6 +164,8 @@ begin
         test_en => test_en_int,
         l1a => l1a,
         start_lumisection => start_lumisection,
+        algo_bx_mask_mem_fdl => algo_bx_mask_mem_fdl,
+        bx_nr_fdl => bx_nr_fdl,
         prescale_factor_set_index_rop => prescale_factor_set_index_rop,
         algo_after_gtLogic_rop => algo_after_gtLogic_rop,
         algo_after_bxomask_rop => algo_after_bxomask_rop,
