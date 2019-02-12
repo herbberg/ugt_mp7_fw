@@ -82,10 +82,14 @@ def main():
             "  check if Xilinx Vivado {args.vivado} is installed on this machine.".format(**locals())
         )
 
-    for i in range(modules):
-        command = 'bash -c "source {settings64}; cd {buildarea}; python sim/scripts/run_vivado_simulation.py --menu {menu_location} --testvector {tv}"'.format(**locals())
-        #print 'command= ', command
-        run_command(command)
+    #for i in range(modules):
+        #command = 'bash -c "source {settings64}; cd {buildarea}; python sim/scripts/run_vivado_simulation.py --menu {menu_location} --testvector {tv}"'.format(**locals())
+        ##print 'command= ', command
+        #run_command(command)
+
+    # HB 2019-02-12: iteration over modules done in run_vivado_simulation.py
+    command = 'bash -c "source {settings64}; cd {buildarea}; python sim/scripts/run_vivado_simulation.py --menu {menu_location} --testvector {tv}"'.format(**locals())
+    run_command(command)
 
     logging.info("done.")
 
