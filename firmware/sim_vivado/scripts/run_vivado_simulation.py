@@ -19,6 +19,8 @@ reset = "\033[0m"
 
 TB_FILE_TPL = 'testbench/templates/gtl_fdl_wrapper_tb_pkg_tpl.vhd'
 TB_FILE = 'testbench/gtl_fdl_wrapper_tb_pkg.vhd'
+TCL_FILE_PATH = 'firmware/sim/tcl/sim_gtl_fdl_wrapper_tb.tcl'
+XPR_FILE_PATH = 'top/sim.xpr'
 
 algonum = 512#numbers of bits
 IGNORED_ALGOS = [
@@ -71,6 +73,47 @@ def bitfield(i, n=algonum):
     """
     return [int(digit) for digit in '{0:0{1}b}'.format(i, n)][::-1]
 
+def run_vivado_sim(module, tcl_file, xpr_file):
+    with open(module.results_log,'w') as logfile:
+        cmd = 'vivado -mode batch -source' + ' ' + tcl_file + ' ' + xpr_file + ' > ' + module.results_log
+        #cmd = ['vivado -mode batch -source' + ' ' + tcl_file + ' ' + xpr_file]
+        logging.info("starting simulation for module_%d..." % module._id)
+        logging.info("Simulation can take some time ..., PLEASE WAIT !")
+        logging.info("executing: %s", cmd)
+        #subprocess.check_call(cmd, stdout = logfile)
+        os.system(cmd)
+    while not os.path.exists(module.results_json): # checks for the json file
+        pass
+    with open(module.results_txt, 'w') as results_txt: # writes to results.txt what bx number triggert which algorithm and how often
+        jsonf = json.load(open(module.results_json))
+        errors = jsonf['errors']
+        for error in errors:
+            results_txt.write('#' * 80 + '\n')
+            results_txt.write('bx-nr      = %s\n' % error['bx-nr'])
+            results_txt.write('algo_sim   = %s\n' % error['algos_sim'])
+            results_txt.write('algo_tv    = %s\n' % error['algos_tv'])
+            results_txt.write('fin_or_sim = %s\n' % error['finor_sim'])
+            results_txt.write('fin_or_tv  = %s\n' % error['finor_tv'])
+            results_txt.write('#' * 80 + '\n')
+
+            algos_sim_bin = bitfield(int(error['algos_sim'], 16))
+            algos_tv_bin = bitfield(int(error['algos_tv'], 16))
+            logging.debug('-' * ts)
+
+            for bit in range(algonum):
+                if algos_tv_bin[bit] != algos_sim_bin[bit]:
+                    if module.menu.algorithms.byIndex(bit):#checks if index has a algorithm name else wirtes not found
+                        results_txt.write('\n')
+                        results_txt.write('algo %s (%s)\n' % (bit, module.menu.algorithms.byIndex(bit).name))
+                        results_txt.write('     tv = %s sim = %s\n' % (algos_tv_bin[bit], algos_sim_bin[bit]))
+                        results_txt.write('\n')
+                    else:
+                        results_txt.write('\n')
+                        results_txt.write('algo with index: %s not found in menu\n' % bit)
+                        results_txt.write('\n')
+
+        logging.info("finished simulating module_{}".format(module._id))
+        
 def check_algocount(liste):
     """prosseses list so module id is in [0] and trgger count in [1] eg. [1, 255]"""
     aus_liste = []
@@ -117,8 +160,7 @@ class Module(object):#module class and nessesary information
         render_template(os.path.join(sim_dir, 'module_%d/firmware/sim/' % self._id, TB_FILE_TPL),
             os.path.join(sim_dir, 'module_%d/firmware/sim/' % self._id, TB_FILE), {
             '{{TESTVECTOR_FILENAME}}' : self.testvector_filepath,
-            #'{{RESULTS_FILE}}' : os.path.join(sim_dir, 'module_%d/results_module_%d.json' % (self._id, self._id)) #results.json
-            '{{RESULTS_FILE}}' : '%s/sim/sim_results/module_%d/results_module_%d.json' % (os.getcwd(), self._id, self._id)
+             '{{RESULTS_FILE}}' : '%s/sim/sim_results/module_%d/results_module_%d.json' % (os.getcwd(), self._id, self._id)
         })
 
 def parse():
@@ -156,7 +198,7 @@ def main():
     #os.makedirs(base_dir)#makes folders
 
     menu = xmlmenu.XmlMenu(menu_filepath)
-
+    
     modules = []
     for _id in range(menu.n_modules):#makes list for each module
         modules.append(Module(menu ,_id, base_dir))
@@ -180,59 +222,21 @@ def main():
 
     logging.info('finished creating modules and masks')
     logging.info('starting simulations...')
-
-    for module in modules:#makes for all simulations a thread
-        module_dir = sim_dir + '/module_%d' % module._id
-        path_tcl = '%s/firmware/sim/tcl/sim_gtl_fdl_wrapper_tb.tcl' % module_dir
-        path_xpr = '%s/top/sim.xpr' % module_dir
-        cmd = 'vivado -mode batch -source' + ' ' + path_tcl + ' ' + path_xpr + ' | tee ' + module.results_log
-        logging.info("starting simulation for module_%d..." % module._id)
-        logging.info("executing: %s", cmd)
-        os.system(cmd)
-        while not os.path.exists(module.results_json): # checks for the json file
-            pass
-        with open(module.results_txt, 'w') as results_txt: # writes to results.txt what bx number triggert which algorithm and how often
-            jsonf = json.load(open(module.results_json))
-            errors = jsonf['errors']
-            for error in errors:
-                results_txt.write('#' * 80 + '\n')
-                results_txt.write('bx-nr      = %s\n' % error['bx-nr'])
-                results_txt.write('algo_sim   = %s\n' % error['algos_sim'])
-                results_txt.write('algo_tv    = %s\n' % error['algos_tv'])
-                results_txt.write('fin_or_sim = %s\n' % error['finor_sim'])
-                results_txt.write('fin_or_tv  = %s\n' % error['finor_tv'])
-                results_txt.write('#' * 80 + '\n')
-
-                algos_sim_bin = bitfield(int(error['algos_sim'], 16))
-                algos_tv_bin = bitfield(int(error['algos_tv'], 16))
-                logging.debug('-' * ts)
-
-                for bit in range(algonum):
-                    if algos_tv_bin[bit] != algos_sim_bin[bit]:
-                        if module.menu.algorithms.byIndex(bit):#checks if index has a algorithm name else wirtes not found
-                            results_txt.write('\n')
-                            results_txt.write('algo %s (%s)\n' % (bit, module.menu.algorithms.byIndex(bit).name))
-                            results_txt.write('     tv = %s sim = %s\n' % (algos_tv_bin[bit], algos_sim_bin[bit]))
-                            results_txt.write('\n')
-                        else:
-                            results_txt.write('\n')
-                            results_txt.write('algo with index: %s not found in menu\n' % bit)
-                            results_txt.write('\n')
-
-        logging.info("finished simulating module_{}".format(module._id))
         
-    #threads = []
-    #for module in modules:#makes for all simulations a thread
-        ##thread = Thread(target = run_vsim, args = (module, msgmode, ini_file))
-        #thread = Thread(target = run_vivado_sim, args = (module))
-        #threads.append(thread)
-        #thread.start()os.system(cmd)
-        ##while not os.path.exists(os.path.join(module.path, 'running.lock')):#stops starting of new threads if .do file is still in use
-            ##time.sleep(0.5)
-        ##os.remove(os.path.join(module.path, 'running.lock'))
+    threads = []
+    for module in modules:#makes for all simulations a thread
+        tcl_file = sim_dir + '/module_%d/' % module._id + TCL_FILE_PATH
+        xpr_file = sim_dir + '/module_%d/' % module._id + XPR_FILE_PATH        
 
-    #for thread in threads:#waits for all threads to finish
-        #thread.join()
+        thread = Thread(target = run_vivado_sim, args = (module, tcl_file, xpr_file))
+        threads.append(thread)
+        thread.start()
+        #while not os.path.exists(os.path.join(module.path, 'running.lock')):#stops starting of new threads if .do file is still in use
+            #time.sleep(0.5)
+        #os.remove(os.path.join(module.path, 'running.lock'))
+
+    for thread in threads:#waits for all threads to finish
+        thread.join()
     logging.info('finished all simulations')
     print ('')
 
