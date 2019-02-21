@@ -78,7 +78,7 @@ def run_vivado_sim(module, tcl_file, xpr_file):
         cmd = 'vivado -mode batch -source' + ' ' + tcl_file + ' ' + xpr_file + ' > ' + module.results_log
         #cmd = ['vivado -mode batch -source' + ' ' + tcl_file + ' ' + xpr_file]
         logging.info("starting simulation for module_%d..." % module._id)
-        logging.info("Simulation can take some time ..., PLEASE WAIT !")
+        logging.info("Simulation of module_%d can take some time ..., PLEASE WAIT !" % module._id)
         logging.info("executing: %s", cmd)
         #subprocess.check_call(cmd, stdout = logfile)
         os.system(cmd)
@@ -283,12 +283,15 @@ def main():
     algorithms = sorted(menu.algorithms, key = lambda algorithm: algorithm.index)#sorts all algorithms by index number
     success = True
     for algo in algorithms:
-        result = 'OK'
+        result = '\033[92m OK \033[0m' # green color
+        #result = 'OK'
         if algo.name in IGNORED_ALGOS:
-            result = 'IGNORE'
+            result = '\033[94m IGNORE \033[0m' # blue color
+            #result = 'IGNORE'
         #checks if algorithm trigger count is equal in both hardware and testvectors
         elif algos_tv[algo.index][0][1] != algos_sim[algo.index][0][1]:
-            result = 'ERROR'
+            result = '\033[91m ERROR \033[0m' # red color
+            #result = 'ERROR'
             success = False
 
         sum_log.info('|{:>5}|{:>5}|{:<66}|{:>8}|{:>8}|{:>8}|'.format( #prints line with information about each algo present in the menu
