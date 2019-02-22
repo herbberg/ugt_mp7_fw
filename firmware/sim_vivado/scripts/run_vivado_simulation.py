@@ -283,15 +283,12 @@ def main():
     algorithms = sorted(menu.algorithms, key = lambda algorithm: algorithm.index)#sorts all algorithms by index number
     success = True
     for algo in algorithms:
-        result = '\033[92m OK \033[0m' # green color
-        #result = 'OK'
+        result = ' \033[92mOK\033[0m     '
         if algo.name in IGNORED_ALGOS:
-            result = '\033[94m IGNORE \033[0m' # blue color
-            #result = 'IGNORE'
+            result = ' \033[94mIGNORE\033[0m ' # blue color
         #checks if algorithm trigger count is equal in both hardware and testvectors
         elif algos_tv[algo.index][0][1] != algos_sim[algo.index][0][1]:
-            result = '\033[91m ERROR \033[0m' # red color
-            #result = 'ERROR'
+            result = ' \033[91mERROR\033[0m  ' # red color
             success = False
 
         sum_log.info('|{:>5}|{:>5}|{:<66}|{:>8}|{:>8}|{:>8}|'.format( #prints line with information about each algo present in the menu
@@ -345,9 +342,9 @@ def main():
     print ("")
 
     if success:
-        logging.info("Success!")
+        logging.info("\033[92m Success! \033[0m")
     else:
-        logging.error("Failed!")
+        logging.error("\033[91m Failed! \033[0m")
 
     #with open('')
 if __name__ == '__main__':
