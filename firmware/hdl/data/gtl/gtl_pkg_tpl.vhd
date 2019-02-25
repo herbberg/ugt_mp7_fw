@@ -17,6 +17,8 @@ package gtl_pkg is
 
 {{ugt_constants}}
 
+-- ========================================================
+
 -- HB 2014-09-09: GTL and FDL firmware major, minor and revision versions moved to gt_mp7_core_pkg.vhd (GTL_FW_MAJOR_VERSION, etc.)
 --                for creating a tag name by a script independent from L1Menu.
 -- GTL firmware (fix part) version
@@ -396,7 +398,7 @@ package gtl_pkg is
 -- bx pipeline
     type array_obj_bx_record is array (0 to BX_PIPELINE_STAGES-1) of obj_bx_record; -- used for outputs of bx_pipeline module  
     type centrality_array is array (0 to BX_PIPELINE_STAGES-1) of std_logic_vector(NR_CENTRALITY_BITS-1 downto 0); -- used for centrality outputs of bx_pipeline module    
-    type ext_cond_array is array (0 to BX_PIPELINE_STAGES-1) of std_logic_vector(EXTERNAL_CONDITIONS_DATA_WIDTH-1 downto 0); -- used for ext_cond outputs of bx_pipeline module    
+    type ext_cond_array is array (0 to BX_PIPELINE_STAGES-1) of std_logic_vector(EXTERNAL_CONDITIONS_DATA_WIDTH-1 downto 0); -- used for ext_cond outputs of bx_pipeline module 
     
 -- correlation cuts
     type pt_array is array (natural range <>) of std_logic_vector((MAX_PT_WIDTH)-1 downto 0);
@@ -426,6 +428,16 @@ package gtl_pkg is
     type std_logic_4dim_array is array (natural range <>, natural range <>, natural range <>, natural range <>) of std_logic;
     type integer_array is array (natural range <>) of integer;
     type integer_2dim_array is array (natural range <>, natural range <>) of integer;
+    
+-- bx arrays for conversion signals
+    type bx_eg_integer_array is array (0 to BX_PIPELINE_STAGES-1) of integer_array(0 to N_EG_OBJECTS-1);
+    type bx_jet_integer_array is array (0 to BX_PIPELINE_STAGES-1) of integer_array(0 to N_JET_OBJECTS-1);
+    type bx_tau_integer_array is array (0 to BX_PIPELINE_STAGES-1) of integer_array(0 to N_TAU_OBJECTS-1);
+    type bx_muon_integer_array is array (0 to BX_PIPELINE_STAGES-1) of integer_array(0 to N_MUON_OBJECTS-1);
+    type bx_eg_pt_vector_array is array (0 to BX_PIPELINE_STAGES-1) of pt_vector_array(0 to N_EG_OBJECTS-1);
+    type bx_jet_pt_vector_array is array (0 to BX_PIPELINE_STAGES-1) of pt_vector_array(0 to N_JET_OBJECTS-1);
+    type bx_tau_pt_vector_array is array (0 to BX_PIPELINE_STAGES-1) of pt_vector_array(0 to N_TAU_OBJECTS-1);
+    type bx_muon_pt_vector_array is array (0 to BX_PIPELINE_STAGES-1) of pt_vector_array(0 to N_MUON_OBJECTS-1);
     
 -- *******************************************************************************************************
 -- MUON charge

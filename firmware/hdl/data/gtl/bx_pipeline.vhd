@@ -1,5 +1,9 @@
+-- Description:
+-- Pipeline for +/-2 bx data.
 
 -- Version-history: 
+-- HB 2019-02-25: included conversions for eg, jet, tau and muon.
+-- HB 2019-01-23: included additional delay for centrality and ext_cond (no comparators and conditions)
 
 library ieee;
 use ieee.std_logic_1164.all;
@@ -11,13 +15,46 @@ entity bx_pipeline is
     port(
         clk : in std_logic;
         data : in gtl_data_record;
-        muon_bx, eg_bx, jet_bx, tau_bx : out array_obj_bx_record := (others => (others => (others => (others => '0'))));
+--         muon_bx, eg_bx, jet_bx, tau_bx : out array_obj_bx_record := (others => (others => (others => (others => '0'))));
+        muon_bx_o, eg_bx_o, jet_bx_o, tau_bx_o : out array_obj_bx_record := (others => (others => (others => (others => '0'))));
         ett_bx, etm_bx, htt_bx, htm_bx, ettem_bx, etmhf_bx, htmhf_bx : out array_obj_bx_record := (others => (others => (others => (others => '0'))));
         towercount_bx : out array_obj_bx_record := (others => (others => (others => (others => '0'))));
         mbt1hfp_bx, mbt1hfm_bx, mbt0hfp_bx, mbt0hfm_bx : out array_obj_bx_record := (others => (others => (others => (others => '0'))));
         asymet_bx, asymht_bx, asymethf_bx, asymhthf_bx : out array_obj_bx_record := (others => (others => (others => (others => '0'))));
         centrality : out centrality_array := (others => (others => '0'));
-        ext_cond : out ext_cond_array := (others => (others => '0'))
+        ext_cond : out ext_cond_array := (others => (others => '0'));
+        eg_pt_vector : out bx_eg_pt_vector_array;
+        eg_cos_phi : out bx_eg_integer_array;
+        eg_sin_phi : out bx_eg_integer_array;
+        eg_conv_mu_cos_phi : out bx_eg_integer_array;
+        eg_conv_mu_sin_phi : out bx_eg_integer_array;
+        eg_conv_2_muon_eta_integer : out bx_eg_integer_array;
+        eg_conv_2_muon_phi_integer : out bx_eg_integer_array;
+        eg_eta_integer : out bx_eg_integer_array;
+        eg_phi_integer : out bx_eg_integer_array;
+        jet_pt_vector : out bx_jet_pt_vector_array;
+        jet_cos_phi : out bx_jet_integer_array;
+        jet_sin_phi : out bx_jet_integer_array;
+        jet_conv_mu_cos_phi : out bx_jet_integer_array;
+        jet_conv_mu_sin_phi : out bx_jet_integer_array;
+        jet_conv_2_muon_eta_integer : out bx_jet_integer_array;
+        jet_conv_2_muon_phi_integer : out bx_jet_integer_array;
+        jet_eta_integer : out bx_jet_integer_array;
+        jet_phi_integer : out bx_jet_integer_array;
+        tau_pt_vector : out bx_tau_pt_vector_array;
+        tau_cos_phi : out bx_tau_integer_array;
+        tau_sin_phi : out bx_tau_integer_array;
+        tau_conv_mu_cos_phi : out bx_tau_integer_array;
+        tau_conv_mu_sin_phi : out bx_tau_integer_array;
+        tau_conv_2_muon_eta_integer : out bx_tau_integer_array;
+        tau_conv_2_muon_phi_integer : out bx_tau_integer_array;
+        tau_eta_integer : out bx_tau_integer_array;
+        tau_phi_integer : out bx_tau_integer_array;
+        muon_pt_vector : out bx_muon_pt_vector_array;
+        muon_cos_phi : out bx_muon_integer_array;
+        muon_sin_phi : out bx_muon_integer_array;
+        muon_eta_integer : out bx_muon_integer_array;
+        muon_phi_integer : out bx_muon_integer_array
     );
 end bx_pipeline;
 
@@ -25,9 +62,11 @@ architecture rtl of bx_pipeline is
 
     type array_gtl_data_record is array (0 to BX_PIPELINE_STAGES-1) of gtl_data_record;       
     signal data_tmp : array_gtl_data_record;
+    signal muon_bx, eg_bx, jet_bx, tau_bx : array_obj_bx_record;
 
 begin
 
+-- BX pipeline
     process(clk, data)
     begin
         data_tmp(0) <= data;
@@ -114,6 +153,62 @@ begin
             port map(
                 clk, data_tmp(i).external_conditions, ext_cond(i)
             );
+            
+-- Conversions for muon, eg, jet and tau parameters - NOCH ERWEITERN !!! 2019-02-22
+
+        eg_conversions_i: entity work.conversions
+            generic map(
+                N_EG_OBJECTS, eg
+            )
+            port map(
+                pt => eg_bx(i).pt, eta => eg_bx(i).eta, phi => eg_bx(i).phi,
+                pt_vector => eg_pt_vector(i), cos_phi => eg_cos_phi(i), sin_phi => eg_sin_phi(i),
+                conv_mu_cos_phi => eg_conv_mu_cos_phi(i), conv_mu_sin_phi => eg_conv_mu_sin_phi(i),
+                conv_2_muon_eta_integer => eg_conv_2_muon_eta_integer(i), conv_2_muon_phi_integer => eg_conv_2_muon_phi_integer(i),
+                eta_integer => eg_eta_integer(i), phi_integer => eg_phi_integer(i) 
+            );
+            
+        jet_conversions_i: entity work.conversions
+            generic map(
+                N_JET_OBJECTS, jet
+            )
+            port map(
+                pt => jet_bx(i).pt, eta => jet_bx(i).eta, phi => jet_bx(i).phi,        
+                pt_vector => jet_pt_vector(i), cos_phi => jet_cos_phi(i), sin_phi => jet_sin_phi(i),
+                conv_mu_cos_phi => jet_conv_mu_cos_phi(i), conv_mu_sin_phi => jet_conv_mu_sin_phi(i),
+                conv_2_muon_eta_integer => jet_conv_2_muon_eta_integer(i), conv_2_muon_phi_integer => jet_conv_2_muon_phi_integer(i),
+                eta_integer => jet_eta_integer(i), phi_integer => jet_phi_integer(i) 
+            );
+            
+        tau_conversions_i: entity work.conversions
+            generic map(
+                N_TAU_OBJECTS, tau
+            )
+            port map(
+                pt => tau_bx(i).pt, eta => tau_bx(i).eta, phi => tau_bx(i).phi,        
+                pt_vector => tau_pt_vector(i), cos_phi => tau_cos_phi(i), sin_phi => tau_sin_phi(i),
+                conv_mu_cos_phi => tau_conv_mu_cos_phi(i), conv_mu_sin_phi => tau_conv_mu_sin_phi(i),
+                conv_2_muon_eta_integer => tau_conv_2_muon_eta_integer(i), conv_2_muon_phi_integer => tau_conv_2_muon_phi_integer(i),
+                eta_integer => tau_eta_integer(i), phi_integer => tau_phi_integer(i) 
+            );
+            
+        muon_conversions_i: entity work.conversions
+            generic map(
+                N_MUON_OBJECTS, muon
+            )
+            port map(
+                pt => muon_bx(i).pt, eta => muon_bx(i).eta, phi => muon_bx(i).phi,        
+                pt_vector => muon_pt_vector(i), cos_phi => muon_cos_phi(i), sin_phi => muon_sin_phi(i),
+                eta_integer => muon_eta_integer(i), phi_integer => muon_phi_integer(i) 
+            );
+            
     end generate bx_l;
+    
+-- Output bx object parameters (muon, eg, jet and tau)
+
+    muon_bx_o <= muon_bx;
+    eg_bx_o <= eg_bx;
+    jet_bx_o <= jet_bx;
+    tau_bx_o <= tau_bx;
 
 end architecture rtl;
