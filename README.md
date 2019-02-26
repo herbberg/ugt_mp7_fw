@@ -1,8 +1,8 @@
 # New structure of Global Trigger firmware on MP7
 
-Top hierarchy module of ugt firmware, which is embedded in the MP7 firmware framework, is *[mp7_payload.vhd](firmware/hdl/mp7_payload.vhd)* and contains three main parts:
+Top hierarchy module of ugt firmware *[mp7_payload.vhd](firmware/hdl/mp7_payload.vhd)*, which is embedded in the MP7 firmware framework, contains three main parts:
 
-* [Frame](doc/frame.md) of GlobalTrigger Logic
+* [Control](doc/control.md) of GlobalTrigger Logic
 * Global Trigger Logic ([GTL](doc/gtl.md)) version 2.x.y for new structure of GTL logic with 3 stages: 
   * conversions and calculations
   * comparisons
