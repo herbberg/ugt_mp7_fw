@@ -1,13 +1,14 @@
 # New structure of Global Trigger firmware on MP7
 
-Top hierarchy module of ugt firmware *[mp7_payload.vhd](firmware/hdl/mp7_payload.vhd)*, which is embedded in the MP7 firmware framework, contains three main parts:
+Top hierarchy module of ugt firmware *[mp7_payload.vhd](firmware/hdl/mp7_payload.vhd)*, which is embedded in the MP7 firmware framework, contains two main parts:
 
-* [Control](doc/control.md) of GlobalTrigger Logic
-* Global Trigger Logic ([GTL](doc/gtl.md)) version 2.x.y for new structure of GTL logic with 3 stages: 
-  * conversions and calculations
-  * comparisons
-  * conditions and algos
-* Final Decision Logic ([FDL](doc/fdl.md))
+* [Control](doc/control.md) (*[control.vhd](firmware/hdl/control.vhd)*) of GlobalTrigger Logic
+* [Data](doc/data.md) (*[data.vhd](firmware/hdl/data.vhd)*) of GlobalTrigger Logic, which contains 
+  * Global Trigger Logic ([GTL](doc/gtl.md)) version 2.x.y for new structure of GTL logic with 3 stages: 
+    * conversions and calculations
+    * comparisons
+    * conditions and algos
+  * Final Decision Logic ([FDL](doc/fdl.md))
 
 Inserted possibility to simulate gtl_fdl_wrapper logic with Vivado simulator by scripts:
 * make a Vivado project with "python makeProject.py ..."
