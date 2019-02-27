@@ -2,8 +2,8 @@
 
 Top hierarchy module of ugt firmware *[mp7_payload.vhd](firmware/hdl/mp7_payload.vhd)*, which is embedded in the MP7 firmware framework, contains two main parts:
 
-* [Control](doc/control.md) (*[gt_control.vhd](firmware/hdl/gt_control.vhd)*) of GlobalTrigger Logic
-* [Data](doc/data.md) (*[gt_data.vhd](firmware/hdl/gt_data.vhd)*) of GlobalTrigger Logic, which contains 
+* [Control](doc/control.md) of GlobalTrigger Logic (*[gt_control.vhd](firmware/hdl/gt_control.vhd)*)
+* [Data](doc/data.md) of GlobalTrigger Logic (*[gt_data.vhd](firmware/hdl/gt_data.vhd)*), which contains 
   * Global Trigger Logic ([GTL](doc/gtl.md)) version 2.x.y for new structure of GTL logic with 3 stages: 
     * conversions and calculations
     * comparisons
